@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertsTabController">
+   <content>
+      <VBox fx:id="mainVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-image: url(&quot;bitcoin.png&quot;); -fx-background-position: center center; -fx-background-size: contain; -fx-background-repeat: no-repeat;">
+         <padding>
+            <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+         </padding>
+         <children>
+            <Label text="No price alerts yet">
+               <VBox.margin>
+                  <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+               </VBox.margin>
+            </Label>
+         </children></VBox>
+   </content>
+</ScrollPane>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<VBox spacing="9.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiSettingsController">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="9.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Browser path (%s - chart URL): " />
+            <TextField fx:id="browserPathEditText" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#selectBrowserClick" text="Select browser..." />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="9.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price rising sound file: " />
+            <TextField fx:id="priceRisingSoundFileEditText" editable="false" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#selectRisingSoundFileClick" text="Select file..." />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="9.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price falling sound file: " />
+            <TextField fx:id="priceFallingSoundFileEditText" editable="false" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#selectFallingSoundFileClick" text="Select file..." />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" spacing="9.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#cancelClick" prefWidth="100.0" text="Cancel" />
+            <Button mnemonicParsing="false" onAction="#saveClick" prefWidth="100.0" text="Save" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+   </padding>
+</VBox>

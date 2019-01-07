@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
+   <children>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <ImageView fx:id="arrowImageView" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@arrow-up-24.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="changeLabel" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="0.0% (0.0)" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="pairNameLabel" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="?" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="finalPriceLabel" text="?" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="periodLabel" text="?" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="exchangeLabel" text="?" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Label fx:id="timeLabel" text="?" />
+         </children>
+      </VBox>
+   </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
+   <effect>
+      <Glow level="0.23" />
+   </effect>
+   <padding>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+   </padding>
+</HBox>
