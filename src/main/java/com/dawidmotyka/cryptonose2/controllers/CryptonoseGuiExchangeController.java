@@ -16,9 +16,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,6 +70,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public CheckBox notificationCheckBox;
     @FXML
     public TableView currenciesTableView;
+    @FXML
+    public TitledPane logTitledPane;
     @FXML
     public CheckBox showTableCheckBox;
 
@@ -343,15 +347,17 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             handlePriceAlert(priceAlert);
         if(showTableCheckBox.isSelected()) {
             for (PriceChanges priceChanges : priceChangesList) {
-                //TODO refactor it?
-                if (!pairPriceChangesMap.containsKey(priceChanges.getCurrencyPair())) {
-                    PairPriceChanges pairPriceChanges = new PairPriceChanges(exchangeSpecs,priceChanges.getCurrencyPair());
-                    pairPriceChangesMap.put(priceChanges.getCurrencyPair(), pairPriceChanges);
-                    pairPriceChangesObservableList.add(pairPriceChanges);
+                Iterator<PairPriceChanges> pairPriceChangesIterator = pairPriceChangesObservableList.iterator();
+                PairPriceChanges pairPriceChanges = pairPriceChangesIterator.hasNext()?pairPriceChangesIterator.next():null;
+                while(pairPriceChangesIterator.hasNext() && !pairPriceChanges.getPairName().equals(priceChanges.getCurrencyPair()))
+                    pairPriceChanges = pairPriceChangesIterator.next();
+                if(pairPriceChanges==null || !pairPriceChanges.getPairName().equals(priceChanges.getCurrencyPair())) {//not found
+                    PairPriceChanges newPairPriceChanges = new PairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair());
+                    pairPriceChangesObservableList.add(newPairPriceChanges);
+                    pairPriceChanges = newPairPriceChanges;
                 }
                 int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? PairPriceChanges.PERIOD1 : PairPriceChanges.PERIOD2;
-                PairPriceChanges pairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
-                pairPriceChanges.setPriceChanges(priceChanges, period);
+                pairPriceChanges.setPriceChanges(priceChanges,period);
                 if(System.currentTimeMillis()-lastTableUpdateMillis>TABLE_UPDATE_FREQUENCY_MILLIS) {
                     pairPriceChangesObservableList.set(pairPriceChangesObservableList.indexOf(pairPriceChanges), pairPriceChanges);
                     currenciesTableView.sort();
