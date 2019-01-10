@@ -71,6 +71,7 @@
                   <CheckBox fx:id="notificationCheckBox" mnemonicParsing="false" selected="true" text="Notification" />
                   <Region HBox.hgrow="ALWAYS" />
                   <CheckBox fx:id="showTableCheckBox" mnemonicParsing="false" selected="true" text="Show Table" />
+                  <Button mnemonicParsing="false" onAction="#pairsClick" text="Pairs..." />
                   <Button mnemonicParsing="false" onAction="#alertSettingsClick" text="Alert conditions..." />
                </children>
             </HBox>

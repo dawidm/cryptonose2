@@ -278,10 +278,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     @FXML
-    public void settingsClick() {
+    public void pairsClick() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiSettings.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPairs.fxml"));
             Parent root = fxmlLoader.load();
+            ((CryptonoseGuiPairsController)fxmlLoader.getController()).setExchange(exchangeSpecs);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.showAndWait();
