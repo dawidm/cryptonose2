@@ -62,7 +62,7 @@ public class CryptonoseGuiController extends Application {
     public void start(Stage primaryStage) throws IOException {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance().addUserAgentStylesheet("FlatBee.css");
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiFx.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
         fxmlLoader.setController(this);
         Node cryptonoseGuiFxNode = fxmlLoader.load();
         primaryStage.setTitle("Cryptonose2");
@@ -140,7 +140,7 @@ public class CryptonoseGuiController extends Application {
             logger.info("loading "+exchangeSpecs.getName());
             if(activeExchangesMap.keySet().contains(exchangeSpecs))
                 return;
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiExchange.fxml"));
             Node cryptonoseGuiNode = fxmlLoader.load();
             Tab tab = new Tab(exchangeSpecs.getName());
             Pane graphicsPane = new Pane();
