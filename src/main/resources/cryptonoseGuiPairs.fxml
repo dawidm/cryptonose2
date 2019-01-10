@@ -19,8 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<StackPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPairsController">
+<StackPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPairsController">
    <children>
       <GridPane fx:id="loadingGridPane" visible="false">
         <columnConstraints>
@@ -33,19 +32,19 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Loading currency pairs..." GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
          </children>
       </GridPane>
-      <HBox fx:id="mainHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="733.0" spacing="5.0">
+      <HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+            <VBox HBox.hgrow="ALWAYS">
                <children>
-                  <TitledPane animated="false" collapsible="false" VBox.vgrow="ALWAYS">
+                  <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0">
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <TableView fx:id="minVolumeTableView" layoutX="20.0" layoutY="-20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="minVolumeTableView" layoutX="20.0" layoutY="-20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn prefWidth="200.0" text="Active" />
-                                  <TableColumn prefWidth="200.0" text="Market" />
-                                    <TableColumn prefWidth="200.0" text="Min volume" />
+                                  <TableColumn prefWidth="10.0" text="Active" />
+                                  <TableColumn prefWidth="20.0" text="Market" />
+                                    <TableColumn prefWidth="20.0" text="Min volume" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -67,9 +66,9 @@
                   </TitledPane>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                <children>
-                  <TitledPane animated="false" collapsible="false" VBox.vgrow="ALWAYS">
+                  <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <graphic>
                         <RadioButton fx:id="choosePairsRadioButton" mnemonicParsing="false" onAction="#radioButtonClick" text="Choose pairs" toggleGroup="$radio">
                            <font>
@@ -78,15 +77,15 @@
                         </RadioButton>
                      </graphic>
                      <content>
-                        <VBox fx:id="choosePairsVBox" spacing="5.0">
+                        <VBox fx:id="choosePairsVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
                            <children>
-                              <HBox spacing="5.0">
+                              <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
                                  <children>
-                                    <TextField promptText="Filter..." HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" text="Select all" />
+                                    <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Filter..." HBox.hgrow="ALWAYS" />
+                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Select all" />
                                  </children>
                               </HBox>
-                              <ListView />
+                              <ListView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                      </content>

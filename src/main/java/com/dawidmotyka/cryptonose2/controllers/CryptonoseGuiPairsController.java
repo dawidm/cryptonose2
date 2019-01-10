@@ -135,14 +135,17 @@ public class CryptonoseGuiPairsController implements Initializable {
         }
         minVolumeTableView.getColumns().clear();
         TableColumn<CounterCurrencyTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
+        activeTableColumn.setPrefWidth(10);
         activeTableColumn.setEditable(true);
         activeTableColumn.setCellValueFactory(tableItem->tableItem.getValue().getActive());
         activeTableColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
         activeTableColumn.setOnEditCommit(event -> event.getRowValue().setActive(event.getNewValue()));
         TableColumn<CounterCurrencyTableItem,String> marketTableColumn = new TableColumn("Market");
+        marketTableColumn.setPrefWidth(20);
         marketTableColumn.setCellValueFactory(tableItem->tableItem.getValue().getName());
         marketTableColumn.setEditable(false);
         TableColumn<CounterCurrencyTableItem,String> minVolTableColumn = new TableColumn("Min volume");
+        minVolTableColumn.setPrefWidth(20);
         minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().getMinVolume().asString());
         minVolTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         minVolTableColumn.setOnEditCommit(value -> {
