@@ -1,6 +1,9 @@
 package com.dawidmotyka.cryptonose2.controllers;
 
+import com.dawidmotyka.exchangeutils.CurrencyPairConverter;
+import com.dawidmotyka.exchangeutils.NotImplementedException;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,49 +24,63 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 
 import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 public class CryptonoseGuiPairsController implements Initializable {
 
     public static final double DEFAULT_MIN_VOLUME = 200;
 
-    public static class CounterCurrencyTableItem {
+    public static class MarketTableItem {
 
         private final SimpleBooleanProperty active = new SimpleBooleanProperty();
         private final SimpleStringProperty name = new SimpleStringProperty();
         private final SimpleDoubleProperty minVolume = new SimpleDoubleProperty();
 
-        public CounterCurrencyTableItem(boolean active, String name, double minVolume) {
+        public MarketTableItem(boolean active, String name, double minVolume) {
             this.active.set(active);
             this.name.set(name);
             this.minVolume.set(minVolume);
         }
 
-        public SimpleBooleanProperty getActive() {
+        public boolean isActive() {
+            return active.get();
+        }
+
+        public SimpleBooleanProperty activeProperty() {
             return active;
+        }
+
+        public String getName() {
+            return name.get();
+        }
+
+        public SimpleStringProperty nameProperty() {
+            return name;
+        }
+
+        public double getMinVolume() {
+            return minVolume.get();
+        }
+
+        public SimpleDoubleProperty minVolumeProperty() {
+            return minVolume;
         }
 
         public void setActive(boolean active) {
             this.active.set(active);
-        }
-
-        public SimpleStringProperty getName() {
-            return name;
-        }
-
-        public SimpleDoubleProperty getMinVolume() {
-            return minVolume;
         }
 
         public void setMinVolume(double minVolume) {
@@ -71,11 +88,11 @@ public class CryptonoseGuiPairsController implements Initializable {
         }
     }
 
-    public class PairsListItem {
+    public class PairListItem {
         private final BooleanProperty selectedBooleanProperty=new SimpleBooleanProperty(false);
         private CurrencyPair currencyPair;
 
-        public PairsListItem(boolean selected, CurrencyPair currencyPair) {
+        public PairListItem(boolean selected, CurrencyPair currencyPair) {
             selectedBooleanProperty.setValue(selected);
             this.currencyPair=currencyPair;
         }
@@ -114,11 +131,14 @@ public class CryptonoseGuiPairsController implements Initializable {
     @FXML
     public VBox choosePairsVBox;
     @FXML
-    public ListView<PairsListItem> currencyPairsListView;
+    public ListView<PairListItem> currencyPairsListView;
     @FXML
     public TextField filterTextField;
 
     private ExchangeSpecs exchangeSpecs;
+    private ObservableList<MarketTableItem> marketsObservableList;
+    private ObservableList<PairListItem> pairsObservableList;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -140,6 +160,7 @@ public class CryptonoseGuiPairsController implements Initializable {
                 loadingGridPane.setVisible(false);
                 fillTable(currencyPairList);
                 fillList(currencyPairList);
+                loadPreferences();
             });
         } catch (Exception e) {
             logger.log(Level.SEVERE,"when loading pairs from exchange",e);
@@ -151,24 +172,24 @@ public class CryptonoseGuiPairsController implements Initializable {
         Set<Currency> baseCurrencies = new HashSet<>();
         for(CurrencyPair currentCurrencyPair: currencyPairsList)
             baseCurrencies.add(currentCurrencyPair.counter);
-        ObservableList<CounterCurrencyTableItem> tableItemObservableList = FXCollections.observableArrayList();
+        marketsObservableList = FXCollections.observableArrayList();
         for(Currency currency : baseCurrencies) {
-            tableItemObservableList.add(new CounterCurrencyTableItem(false,currency.getSymbol(),DEFAULT_MIN_VOLUME));
+            marketsObservableList.add(new MarketTableItem(false,currency.getSymbol(),DEFAULT_MIN_VOLUME));
         }
         minVolumeTableView.getColumns().clear();
-        TableColumn<CounterCurrencyTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
+        TableColumn<MarketTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
         activeTableColumn.setPrefWidth(10.0);
         activeTableColumn.setEditable(true);
-        activeTableColumn.setCellValueFactory(tableItem->tableItem.getValue().getActive());
+        activeTableColumn.setCellValueFactory(tableItem->tableItem.getValue().activeProperty());
         activeTableColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
         activeTableColumn.setOnEditCommit(event -> event.getRowValue().setActive(event.getNewValue()));
-        TableColumn<CounterCurrencyTableItem,String> marketTableColumn = new TableColumn("Market");
+        TableColumn<MarketTableItem,String> marketTableColumn = new TableColumn("Market");
         marketTableColumn.setPrefWidth(20.0);
-        marketTableColumn.setCellValueFactory(tableItem->tableItem.getValue().getName());
+        marketTableColumn.setCellValueFactory(tableItem->tableItem.getValue().nameProperty());
         marketTableColumn.setEditable(false);
-        TableColumn<CounterCurrencyTableItem,String> minVolTableColumn = new TableColumn("Min 24h volume");
+        TableColumn<MarketTableItem,String> minVolTableColumn = new TableColumn("Min 24h volume");
         minVolTableColumn.setPrefWidth(20.0);
-        minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().getMinVolume().asString());
+        minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().minVolumeProperty().asString());
         minVolTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         minVolTableColumn.setOnEditCommit(value -> {
             try {
@@ -183,31 +204,84 @@ public class CryptonoseGuiPairsController implements Initializable {
         });
         minVolTableColumn.setEditable(true);
         minVolumeTableView.getColumns().addAll(activeTableColumn,marketTableColumn,minVolTableColumn);
-        minVolumeTableView.setItems(tableItemObservableList);
+        minVolumeTableView.setItems(marketsObservableList);
         minVolumeTableView.setEditable(true);
     }
 
     public void fillList(List<CurrencyPair> currencyPairList) {
-        ObservableList<PairsListItem> pairsObservableList = FXCollections.observableArrayList();
-        FilteredList<PairsListItem> filteredPairsList = new FilteredList<>(pairsObservableList);
-        filterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(pairsListItem -> pairsListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
+        pairsObservableList = FXCollections.observableArrayList();
+        FilteredList<PairListItem> filteredPairsList = new FilteredList<>(pairsObservableList);
+        filterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(pairListItem -> pairListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
         for(CurrencyPair currentCurrencyPair : currencyPairList) {
-            pairsObservableList.add(new PairsListItem(false,currentCurrencyPair));
+            pairsObservableList.add(new PairListItem(false,currentCurrencyPair));
         }
         currencyPairsListView.setCellFactory(CheckBoxListCell.forListView(param -> param.selectedBooleanProperty));
         currencyPairsListView.setItems(filteredPairsList);
     }
 
+    public void loadPreferences() {
+        Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
+        String markets = preferences.get("markets","");
+        if(!markets.equals("")) {
+            Arrays.stream(markets.split(",")).forEach(market -> {
+                Optional<MarketTableItem> optionalMarketTableItem = marketsObservableList.stream().filter(marketTableItem -> marketTableItem.getName().equals(market)).findAny();
+                if(optionalMarketTableItem.isPresent()) {
+                    MarketTableItem marketTableItem = optionalMarketTableItem.get();
+                    marketTableItem.setActive(true);
+                    marketTableItem.setMinVolume(preferences.getDouble(market,DEFAULT_MIN_VOLUME));
+                }
+            });
+        }
+        Set<String> apiSymbolsSet = new HashSet<>(Arrays.asList(preferences.get("pairsApiSymbols","").split(",")));
+        for(PairListItem pairListItem : pairsObservableList) {
+            if(apiSymbolsSet.contains(PairSymbolConverter.toApiSymbol(exchangeSpecs,pairListItem.getCurrencyPair())))
+                pairListItem.setSelected(true);
+        }
+    }
+
+    public void savePreferences() {
+        Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
+        preferences.put("markets",
+                marketsObservableList.stream().
+                        filter(marketTableItem -> marketTableItem.isActive()).
+                        map(marketTableItem -> marketTableItem.getName()).
+                        collect(Collectors.joining(","))
+        );
+        marketsObservableList.stream().
+                filter(marketTableItem -> marketTableItem.isActive()).
+                forEach(marketTableItem -> preferences.putDouble(marketTableItem.getName(),marketTableItem.getMinVolume()));
+        preferences.put("pairsApiSymbols",
+                pairsObservableList.stream().
+                        filter(pairListItem -> pairListItem.isSelected()).
+                        map(pairListItem -> PairSymbolConverter.toApiSymbol(exchangeSpecs, pairListItem.getCurrencyPair())).
+                        collect(Collectors.joining(","))
+        );
+    }
+
     public void selectVisibleClick() {
-        for(PairsListItem pairsListItem : currencyPairsListView.getItems()) {
-            pairsListItem.setSelected(true);
+        for(PairListItem pairListItem : currencyPairsListView.getItems()) {
+            pairListItem.setSelected(true);
         }
     }
 
     public void deselectAllClick() {
-        for(PairsListItem pairsListItem : (ObservableList<PairsListItem>)((FilteredList)currencyPairsListView.getItems()).getSource()) {
-            pairsListItem.setSelected(false);
+        for(PairListItem pairListItem : (ObservableList<PairListItem>)((FilteredList)currencyPairsListView.getItems()).getSource()) {
+            pairListItem.setSelected(false);
         }
+    }
+
+    public void saveClick() {
+        savePreferences();
+        closeStage();
+    }
+
+    public void cancelClick() {
+        closeStage();
+    }
+
+    private void closeStage() {
+        Stage stage = (Stage)mainHBox.getScene().getWindow();
+        stage.close();
     }
 
 }
