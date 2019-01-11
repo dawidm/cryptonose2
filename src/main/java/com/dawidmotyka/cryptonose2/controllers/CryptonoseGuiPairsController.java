@@ -1,7 +1,5 @@
 package com.dawidmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.exchangeutils.CurrencyPairConverter;
-import com.dawidmotyka.exchangeutils.NotImplementedException;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import javafx.application.Platform;
@@ -14,10 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -32,8 +27,7 @@ import org.knowm.xchange.currency.CurrencyPair;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -134,11 +128,13 @@ public class CryptonoseGuiPairsController implements Initializable {
     public ListView<PairListItem> currencyPairsListView;
     @FXML
     public TextField filterTextField;
+    @FXML
+    public Button saveButton;
 
     private ExchangeSpecs exchangeSpecs;
     private ObservableList<MarketTableItem> marketsObservableList;
     private ObservableList<PairListItem> pairsObservableList;
-
+    private Future loadPairsFuture;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -148,19 +144,22 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void setExchange(ExchangeSpecs exchange) {
         this.exchangeSpecs=exchange;
-        new Thread(this::loadPairs).start();
+        loadPairsFuture=Executors.newSingleThreadExecutor().submit(this::loadPairs);
     }
 
     public void loadPairs() {
         try {
             Exchange exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecs.getXchangeExchange());
             List<CurrencyPair> currencyPairList = exchange.getExchangeSymbols();
+            if(Thread.interrupted())
+                return;
             Platform.runLater(()->{
                 mainHBox.setVisible(true);
                 loadingGridPane.setVisible(false);
                 fillTable(currencyPairList);
                 fillList(currencyPairList);
                 loadPreferences();
+                saveButton.setDisable(false);
             });
         } catch (Exception e) {
             logger.log(Level.SEVERE,"when loading pairs from exchange",e);
@@ -276,6 +275,8 @@ public class CryptonoseGuiPairsController implements Initializable {
     }
 
     public void cancelClick() {
+        if(loadPairsFuture!=null)
+            loadPairsFuture.cancel(true);
         closeStage();
     }
 

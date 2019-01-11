@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<StackPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPairsController">
+<StackPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPairsController">
    <children>
       <GridPane fx:id="loadingGridPane" visible="false">
         <columnConstraints>
@@ -98,7 +98,7 @@
             <HBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0" VBox.vgrow="NEVER">
                <children>
                   <Button mnemonicParsing="false" onAction="#cancelClick" prefWidth="100.0" text="Cancel" />
-                  <Button mnemonicParsing="false" onAction="#saveClick" prefWidth="100.0" text="Save" />
+                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#saveClick" prefWidth="100.0" text="Save" />
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
