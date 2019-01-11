@@ -2,34 +2,35 @@ package com.dawidmotyka.cryptonose2.controllers;
 
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableStringValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +71,37 @@ public class CryptonoseGuiPairsController implements Initializable {
         }
     }
 
+    public class PairsListItem {
+        private final BooleanProperty selectedBooleanProperty=new SimpleBooleanProperty(false);
+        private CurrencyPair currencyPair;
+
+        public PairsListItem(boolean selected, CurrencyPair currencyPair) {
+            selectedBooleanProperty.setValue(selected);
+            this.currencyPair=currencyPair;
+        }
+
+        public boolean isSelected() {
+            return selectedBooleanProperty.get();
+        }
+
+        public void setSelected(boolean selectedBooleanProperty) {
+            this.selectedBooleanProperty.set(selectedBooleanProperty);
+        }
+
+        public BooleanProperty selectedBooleanPropertyProperty() {
+            return selectedBooleanProperty;
+        }
+
+        public CurrencyPair getCurrencyPair() {
+            return currencyPair;
+        }
+
+        @Override
+        public String toString() {
+            return currencyPair.toString();
+        }
+    }
+
     public static final Logger logger = Logger.getLogger(CryptonoseGuiPairsController.class.getName());
 
 
@@ -78,13 +110,13 @@ public class CryptonoseGuiPairsController implements Initializable {
     @FXML
     public GridPane loadingGridPane;
     @FXML
-    public RadioButton minVolumeRadioButton;
-    @FXML
-    public RadioButton choosePairsRadioButton;
-    @FXML
     public TableView minVolumeTableView;
     @FXML
     public VBox choosePairsVBox;
+    @FXML
+    public ListView<PairsListItem> currencyPairsListView;
+    @FXML
+    public TextField filterTextField;
 
     private ExchangeSpecs exchangeSpecs;
 
@@ -92,17 +124,6 @@ public class CryptonoseGuiPairsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         mainHBox.setVisible(false);
         loadingGridPane.setVisible(true);
-        radioButtonClick();
-    }
-
-    public void radioButtonClick() {
-        if(minVolumeRadioButton.isSelected()==true) {
-            minVolumeTableView.setDisable(false);
-            choosePairsVBox.setDisable(true);
-        } else {
-            minVolumeTableView.setDisable(true);
-            choosePairsVBox.setDisable(false);
-        }
     }
 
     public void setExchange(ExchangeSpecs exchange) {
@@ -118,6 +139,7 @@ public class CryptonoseGuiPairsController implements Initializable {
                 mainHBox.setVisible(true);
                 loadingGridPane.setVisible(false);
                 fillTable(currencyPairList);
+                fillList(currencyPairList);
             });
         } catch (Exception e) {
             logger.log(Level.SEVERE,"when loading pairs from exchange",e);
@@ -135,30 +157,57 @@ public class CryptonoseGuiPairsController implements Initializable {
         }
         minVolumeTableView.getColumns().clear();
         TableColumn<CounterCurrencyTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
-        activeTableColumn.setPrefWidth(10);
+        activeTableColumn.setPrefWidth(10.0);
         activeTableColumn.setEditable(true);
         activeTableColumn.setCellValueFactory(tableItem->tableItem.getValue().getActive());
         activeTableColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
         activeTableColumn.setOnEditCommit(event -> event.getRowValue().setActive(event.getNewValue()));
         TableColumn<CounterCurrencyTableItem,String> marketTableColumn = new TableColumn("Market");
-        marketTableColumn.setPrefWidth(20);
+        marketTableColumn.setPrefWidth(20.0);
         marketTableColumn.setCellValueFactory(tableItem->tableItem.getValue().getName());
         marketTableColumn.setEditable(false);
-        TableColumn<CounterCurrencyTableItem,String> minVolTableColumn = new TableColumn("Min volume");
-        minVolTableColumn.setPrefWidth(20);
+        TableColumn<CounterCurrencyTableItem,String> minVolTableColumn = new TableColumn("Min 24h volume");
+        minVolTableColumn.setPrefWidth(20.0);
         minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().getMinVolume().asString());
         minVolTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         minVolTableColumn.setOnEditCommit(value -> {
-            if (value.getNewValue().matches("\\d*")) {
+            try {
                 double newVal = Double.parseDouble(value.getNewValue());
-                if(newVal>0)
+                if (newVal > 0) {
                     value.getRowValue().setMinVolume(newVal);
-            } minVolumeTableView.refresh();
+                } else
+                    throw new NumberFormatException();
+            } catch (NumberFormatException e) {
+                minVolumeTableView.refresh();
+            }
         });
         minVolTableColumn.setEditable(true);
         minVolumeTableView.getColumns().addAll(activeTableColumn,marketTableColumn,minVolTableColumn);
         minVolumeTableView.setItems(tableItemObservableList);
         minVolumeTableView.setEditable(true);
+    }
+
+    public void fillList(List<CurrencyPair> currencyPairList) {
+        ObservableList<PairsListItem> pairsObservableList = FXCollections.observableArrayList();
+        FilteredList<PairsListItem> filteredPairsList = new FilteredList<>(pairsObservableList);
+        filterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(pairsListItem -> pairsListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
+        for(CurrencyPair currentCurrencyPair : currencyPairList) {
+            pairsObservableList.add(new PairsListItem(false,currentCurrencyPair));
+        }
+        currencyPairsListView.setCellFactory(CheckBoxListCell.forListView(param -> param.selectedBooleanProperty));
+        currencyPairsListView.setItems(filteredPairsList);
+    }
+
+    public void selectVisibleClick() {
+        for(PairsListItem pairsListItem : currencyPairsListView.getItems()) {
+            pairsListItem.setSelected(true);
+        }
+    }
+
+    public void deselectAllClick() {
+        for(PairsListItem pairsListItem : (ObservableList<PairsListItem>)((FilteredList)currencyPairsListView.getItems()).getSource()) {
+            pairsListItem.setSelected(false);
+        }
     }
 
 }
