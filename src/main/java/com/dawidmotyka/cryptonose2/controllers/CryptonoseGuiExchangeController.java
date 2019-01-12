@@ -4,6 +4,7 @@ import com.dawidmotyka.cryptonose2.*;
 import com.dawidmotyka.cryptonoseengine.*;
 import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.*;
+import com.dawidmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -158,19 +159,35 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         if(exchangeSpecs.getClass().equals(PoloniexExchangeSpecs.class)
                 || exchangeSpecs.getClass().equals(BittrexExchangeSpecs.class)
                 || exchangeSpecs.getClass().equals(BinanceExchangeSpecs.class)) {
-            engine = CryptonoseGenericEngine.withoutProviderCurrencyPairs(exchangeSpecs,
+            Preferences pairsPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
+            String markets = pairsPreferences.get("markets","");
+            ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
+            if(!markets.equals("")) {
+                Arrays.stream(markets.split(",")).forEach(market -> {
+                    Double minVolume = pairsPreferences.getDouble(market,-1.0);
+                    if(minVolume>=0)
+                        pairSelectionCriteria.add(new PairSelectionCriteria(market,minVolume));
+                });
+            }
+            String pairs = pairsPreferences.get("pairsApiSymbols",null);
+            String[] additionalPairs;
+            if(pairs==null || pairs.equals(""))
+                additionalPairs = new String[0];
+            else
+                additionalPairs=pairs.split(",");
+            engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
                     this,
                     timePeriods,
                     RELATIVE_CHANGE_NUM_CANDLES,
-                    "BTC",
-                    enginePreferences.getInt("minVolume",DEFAULT_MIN_VOLUME_VALUE));
+                    pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
+                    additionalPairs);
             engine.autoRefreshPairData(enginePreferences.getInt("autoRefreshDataMinutes", DEFAULT_AUTO_REFRESH_PAIR_DATA_VALUE));
         } else if (exchangeSpecs.getClass().equals(XtbExchangeSpecs.class)) {
             Properties properties = new Properties();
             String propertiesFileName=exchangeSpecs.getClass().getSimpleName()+".settings";
             try {
                 properties.load(new FileInputStream(propertiesFileName));
-                engine = CryptonoseGenericEngine.withProviderCurrencyPairs(exchangeSpecs,this,timePeriods,RELATIVE_CHANGE_NUM_CANDLES,properties.getProperty("pairs").split(","));
+                engine = CryptonoseGenericEngine.withProvidedCurrencyPairs(exchangeSpecs,this,timePeriods,RELATIVE_CHANGE_NUM_CANDLES,properties.getProperty("pairs").split(","));
             } catch (IOException e) {
                 consoleLog("error reading pairs from " + propertiesFileName);
                 return;
