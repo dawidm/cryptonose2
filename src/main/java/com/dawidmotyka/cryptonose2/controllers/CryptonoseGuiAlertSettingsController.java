@@ -142,12 +142,17 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void saveForAllExchanges(PriceAlertThresholds[] priceAlertThresholds) {
-        for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.EXCHANGE_SPECSS) {
-            Preferences currentPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(currentExchangeSpecs.getName());
-            priceAlertThresholds[0].toPreferences(currentPreferences,""+timePeriods[0]);
-            priceAlertThresholds[1].toPreferences(currentPreferences,""+timePeriods[1]);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will replace settings for all available exchanges", ButtonType.OK, ButtonType.CANCEL);
+        alert.getDialogPane().setPrefWidth(500);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.EXCHANGE_SPECSS) {
+                Preferences currentPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(currentExchangeSpecs.getName());
+                priceAlertThresholds[0].toPreferences(currentPreferences,""+timePeriods[0]);
+                priceAlertThresholds[1].toPreferences(currentPreferences,""+timePeriods[1]);
+            }
+            closeStage();
         }
-        closeStage();
     }
 
     public void saveClick() {
