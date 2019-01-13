@@ -54,14 +54,18 @@ public class CryptonoseGuiController extends Application {
 
     private Scene mainScene;
 
+    private Stage primaryStage;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-        StyleManager.getInstance().addUserAgentStylesheet("FlatBee.css");
+        //StyleManager.getInstance().addUserAgentStylesheet("FlatBee.css");
+        //StyleManager.getInstance().addUserAgentStylesheet("JMetroLightTheme.css");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
         fxmlLoader.setController(this);
         Node cryptonoseGuiFxNode = fxmlLoader.load();
@@ -80,18 +84,24 @@ public class CryptonoseGuiController extends Application {
         }
         primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icon24.png")));
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        double mainWidth, mainHeight, mainX, mainY;
-        mainWidth=preferences.getDouble("mainWidth",primaryScreenBounds.getWidth()* MAIN_WINDOW_WIDTH_DEF_MULTIPLIER);
-        mainHeight=preferences.getDouble("mainWidth",primaryScreenBounds.getHeight()* MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER);
-        mainScene = new Scene((VBox)cryptonoseGuiFxNode, mainWidth, mainHeight);
-        mainX=preferences.getDouble("mainX",-1.0);
-        mainY=preferences.getDouble("mainY",-1.0);
-        if(mainX<0.0 || mainY<0.0)
-            primaryStage.centerOnScreen();
-        else {
-            primaryStage.setX(mainX);
-            primaryStage.setY(mainY);
+        if(preferences.getBoolean("mainIsMaximized",false)) {
+            primaryStage.setMaximized(true);
+        } else {
+            double mainWidth, mainHeight, mainX, mainY;
+            mainWidth = preferences.getDouble("mainWidth", primaryScreenBounds.getWidth() * MAIN_WINDOW_WIDTH_DEF_MULTIPLIER);
+            mainHeight = preferences.getDouble("mainHeight", primaryScreenBounds.getHeight() * MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER);
+            primaryStage.setWidth(mainWidth);
+            primaryStage.setHeight(mainHeight);
+            mainX = preferences.getDouble("mainX", -1.0);
+            mainY = preferences.getDouble("mainY", -1.0);
+            if (mainX < 0.0 || mainY < 0.0)
+                primaryStage.centerOnScreen();
+            else {
+                primaryStage.setX(mainX);
+                primaryStage.setY(mainY);
+            }
         }
+        mainScene = new Scene((VBox) cryptonoseGuiFxNode);
         mainScene.setOnKeyPressed(event -> {
             if(mainTabPane.getSelectionModel().getSelectedItem().getContent().getOnKeyPressed()!=null)
                 mainTabPane.getSelectionModel().getSelectedItem().getContent().getOnKeyPressed().handle(event);
@@ -167,10 +177,11 @@ public class CryptonoseGuiController extends Application {
     private void saveSceneSizePosition() {
         if(mainScene!=null) {
             Preferences preferences = Preferences.userNodeForPackage(this.getClass());
-            preferences.putDouble("mainWidth",mainScene.getWidth());
-            preferences.putDouble("mainHeight",mainScene.getHeight());
-            preferences.putDouble("mainX",mainScene.getX());
-            preferences.putDouble("mainY",mainScene.getY());
+            preferences.putBoolean("mainIsMaximized",primaryStage.isMaximized());
+            preferences.putDouble("mainWidth",primaryStage.getWidth());
+            preferences.putDouble("mainHeight",primaryStage.getHeight());
+            preferences.putDouble("mainX",primaryStage.getX());
+            preferences.putDouble("mainY",primaryStage.getY());
         }
     }
 
