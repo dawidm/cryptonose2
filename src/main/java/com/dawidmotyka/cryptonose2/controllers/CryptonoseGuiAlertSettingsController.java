@@ -2,12 +2,14 @@ package com.dawidmotyka.cryptonose2.controllers;
 
 import com.dawidmotyka.cryptonose2.DecimalFormatterUnaryOperator;
 import com.dawidmotyka.cryptonose2.PriceAlertThresholds;
+import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -22,21 +24,39 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     private Preferences alertPreferences;
 
     @FXML
-    public TextField requiredRisingTextField;
+    public HBox mainHBox;
     @FXML
-    public TextField requiredDroppingTextField;
+    public TextField p1requiredRisingTextField;
     @FXML
-    public TextField requiredRelativeRisingTextField;
+    public TextField p1requiredDroppingTextField;
     @FXML
-    public TextField requiredRelativeDroppingTextField;
+    public TextField p1requiredRelativeRisingTextField;
     @FXML
-    public TextField sufficientRelativeRisingTextField;
+    public TextField p1requiredRelativeDroppingTextField;
     @FXML
-    public TextField sufficientRelativeDroppingTextField;
+    public TextField p1sufficientRelativeRisingTextField;
     @FXML
-    public ListView timePeriodsListView;
+    public TextField p1sufficientRelativeDroppingTextField;
     @FXML
-    public Label titleLabel;
+    public Label p1titleLabel;
+    @FXML
+    public TextField p2requiredRisingTextField;
+    @FXML
+    public TextField p2requiredDroppingTextField;
+    @FXML
+    public TextField p2requiredRelativeRisingTextField;
+    @FXML
+    public TextField p2requiredRelativeDroppingTextField;
+    @FXML
+    public TextField p2sufficientRelativeRisingTextField;
+    @FXML
+    public TextField p2sufficientRelativeDroppingTextField;
+    @FXML
+    public Label p2titleLabel;
+    @FXML
+    public TitledPane p2periodSettingsTitledPane;
+
+    private int[] timePeriods;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,39 +64,68 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void addFormatters() {
-        requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p2requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p2requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p2requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p2requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p2sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p2sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
     }
 
     private void fillTextFields() {
-        String selectedTimePeriod = timePeriodsListView.getSelectionModel().getSelectedItem().toString();
-        PriceAlertThresholds priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,selectedTimePeriod);
-        titleLabel.setText(selectedTimePeriod+"s period alerts settings");
-        String format = "%.2f";
-        requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
-        requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
-        requiredRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeRisingValue()));
-        requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
-        sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
-        sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
+            int p1timePeriod=timePeriods[0];
+            PriceAlertThresholds priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p1timePeriod);
+            p1titleLabel.setText(TimeConverter.secondsToMinutesHoursDays(p1timePeriod)+" period alerts settings");
+            String format = "%.2f";
+            p1requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
+            p1requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
+            p1requiredRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeRisingValue()));
+            p1requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
+            p1sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
+            p1sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
+            int p2timePeriod=timePeriods[1];
+            priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p2timePeriod);
+            p2titleLabel.setText(TimeConverter.secondsToMinutesHoursDays(p2timePeriod)+" period alerts settings");
+            p2requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
+            p2requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
+            p2requiredRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeRisingValue()));
+            p2requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
+            p2sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
+            p2sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
+
     }
 
-    private PriceAlertThresholds readTextFields() throws NumberFormatException {
-        return new PriceAlertThresholds(Double.parseDouble(requiredRisingTextField.getText()),
-                Double.parseDouble(requiredDroppingTextField.getText()),
-                Double.parseDouble(requiredRelativeRisingTextField.getText()),
-                Double.parseDouble(requiredRelativeDroppingTextField.getText()),
-                Double.parseDouble(sufficientRelativeRisingTextField.getText()),
-                Double.parseDouble(sufficientRelativeDroppingTextField.getText()));
+    private PriceAlertThresholds[] readTextFields() throws NumberFormatException {
+        return new PriceAlertThresholds[]{
+                new PriceAlertThresholds(
+                        Double.parseDouble(p1requiredRisingTextField.getText()),
+                        Double.parseDouble(p1requiredDroppingTextField.getText()),
+                        Double.parseDouble(p1requiredRelativeRisingTextField.getText()),
+                        Double.parseDouble(p1requiredRelativeDroppingTextField.getText()),
+                        Double.parseDouble(p1sufficientRelativeRisingTextField.getText()),
+                        Double.parseDouble(p1sufficientRelativeDroppingTextField.getText())),
+                new PriceAlertThresholds(
+                        Double.parseDouble(p2requiredRisingTextField.getText()),
+                        Double.parseDouble(p2requiredDroppingTextField.getText()),
+                        Double.parseDouble(p2requiredRelativeRisingTextField.getText()),
+                        Double.parseDouble(p2requiredRelativeDroppingTextField.getText()),
+                        Double.parseDouble(p2sufficientRelativeRisingTextField.getText()),
+                        Double.parseDouble(p2sufficientRelativeDroppingTextField.getText()))
+        };
     }
 
     public void init(ExchangeSpecs exchangeSpecs, int[] timePeriods) {
+        if(timePeriods.length<2) {
+            throw new IllegalArgumentException("timePeriods array should have at least 2 elements");
+        }
         setExchangeClass(exchangeSpecs);
-        setTimePeriods(timePeriods);
+        this.timePeriods=timePeriods;
         fillTextFields();
     }
 
@@ -84,33 +133,32 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         this.alertPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(exchangeSpecs.getName());
     }
 
-    private void setTimePeriods(int[] timePeriods) {
-        for(long currentPeriod : timePeriods)
-            timePeriodsListView.getItems().add(""+currentPeriod);
-        timePeriodsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        timePeriodsListView.getSelectionModel().selectFirst();
-        timePeriodsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> fillTextFields());
+    public void closeStage() {
+        ((Stage)mainHBox.getScene().getWindow()).close();
     }
 
     public void cancelClick(ActionEvent actionEvent) {
-        ((Stage)((Node)actionEvent.getSource()).getScene().getWindow()).close();
+        closeStage();
     }
 
-    private void saveForAllExchanges(PriceAlertThresholds priceAlertThresholds, String timePeriodSeconds) {
+    private void saveForAllExchanges(PriceAlertThresholds[] priceAlertThresholds) {
         for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.EXCHANGE_SPECSS) {
             Preferences currentPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(currentExchangeSpecs.getName());
-            priceAlertThresholds.toPreferences(currentPreferences,timePeriodSeconds);
+            priceAlertThresholds[0].toPreferences(currentPreferences,""+timePeriods[0]);
+            priceAlertThresholds[1].toPreferences(currentPreferences,""+timePeriods[1]);
         }
+        closeStage();
     }
 
     public void saveClick() {
-        String selectedTimePeriod = timePeriodsListView.getSelectionModel().getSelectedItem().toString();
-        readTextFields().toPreferences(alertPreferences,selectedTimePeriod);
+        PriceAlertThresholds[] priceAlertThresholds = readTextFields();
+        priceAlertThresholds[0].toPreferences(alertPreferences,""+timePeriods[0]);
+        priceAlertThresholds[1].toPreferences(alertPreferences,""+timePeriods[1]);
+        closeStage();
     }
 
     public void saveForAllExchangesClick() {
-        String selectedTimePeriod = timePeriodsListView.getSelectionModel().getSelectedItem().toString();
-        saveForAllExchanges(readTextFields(),selectedTimePeriod);
+        saveForAllExchanges(readTextFields());
     }
 
 }
