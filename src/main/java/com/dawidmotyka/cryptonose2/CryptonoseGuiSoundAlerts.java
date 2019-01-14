@@ -24,6 +24,10 @@ public class CryptonoseGuiSoundAlerts {
         this.preferences = preferences;
     }
 
+    public static AudioFileFormat.Type[] getAudioFileTypes() {
+        return AudioSystem.getAudioFileTypes();
+    }
+
     public void soundAlert(PriceAlert priceAlert) {
         if(priceAlert.getPriceChange()>=0)
             soundAlert(CryptonoseGuiSoundAlerts.ALERT_RISING);

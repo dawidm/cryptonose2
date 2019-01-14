@@ -1,5 +1,6 @@
 package com.dawidmotyka.cryptonose2.controllers;
 
+import com.dawidmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -8,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.AudioFileFormat;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -62,7 +64,9 @@ public class CryptonoseGuiSettingsController implements Initializable{
 
     void selectSoundFile(TextField targetEditText) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select browser...");
+        fileChooser.setTitle("Select audio file...");
+        for (AudioFileFormat.Type type : CryptonoseGuiSoundAlerts.getAudioFileTypes())
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(type.toString(),"*."+type.getExtension()));
         File file = fileChooser.showOpenDialog(null);
         if (file==null)
             return;
