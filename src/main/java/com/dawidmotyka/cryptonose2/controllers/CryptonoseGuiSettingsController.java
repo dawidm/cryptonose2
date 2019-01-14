@@ -115,6 +115,7 @@ public class CryptonoseGuiSettingsController implements Initializable{
     }
 
     public void saveClick(ActionEvent actionEvent) {
+        preferences.putBoolean("tryUseDefBrowser",defBrowserCheckbox.isSelected());
         preferences.put("browserPath", browserPathEditText.getText());
         preferences.put("soundRisingPath", priceRisingSoundFileEditText.getText());
         preferences.put("soundDroppingPath", priceFallingSoundFileEditText.getText());
