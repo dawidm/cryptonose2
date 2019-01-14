@@ -3,33 +3,61 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
-<VBox spacing="9.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiSettingsController">
+<?import javafx.scene.text.*?>
+<VBox spacing="9.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiSettingsController">
    <children>
-      <HBox alignment="CENTER_LEFT" spacing="9.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Browser path (%s - chart URL): " />
-            <TextField fx:id="browserPathEditText" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#selectBrowserClick" text="Select browser..." />
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="9.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price rising sound file: " />
-            <TextField fx:id="priceRisingSoundFileEditText" editable="false" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#selectRisingSoundFileClick" text="Select file..." />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" spacing="9.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price falling sound file: " />
-            <TextField fx:id="priceFallingSoundFileEditText" editable="false" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#selectFallingSoundFileClick" text="Select file..." />
-         </children>
-      </HBox>
+      <TitledPane animated="false" collapsible="false" text="Web browser settings">
+        <content>
+            <VBox spacing="7.0">
+               <children>
+                  <CheckBox fx:id="defBrowserCheckbox" mnemonicParsing="false" onAction="#defBrowserCheckboxOnAction" selected="true" text="Try to use default browser" />
+                  <HBox fx:id="browserPathHBox" alignment="CENTER_LEFT" spacing="9.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Browser path (%s - chart URL): " />
+                        <TextField fx:id="browserPathEditText" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#selectBrowserClick" text="Select browser..." />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+        </content>
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TitledPane>
+      <TitledPane animated="false" collapsible="false" text="Price alert sound files">
+        <content>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0">
+               <children>
+                  <TextFlow>
+                     <children>
+                        <Text fx:id="supportedAudioFilesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose files that will be played when price alert occurs. Supported types: " wrappingWidth="600.0" />
+                     </children>
+                  </TextFlow>
+                  <HBox alignment="CENTER_LEFT" spacing="9.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price rising sound file: " />
+                        <TextField fx:id="priceRisingSoundFileEditText" editable="false" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#selectRisingSoundFileClick" text="Select file..." />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="9.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price falling sound file: " />
+                        <TextField fx:id="priceFallingSoundFileEditText" editable="false" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#selectFallingSoundFileClick" text="Select file..." />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+        </content>
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </TitledPane>
       <HBox alignment="CENTER_RIGHT" spacing="9.0">
          <children>
             <Button mnemonicParsing="false" onAction="#cancelClick" prefWidth="100.0" text="Cancel" />
