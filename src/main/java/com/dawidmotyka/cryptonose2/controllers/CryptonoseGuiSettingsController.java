@@ -1,5 +1,6 @@
 package com.dawidmotyka.cryptonose2.controllers;
 
+import com.dawidmotyka.cryptonose2.CryptonoseGuiBrowser;
 import com.dawidmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,8 +49,14 @@ public class CryptonoseGuiSettingsController implements Initializable{
         browserPathEditText.setText(preferences.get("browserPath", ""));
         priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath", ""));
         priceFallingSoundFileEditText.setText(preferences.get("soundDroppingPath", ""));
-        defBrowserCheckbox.setSelected(preferences.getBoolean("tryUseDefBrowser",true));
-        browserPathHBox.setDisable(defBrowserCheckbox.isSelected());
+        if(CryptonoseGuiBrowser.isDefaultBrowserSupported()) {
+            defBrowserCheckbox.setSelected(preferences.getBoolean("tryUseDefBrowser",true));
+            browserPathHBox.setDisable(defBrowserCheckbox.isSelected());
+        } else {
+            defBrowserCheckbox.setSelected(true);
+            defBrowserCheckbox.setDisable(true);
+            defBrowserCheckbox.setText(defBrowserCheckbox.getText()+" (not supported)");
+        }
         supportedAudioFilesText.textProperty().setValue(supportedAudioFilesText.getText()
                 +Arrays.stream(CryptonoseGuiSoundAlerts.getAudioFileTypes()).map(type -> String.format("%s (*.%s)",type.toString(), type.getExtension())).collect(Collectors.joining(", ")));
     }
