@@ -5,6 +5,7 @@ import com.dawidmotyka.cryptonoseengine.*;
 import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.*;
 import com.dawidmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,11 +18,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -152,6 +151,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         if(engine!=null) {
             engine.stop();
             engine = null;
+        }
+        if(scheduledExecutorService!=null) {
+            scheduledExecutorService.shutdown();
         }
     }
 
@@ -303,6 +305,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.showAndWait();
+            engine.stop();
+            startEngine();
         } catch(IOException e) {
             throw new Error(e);
         }
@@ -335,17 +339,27 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void message(EngineMessage msg) {
-        if(msg.getCode()==EngineMessage.ERROR)
+        if(msg.getCode()==EngineMessage.Type.ERROR)
             consoleLog("Error: " + msg.getMessage());
         else
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
-            case EngineMessage.CONNECTED:
+            case CONNECTED:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED);
                 break;
-            case EngineMessage.DISCONNECTED:
+            case DISCONNECTED:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
                 break;
+            case NO_PAIRS:
+                Platform.runLater(()->{
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Got 0 currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
+                    alert.getDialogPane().setPrefWidth(500);
+                    alert.showAndWait();
+                    if (alert.getResult() == ButtonType.YES)
+                        pairsClick();
+                    if(alert.getResult() == ButtonType.NO)
+                        close();
+                });
         }
     }
 
