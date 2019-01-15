@@ -44,10 +44,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
     public static final String DEFAULT_TIME_PERIODS_VALUE = "300,1800";
-    public static final int DEFAULT_MIN_VOLUME_VALUE = 200;
-    public static final int DEFAULT_AUTO_REFRESH_PAIR_DATA_VALUE = 1800;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
-
     private static final boolean CURRENCIES_TABLE_VISIBLE = false;
     private static final long TABLE_UPDATE_FREQUENCY_MILLIS=1000;
     public static final long NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED=60;
@@ -184,7 +181,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                     additionalPairs);
-            engine.autoRefreshPairData(enginePreferences.getInt("autoRefreshDataMinutes", DEFAULT_AUTO_REFRESH_PAIR_DATA_VALUE));
+            //engine.autoRefreshPairData(enginePreferences.getInt("autoRefreshDataMinutes", DEFAULT_AUTO_REFRESH_PAIR_DATA_VALUE));
         } else if (exchangeSpecs.getClass().equals(XtbExchangeSpecs.class)) {
             Properties properties = new Properties();
             String propertiesFileName=exchangeSpecs.getClass().getSimpleName()+".settings";
@@ -455,12 +452,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if (lastTradeTimeMillis!=0) {
                 long lastTradeSecondsAgo = (System.currentTimeMillis() - lastTradeTimeMillis) / 1000;
                 if(lastTradeSecondsAgo>NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED) {
-                    if (!currentConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED))
-                        setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
-                } else if(currentConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED))
-                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED);
+                    
+                }
                 javafx.application.Platform.runLater(() -> {
-                    lastTradeLabel.setText(String.valueOf(lastTradeSecondsAgo) + " seconds ago");
+                    lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago");
                 });
             }
         },1,1, TimeUnit.SECONDS);
