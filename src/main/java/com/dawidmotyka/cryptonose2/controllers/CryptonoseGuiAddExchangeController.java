@@ -38,9 +38,10 @@ public class CryptonoseGuiAddExchangeController implements Initializable {
         exchangeListView.setItems(itemsObservableList);
         itemsObservableList.addAll(exchangeSpecs);
         exchangeListView.setOnMouseClicked(event -> {
-            if(event.getClickCount()>1) {
+            if(event.getClickCount()==1) {
                 ExchangeSpecs selectedExchangeSpecs=(ExchangeSpecs)exchangeListView.getSelectionModel().getSelectedItem();
                 itemsObservableList.remove(selectedExchangeSpecs);
+                exchangeListView.getSelectionModel().select(null);
                 cryptonoseGuiController.loadExchange(selectedExchangeSpecs,true);
                 if(itemsObservableList.size()==0)
                     closeWindow();
