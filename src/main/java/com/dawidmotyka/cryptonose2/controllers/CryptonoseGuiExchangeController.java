@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -301,12 +302,15 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPairs.fxml"));
             Parent root = fxmlLoader.load();
-            ((CryptonoseGuiPairsController)fxmlLoader.getController()).setExchange(exchangeSpecs);
+            AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
+            ((CryptonoseGuiPairsController)fxmlLoader.getController()).init(exchangeSpecs,()->settingsChangedAtomic.set(true));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.showAndWait();
-            engine.stop();
-            startEngine();
+            if(settingsChangedAtomic.get()) {
+                engine.stop();
+                startEngine();
+            }
         } catch(IOException e) {
             throw new Error(e);
         }
@@ -317,12 +321,16 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAlertSettings.fxml"));
             Parent root = fxmlLoader.load();
-            ((CryptonoseGuiAlertSettingsController)fxmlLoader.getController()).init(exchangeSpecs,timePeriods);
+            AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
+            ((CryptonoseGuiAlertSettingsController)fxmlLoader.getController()).init(exchangeSpecs,timePeriods, ()->{
+                settingsChangedAtomic.set(true);
+            });
             Stage stage = new Stage();
             stage.setTitle("Alerts settings: " + exchangeSpecs.getName());
             stage.setScene(new Scene(root));
             stage.showAndWait();
-            initPriceAlertThresholds();
+            if(settingsChangedAtomic.get())
+                initPriceAlertThresholds();
         } catch(IOException e) {
             throw new Error(e);
         }

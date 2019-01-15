@@ -27,7 +27,8 @@ import org.knowm.xchange.currency.CurrencyPair;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -135,6 +136,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     private ObservableList<MarketTableItem> marketsObservableList;
     private ObservableList<PairListItem> pairsObservableList;
     private Future loadPairsFuture;
+    private SettingsChangedNotifier settingsChangedNotifier;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -142,8 +144,9 @@ public class CryptonoseGuiPairsController implements Initializable {
         loadingGridPane.setVisible(true);
     }
 
-    public void setExchange(ExchangeSpecs exchange) {
+    public void init(ExchangeSpecs exchange, SettingsChangedNotifier settingsChangedNotifier) {
         this.exchangeSpecs=exchange;
+        this.settingsChangedNotifier=settingsChangedNotifier;
         loadPairsFuture=Executors.newSingleThreadExecutor().submit(this::loadPairs);
     }
 
@@ -271,6 +274,7 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void saveClick() {
         savePreferences();
+        settingsChangedNotifier.notifySettingsChanged();
         closeStage();
     }
 
