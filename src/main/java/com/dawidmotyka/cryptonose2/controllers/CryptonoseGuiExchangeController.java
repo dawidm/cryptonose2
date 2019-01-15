@@ -323,7 +323,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 settingsChangedAtomic.set(true);
             });
             Stage stage = new Stage();
-            stage.setTitle("Alerts settings: " + exchangeSpecs.getName());
+            stage.setTitle("Alerts conditions: " + exchangeSpecs.getName());
             stage.setScene(new Scene(root));
             stage.showAndWait();
             if(settingsChangedAtomic.get())
@@ -359,6 +359,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 Platform.runLater(()->{
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Got 0 currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
                     alert.getDialogPane().setPrefWidth(500);
+                    alert.setTitle("Pairs settings: " + exchangeSpecs.getName());
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.YES)
                         pairsClick();
@@ -452,7 +453,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if (lastTradeTimeMillis!=0) {
                 long lastTradeSecondsAgo = (System.currentTimeMillis() - lastTradeTimeMillis) / 1000;
                 if(lastTradeSecondsAgo>NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED) {
-                    
+
                 }
                 javafx.application.Platform.runLater(() -> {
                     lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago");
