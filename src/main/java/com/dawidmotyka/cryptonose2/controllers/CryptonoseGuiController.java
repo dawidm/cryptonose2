@@ -6,7 +6,6 @@ package com.dawidmotyka.cryptonose2.controllers;
 
 import com.dawidmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
 import com.dawidmotyka.exchangeutils.exchangespecs.*;
-import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -48,7 +47,7 @@ public class CryptonoseGuiController extends Application {
     @FXML
     public CheckBox notificationCheckBox;
 
-    private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesMap = new HashMap<>();
+    private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
 
     private CryptonoseGuiPriceAlertsTabController priceAlertsTabController;
 
@@ -125,30 +124,30 @@ public class CryptonoseGuiController extends Application {
         priceAlertsTab.setClosable(false);
         mainTabPane.getTabs().add(priceAlertsTab);
         for (ExchangeSpecs exchangeSpecs : loadedExchangesList) {
-            loadExchange(exchangeSpecs);
+            loadExchange(exchangeSpecs,false);
         }
         soundCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesMap.values()) {
+            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
                 cryptonoseGuiExchangeController.enablePlaySound(soundCheckBox.isSelected());
             }
         });
         runBrowserCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesMap.values()) {
+            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
                 cryptonoseGuiExchangeController.enableRunBrowser(runBrowserCheckBox.isSelected());
             }
         });
         notificationCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesMap.values()) {
+            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
                 cryptonoseGuiExchangeController.enableNotification(notificationCheckBox.isSelected());
             }
         });
         primaryStage.show();
     }
 
-    public void loadExchange(ExchangeSpecs exchangeSpecs) {
+    public void loadExchange(ExchangeSpecs exchangeSpecs, boolean activate) {
         try {
             logger.info("loading "+exchangeSpecs.getName());
-            if(activeExchangesMap.keySet().contains(exchangeSpecs))
+            if(activeExchangesControllersMap.keySet().contains(exchangeSpecs))
                 return;
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiExchange.fxml"));
             Node cryptonoseGuiNode = fxmlLoader.load();
@@ -160,14 +159,20 @@ public class CryptonoseGuiController extends Application {
             tab.setGraphic(graphicsPane);
             tab.setContent(cryptonoseGuiNode);
             mainTabPane.getTabs().add(tab);
+            if(activate)
+                mainTabPane.getSelectionModel().select(tab);
             CryptonoseGuiExchangeController cryptonoseGuiExchangeController = fxmlLoader.getController();
             cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,graphicsPane);
             tab.setOnCloseRequest((event) -> {
                 logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
                 new Thread(()-> cryptonoseGuiExchangeController.close()).start();
-                activeExchangesMap.remove(exchangeSpecs);
+                activeExchangesControllersMap.remove(exchangeSpecs);
             });
-            activeExchangesMap.put(exchangeSpecs, cryptonoseGuiExchangeController);
+            cryptonoseGuiExchangeController.soundCheckBox.setSelected(soundCheckBox.isSelected());
+            cryptonoseGuiExchangeController.runBrowserCheckBox.setSelected(runBrowserCheckBox.isSelected());
+            cryptonoseGuiExchangeController.notificationCheckBox.setSelected(notificationCheckBox.isSelected());
+            activeExchangesControllersMap.put(exchangeSpecs, cryptonoseGuiExchangeController);
+
         } catch (IOException e) {
             logger.log(Level.SEVERE,"when loading exchange",e);
             throw new Error();
@@ -187,7 +192,7 @@ public class CryptonoseGuiController extends Application {
 
     private void saveExchangesList() {
         Preferences preferences = Preferences.userNodeForPackage(this.getClass());
-        String activeExchangesString=activeExchangesMap.keySet().stream().map(activeExchange -> activeExchange.getName()).collect(Collectors.joining(","));
+        String activeExchangesString= activeExchangesControllersMap.keySet().stream().map(activeExchange -> activeExchange.getName()).collect(Collectors.joining(","));
         preferences.put("activeExchanges",activeExchangesString);
     }
 
@@ -197,7 +202,7 @@ public class CryptonoseGuiController extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAddExchange.fxml"));
             Parent root = fxmlLoader.load();
             Set<ExchangeSpecs> allExchanges = new HashSet<>(Arrays.asList(EXCHANGE_SPECSS));
-            allExchanges.removeAll(activeExchangesMap.keySet());
+            allExchanges.removeAll(activeExchangesControllersMap.keySet());
             ((CryptonoseGuiAddExchangeController)fxmlLoader.getController()).init(this,allExchanges.toArray(new ExchangeSpecs[allExchanges.size()]));
             Stage stage = new Stage();
             stage.setTitle("Add exchange");
