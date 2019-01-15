@@ -208,6 +208,12 @@ public class CryptonoseGuiPairsController implements Initializable {
         minVolumeTableView.getColumns().addAll(activeTableColumn,marketTableColumn,minVolTableColumn);
         minVolumeTableView.setItems(marketsObservableList);
         minVolumeTableView.setEditable(true);
+        minVolumeTableView.getFocusModel().focusedCellProperty().addListener((observable, oldPos, newPos) -> {
+            if (newPos != null) {
+                TablePosition tablePosition = (TablePosition) newPos;
+                Platform.runLater(() -> minVolumeTableView.edit(tablePosition.getRow(), tablePosition.getTableColumn()));
+            }
+        });
     }
 
     public void fillList(List<CurrencyPair> currencyPairList) {

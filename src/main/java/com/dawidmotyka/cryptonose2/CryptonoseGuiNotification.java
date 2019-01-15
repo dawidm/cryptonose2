@@ -18,7 +18,7 @@ public class CryptonoseGuiNotification {
     public enum NotificationLibrary {CONTROLSFX,DORKBOX,TWINKLE};
 
     public static void notifyPriceAlert(NotificationLibrary notificationLibrary, PriceAlert priceAlert, Runnable action) {
-        String notifyText = String.format("%.2f (rel %.2f), %s (%ds), final price: %.8f",
+        String notifyText = String.format("%.2f%% (rel %.2f), %s (%ds), final price: %.8f",
                 priceAlert.getPriceChange(),
                 priceAlert.getRelativePriceChange(),
                 priceAlert.getFormattedTimePeriod(),

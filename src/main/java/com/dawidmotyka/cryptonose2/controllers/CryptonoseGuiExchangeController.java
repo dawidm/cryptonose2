@@ -236,7 +236,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         lastPriceCol.setCellFactory(col -> new PriceTableCell());
         lastPriceCol.setPrefWidth(150);
 
-        TableColumn p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0]) +" change");
+        TableColumn p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0]) +" % change");
         p1ChangeCol.setCellValueFactory(new PropertyValueFactory<>("P1PercentPriceChange"));
         p1ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1ChangeCol.setPrefWidth(100);
@@ -246,7 +246,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         p1RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1RelativeChangeCol.setPrefWidth(100);
 
-        TableColumn p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" change");
+        TableColumn p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" % change");
         p2ChangeCol.setCellValueFactory(new PropertyValueFactory<>("P2PercentPriceChange"));
         p2ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2ChangeCol.setPrefWidth(100);
