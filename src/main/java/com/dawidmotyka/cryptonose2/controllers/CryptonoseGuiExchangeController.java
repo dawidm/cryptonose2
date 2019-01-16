@@ -6,6 +6,7 @@ import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.*;
 import com.dawidmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -46,7 +46,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public static final String DEFAULT_TIME_PERIODS_VALUE = "300,1800";
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean CURRENCIES_TABLE_VISIBLE = false;
-    private static final long TABLE_UPDATE_FREQUENCY_MILLIS=1000;
+    private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
     public static final long NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED=60;
     public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.CONTROLSFX;
 
@@ -87,21 +87,20 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private Preferences enginePreferences;
     private Preferences cryptonosePreferences;
 
-    private Map<String, PairPriceChanges> pairPriceChangesMap;
-    private ObservableList<PairPriceChanges> pairPriceChangesObservableList;
-    private long lastTableUpdateMillis=0;
-    private CryptonoseGuiConnectionStatus currentConnectionStatus=CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED;
+    private Map<String, TablePairPriceChanges> pairPriceChangesMap=new HashMap<>();
+    private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList;
+    private long lastTableSortMillis =0;
     private long numTradesPerSecond=0;
     private Object numTradesPerSecondLock=new Object();
 
-    class PriceChangesTableCell extends TableCell<PairPriceChanges,Double> {
+    class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
         @Override
-        protected void updateItem(Double item, boolean empty) {
+        protected void updateItem(Number item, boolean empty) {
             super.updateItem(item, empty);
             if(empty)
                 setText(null);
             if(item!=null) {
-                if (item >= 0)
+                if (item.doubleValue() >= 0)
                     setTextFill(Color.GREEN);
                 else
                     setTextFill(Color.RED);
@@ -111,9 +110,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             }
         }
     }
-    class PriceTableCell extends TableCell<PairPriceChanges,Double> {
+    class PriceTableCell extends TableCell<TablePairPriceChanges,Number> {
         @Override
-        protected void updateItem(Double item, boolean empty) {
+        protected void updateItem(Number item, boolean empty) {
             super.updateItem(item, empty);
             if(empty)
                 setText(null);
@@ -204,9 +203,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         startLastTransactionTimer();
         startChangesPerSecondCounter();
         pairPriceChangesMap = new HashMap<>();
-        pairPriceChangesObservableList = FXCollections.observableArrayList();
+        tablePairPriceChangesObservableList = FXCollections.observableArrayList();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
-        showTableCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> currenciesTableView.setVisible(newValue));
+        showTableCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            currenciesTableView.setVisible(newValue);
+            if(newValue)
+                updateTable(Arrays.asList(engine.requestAllPairsChanges()));
+        });
         initShortcuts();
     }
 
@@ -227,47 +230,39 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void initTable() {
-        TableColumn pairNameCol = new TableColumn("Pair name");
-        pairNameCol.setCellValueFactory(new PropertyValueFactory<>("formattedPairName"));
+        TableColumn<TablePairPriceChanges,String> pairNameCol = new TableColumn("Pair name");
+        pairNameCol.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getFormattedPairName()));
         pairNameCol.setPrefWidth(150);
-
-        TableColumn lastPriceCol = new TableColumn("Last price");
-        lastPriceCol.setCellValueFactory(new PropertyValueFactory<>("lastPrice"));
+        TableColumn<TablePairPriceChanges,Number> lastPriceCol = new TableColumn("Last price");
+        lastPriceCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().lastPriceProperty());
         lastPriceCol.setCellFactory(col -> new PriceTableCell());
         lastPriceCol.setPrefWidth(150);
-
-        TableColumn p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0]) +" % change");
-        p1ChangeCol.setCellValueFactory(new PropertyValueFactory<>("P1PercentPriceChange"));
+        TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0]) +" % change");
+        p1ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1PercentChangeProperty());
         p1ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1ChangeCol.setPrefWidth(100);
-
-        TableColumn p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0])+" relative");
-        p1RelativeChangeCol.setCellValueFactory(new PropertyValueFactory<>("P1RelativePriceChange"));
+        TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0])+" relative");
+        p1RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1RelativeChangeProperty());
         p1RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1RelativeChangeCol.setPrefWidth(100);
-
-        TableColumn p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" % change");
-        p2ChangeCol.setCellValueFactory(new PropertyValueFactory<>("P2PercentPriceChange"));
+        TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" % change");
+        p2ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2PercentChangeProperty());
         p2ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2ChangeCol.setPrefWidth(100);
-
-        TableColumn p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" relative");
-        p2RelativeChangeCol.setCellValueFactory(new PropertyValueFactory<>("P2RelativePriceChange"));
+        TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" relative");
+        p2RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2RelativeChangeProperty());
         p2RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2RelativeChangeCol.setPrefWidth(100);
-
-        currenciesTableView.setItems(pairPriceChangesObservableList);
+        currenciesTableView.setItems(tablePairPriceChangesObservableList);
         currenciesTableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol);
-
         currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
         currenciesTableView.setVisible(CURRENCIES_TABLE_VISIBLE);
         showTableCheckBox.setSelected(CURRENCIES_TABLE_VISIBLE);
-
         currenciesTableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
                 if (node instanceof TableRow || node.getParent() instanceof TableRow) {
-                    CryptonoseGuiBrowser.runBrowser(((PairPriceChanges)currenciesTableView.getSelectionModel().getSelectedItem()).getPairName(),exchangeSpecs);
+                    CryptonoseGuiBrowser.runBrowser(((TablePairPriceChanges)currenciesTableView.getSelectionModel().getSelectedItem()).getPairName(),exchangeSpecs);
                 }
             }
         });
@@ -335,7 +330,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void setConnectionStatus(CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
         javafx.application.Platform.runLater(() -> {
-            currentConnectionStatus=cryptonoseGuiConnectionStatus;
             connectionStatusLabel.setText(cryptonoseGuiConnectionStatus.getText());
             graphicsPane.setStyle("-fx-background-color: " + cryptonoseGuiConnectionStatus.getColor());
         });
@@ -383,25 +377,24 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         List<PriceAlert> priceAlerts = cryptonoseGuiAlertChecker.checkAlerts(priceChangesList);
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
-        if(showTableCheckBox.isSelected()) {
-            for (PriceChanges priceChanges : priceChangesList) {
-                Iterator<PairPriceChanges> pairPriceChangesIterator = pairPriceChangesObservableList.iterator();
-                PairPriceChanges pairPriceChanges = pairPriceChangesIterator.hasNext()?pairPriceChangesIterator.next():null;
-                while(pairPriceChangesIterator.hasNext() && !pairPriceChanges.getPairName().equals(priceChanges.getCurrencyPair()))
-                    pairPriceChanges = pairPriceChangesIterator.next();
-                if(pairPriceChanges==null || !pairPriceChanges.getPairName().equals(priceChanges.getCurrencyPair())) {//not found
-                    PairPriceChanges newPairPriceChanges = new PairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair());
-                    pairPriceChangesObservableList.add(newPairPriceChanges);
-                    pairPriceChanges = newPairPriceChanges;
-                }
-                int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? PairPriceChanges.PERIOD1 : PairPriceChanges.PERIOD2;
-                pairPriceChanges.setPriceChanges(priceChanges,period);
-                if(System.currentTimeMillis()-lastTableUpdateMillis>TABLE_UPDATE_FREQUENCY_MILLIS) {
-                    pairPriceChangesObservableList.set(pairPriceChangesObservableList.indexOf(pairPriceChanges), pairPriceChanges);
-                    currenciesTableView.sort();
-                    lastTableUpdateMillis=System.currentTimeMillis();
-                }
+        if(showTableCheckBox.isSelected())
+            updateTable(priceChangesList);
+    }
+
+    private synchronized void updateTable(List<PriceChanges> priceChangesList) {
+        for (PriceChanges priceChanges : priceChangesList) {
+            TablePairPriceChanges tablePairPriceChanges =pairPriceChangesMap.get(priceChanges.getCurrencyPair());
+            if(tablePairPriceChanges ==null) {
+                tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair());
+                pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
+                tablePairPriceChangesObservableList.add(tablePairPriceChanges);
             }
+            int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
+            tablePairPriceChanges.setPriceChanges(priceChanges,period);
+        }
+        if(System.currentTimeMillis()- lastTableSortMillis > TABLE_SORT_FREQUENCY_MILLIS) {
+            currenciesTableView.sort();
+            lastTableSortMillis=System.currentTimeMillis();
         }
     }
 
