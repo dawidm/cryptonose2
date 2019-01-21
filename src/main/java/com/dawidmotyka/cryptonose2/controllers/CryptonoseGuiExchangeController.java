@@ -78,7 +78,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private ExchangeSpecs exchangeSpecs;
     private int[] timePeriods;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
-    private CryptonoseEngineBase engine;
+    private CryptonoseGenericEngine engine;
     long lastTradeTimeMillis = 0;
     private ScheduledExecutorService scheduledExecutorService;
     private Map<Long,PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
@@ -180,6 +180,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                     additionalPairs);
+            engine.enableInitEngineWithLowerPeriodChartData();
             //engine.autoRefreshPairData(enginePreferences.getInt("autoRefreshDataMinutes", DEFAULT_AUTO_REFRESH_PAIR_DATA_VALUE));
         } else if (exchangeSpecs.getClass().equals(XtbExchangeSpecs.class)) {
             Properties properties = new Properties();
