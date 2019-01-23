@@ -43,7 +43,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
-    public static final String DEFAULT_TIME_PERIODS_VALUE = "300,1800";
+    public static final int[] TIME_PERIODS = {300,1800};
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean CURRENCIES_TABLE_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
@@ -76,7 +76,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private Pane graphicsPane;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
     private ExchangeSpecs exchangeSpecs;
-    private int[] timePeriods;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
     private CryptonoseGenericEngine engine;
     long lastTradeTimeMillis = 0;
@@ -131,17 +130,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         alertPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(exchangeSpecs.getName());
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts(cryptonosePreferences);
         enginePreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("enginePreferences").node(exchangeSpecs.getName());
-        enginePreferences.addPreferenceChangeListener(evt -> {updateEnginePreferences();});
-        String[] stringTimePeriods = enginePreferences.get("timePeriods",DEFAULT_TIME_PERIODS_VALUE).split(",");
-        try {
-            timePeriods = new int[]{Integer.parseInt(stringTimePeriods[0]), Integer.parseInt(stringTimePeriods[1])};
-            initPriceAlertThresholds();
-            cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
-            initTable();
-            startEngine();
-        } catch (Exception e) {
-            throw new Error("error reading time period settings for "+exchangeSpecs.getName(),e);
-        }
+        initPriceAlertThresholds();
+        cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
+        initTable();
+        startEngine();
     }
 
     public void close() {
@@ -157,7 +149,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void startEngine() {
         if(exchangeSpecs.getClass().equals(PoloniexExchangeSpecs.class)
                 || exchangeSpecs.getClass().equals(BittrexExchangeSpecs.class)
-                || exchangeSpecs.getClass().equals(BinanceExchangeSpecs.class)) {
+                || exchangeSpecs.getClass().equals(BinanceExchangeSpecs.class)
+                || exchangeSpecs.getClass().equals(BitfinexExchangeSpecs.class)) {
             Preferences pairsPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
             String markets = pairsPreferences.get("markets","");
             ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
@@ -176,7 +169,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 additionalPairs=pairs.split(",");
             engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
                     this,
-                    timePeriods,
+                    TIME_PERIODS,
                     RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                     additionalPairs);
@@ -187,7 +180,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             String propertiesFileName=exchangeSpecs.getClass().getSimpleName()+".settings";
             try {
                 properties.load(new FileInputStream(propertiesFileName));
-                engine = CryptonoseGenericEngine.withProvidedCurrencyPairs(exchangeSpecs,this,timePeriods,RELATIVE_CHANGE_NUM_CANDLES,properties.getProperty("pairs").split(","));
+                engine = CryptonoseGenericEngine.withProvidedCurrencyPairs(exchangeSpecs,this,TIME_PERIODS,RELATIVE_CHANGE_NUM_CANDLES,properties.getProperty("pairs").split(","));
             } catch (IOException e) {
                 consoleLog("error reading pairs from " + propertiesFileName);
                 return;
@@ -214,11 +207,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initShortcuts();
     }
 
-    private void updateEnginePreferences() {
-        //engine.stop();
-        //startEngine();
-    }
-
     private void startChangesPerSecondCounter() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             long currentTps;
@@ -238,19 +226,19 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         lastPriceCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().lastPriceProperty());
         lastPriceCol.setCellFactory(col -> new PriceTableCell());
         lastPriceCol.setPrefWidth(150);
-        TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0]) +" % change");
+        TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[0]) +" % change");
         p1ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1PercentChangeProperty());
         p1ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1ChangeCol.setPrefWidth(100);
-        TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[0])+" relative");
+        TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[0])+" relative");
         p1RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1RelativeChangeProperty());
         p1RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1RelativeChangeCol.setPrefWidth(100);
-        TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" % change");
+        TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[1])+" % change");
         p2ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2PercentChangeProperty());
         p2ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2ChangeCol.setPrefWidth(100);
-        TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(timePeriods[1])+" relative");
+        TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[1])+" relative");
         p2RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2RelativeChangeProperty());
         p2RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2RelativeChangeCol.setPrefWidth(100);
@@ -315,7 +303,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAlertSettings.fxml"));
             Parent root = fxmlLoader.load();
             AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
-            ((CryptonoseGuiAlertSettingsController)fxmlLoader.getController()).init(exchangeSpecs,timePeriods, ()->{
+            ((CryptonoseGuiAlertSettingsController)fxmlLoader.getController()).init(exchangeSpecs,TIME_PERIODS, ()->{
                 settingsChangedAtomic.set(true);
             });
             Stage stage = new Stage();
@@ -390,7 +378,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
                 tablePairPriceChangesObservableList.add(tablePairPriceChanges);
             }
-            int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
+            int period = (priceChanges.getTimePeriodSeconds() == TIME_PERIODS[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
             tablePairPriceChanges.setPriceChanges(priceChanges,period);
         }
         if(System.currentTimeMillis()- lastTableSortMillis > TABLE_SORT_FREQUENCY_MILLIS) {
@@ -432,7 +420,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void initPriceAlertThresholds() {
         logger.info("updating alerts values...");
-        for(long currentTimePeriod : timePeriods) {
+        for(long currentTimePeriod : TIME_PERIODS) {
             priceAlertThresholdsMap.put(new Long(currentTimePeriod),
                     PriceAlertThresholds.fromPreferences(
                             alertPreferences,

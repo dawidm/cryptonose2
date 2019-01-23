@@ -36,7 +36,7 @@ public class CryptonoseGuiController extends Application {
 
     public static final double MAIN_WINDOW_WIDTH_DEF_MULTIPLIER = 0.5;
     public static final double MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER = 0.7;
-    public static final ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{new PoloniexExchangeSpecs(), new BittrexExchangeSpecs(), new BinanceExchangeSpecs(),new XtbExchangeSpecs()};
+    public static final ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{new PoloniexExchangeSpecs(), new BittrexExchangeSpecs(), new BinanceExchangeSpecs(),new XtbExchangeSpecs(), new BitfinexExchangeSpecs()};
 
     @FXML
     public TabPane mainTabPane;
