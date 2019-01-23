@@ -1,9 +1,8 @@
 package com.dawidmotyka.cryptonose2;
 
 import com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
-import com.dawidmotyka.exchangeutils.CurrencyPairConverter;
-import com.dawidmotyka.exchangeutils.exchangespecs.BinanceExchangeSpecs;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 import java.awt.*;
 import java.io.IOException;
@@ -17,8 +16,7 @@ public class CryptonoseGuiBrowser {
     private static final Logger logger = Logger.getLogger(CryptonoseGuiBrowser.class.getName());
     
     public static void runBrowser(String pair, ExchangeSpecs exchangeSpecs){
-        if(exchangeSpecs instanceof BinanceExchangeSpecs)
-            pair=CurrencyPairConverter.binanceApiPairToUrlPair(pair);
+        pair= PairSymbolConverter.apiSymbolToChartUrlSymbol(exchangeSpecs, pair);
         String urlToOpen = exchangeSpecs.getMarketUrl() + pair;
         Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
         if(isDefaultBrowserSupported() && preferences.getBoolean("tryUseDefBrowser",true)) {
