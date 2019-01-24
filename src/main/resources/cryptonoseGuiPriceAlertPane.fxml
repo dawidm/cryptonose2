@@ -3,11 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
    <children>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
          <children>
@@ -52,9 +51,6 @@
    <cursor>
       <Cursor fx:constant="HAND" />
    </cursor>
-   <effect>
-      <Glow level="0.23" />
-   </effect>
    <padding>
       <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
    </padding>
