@@ -289,7 +289,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             stage.setScene(new Scene(root));
             stage.showAndWait();
             if(settingsChangedAtomic.get()) {
-                engine.stop();
+                if(engine!=null)
+                    engine.stop();
                 startEngine();
             }
         } catch(IOException e) {
