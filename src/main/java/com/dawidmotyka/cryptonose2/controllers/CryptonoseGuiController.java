@@ -37,7 +37,12 @@ public class CryptonoseGuiController extends Application {
 
     public static final double MAIN_WINDOW_WIDTH_DEF_MULTIPLIER = 0.5;
     public static final double MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER = 0.7;
-    public static final ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{new PoloniexExchangeSpecs(), new BittrexExchangeSpecs(), new BinanceExchangeSpecs(),new XtbExchangeSpecs(), new BitfinexExchangeSpecs()};
+    public static final ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{
+            new PoloniexExchangeSpecs(),
+            //new BittrexExchangeSpecs(),
+            new BinanceExchangeSpecs(),
+            //new XtbExchangeSpecs(),
+            new BitfinexExchangeSpecs()};
 
     @FXML
     public TabPane mainTabPane;
@@ -68,8 +73,6 @@ public class CryptonoseGuiController extends Application {
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-        //StyleManager.getInstance().addUserAgentStylesheet("FlatBee.css");
-        //StyleManager.getInstance().addUserAgentStylesheet("JMetroLightTheme.css");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
         fxmlLoader.setController(this);
         Node cryptonoseGuiFxNode = fxmlLoader.load();
