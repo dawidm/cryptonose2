@@ -1,6 +1,7 @@
 package com.dawidmotyka.cryptonose2.controllers;
 
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import com.dawidmotyka.exchangeutils.pairdataprovider.PairDataProvider;
 import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -20,8 +21,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.knowm.xchange.Exchange;
-import org.knowm.xchange.ExchangeFactory;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 
@@ -152,8 +151,12 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void loadPairs() {
         try {
-            Exchange exchange = ExchangeFactory.INSTANCE.createExchange(exchangeSpecs.getXchangeExchange());
-            List<CurrencyPair> currencyPairList = exchange.getExchangeSymbols();
+            PairDataProvider pairDataProvider = PairDataProvider.forExchange(exchangeSpecs);
+            List<CurrencyPair> currencyPairList= Arrays.stream(pairDataProvider.getPairsApiSymbols()).
+                    map(pairSymbol -> new CurrencyPair(
+                            PairSymbolConverter.apiSymbolToBaseCurrencySymbol(exchangeSpecs,pairSymbol),
+                            PairSymbolConverter.apiSymbolToCounterCurrencySymbol(exchangeSpecs,pairSymbol))
+                    ).collect(Collectors.toList());
             if(Thread.interrupted())
                 return;
             Platform.runLater(()->{
@@ -176,7 +179,7 @@ public class CryptonoseGuiPairsController implements Initializable {
             baseCurrencies.add(currentCurrencyPair.counter);
         marketsObservableList = FXCollections.observableArrayList();
         for(Currency currency : baseCurrencies) {
-            marketsObservableList.add(new MarketTableItem(false,currency.getSymbol(),DEFAULT_MIN_VOLUME));
+            marketsObservableList.add(new MarketTableItem(false,currency.getCurrencyCode(),DEFAULT_MIN_VOLUME));
         }
         minVolumeTableView.getColumns().clear();
         TableColumn<MarketTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
