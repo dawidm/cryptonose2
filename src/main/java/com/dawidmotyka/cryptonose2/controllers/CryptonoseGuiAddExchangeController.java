@@ -43,8 +43,7 @@ public class CryptonoseGuiAddExchangeController implements Initializable {
                 itemsObservableList.remove(selectedExchangeSpecs);
                 exchangeListView.getSelectionModel().select(null);
                 cryptonoseGuiController.loadExchange(selectedExchangeSpecs,true);
-                if(itemsObservableList.size()==0)
-                    closeWindow();
+                closeWindow();
             }
         });
     }
