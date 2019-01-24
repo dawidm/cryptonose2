@@ -13,6 +13,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -46,6 +47,10 @@ public class CryptonoseGuiController extends Application {
     public CheckBox runBrowserCheckBox;
     @FXML
     public CheckBox notificationCheckBox;
+    @FXML
+    public Button addExchangeButton;
+    @FXML
+    public Button settingsButton;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
 
@@ -141,6 +146,8 @@ public class CryptonoseGuiController extends Application {
                 cryptonoseGuiExchangeController.enableNotification(notificationCheckBox.isSelected());
             }
         });
+        addExchangeButton.setOnMouseClicked(event -> addExchangeClick());
+        settingsButton.setOnMouseClicked(event -> settingsClick());
         primaryStage.show();
     }
 
@@ -196,7 +203,6 @@ public class CryptonoseGuiController extends Application {
         preferences.put("activeExchanges",activeExchangesString);
     }
 
-    @FXML
     public void addExchangeClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAddExchange.fxml"));
@@ -207,13 +213,14 @@ public class CryptonoseGuiController extends Application {
             Stage stage = new Stage();
             stage.setTitle("Add exchange");
             stage.setScene(new Scene(root));
+            addExchangeButton.setDisable(true);
             stage.showAndWait();
+            addExchangeButton.setDisable(false);
         } catch(IOException e) {
             throw new Error(e);
         }
     }
 
-    @FXML
     public void settingsClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiSettings.fxml"));
@@ -221,7 +228,9 @@ public class CryptonoseGuiController extends Application {
             Stage stage = new Stage();
             stage.setTitle("Cryptonose2 settings");
             stage.setScene(new Scene(root));
+            settingsButton.setDisable(true);
             stage.showAndWait();
+            settingsButton.setDisable(false);
         } catch(IOException e) {
             throw new Error(e);
         }
