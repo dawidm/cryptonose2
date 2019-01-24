@@ -56,7 +56,6 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     public TitledPane p2periodSettingsTitledPane;
 
     private int[] timePeriods;
-    private SettingsChangedNotifier settingsChangedNotifier;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -120,13 +119,12 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         };
     }
 
-    public void init(ExchangeSpecs exchangeSpecs, int[] timePeriods, SettingsChangedNotifier settingsChangedNotifier) {
+    public void init(ExchangeSpecs exchangeSpecs, int[] timePeriods) {
         if(timePeriods.length<2) {
             throw new IllegalArgumentException("timePeriods array should have at least 2 elements");
         }
         setExchangeClass(exchangeSpecs);
         this.timePeriods=timePeriods;
-        this.settingsChangedNotifier=settingsChangedNotifier;
         fillTextFields();
     }
 
@@ -152,7 +150,6 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
                 priceAlertThresholds[0].toPreferences(currentPreferences,""+timePeriods[0]);
                 priceAlertThresholds[1].toPreferences(currentPreferences,""+timePeriods[1]);
             }
-            settingsChangedNotifier.notifySettingsChanged();
             closeStage();
         }
     }
@@ -161,7 +158,6 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         PriceAlertThresholds[] priceAlertThresholds = readTextFields();
         priceAlertThresholds[0].toPreferences(alertPreferences,""+timePeriods[0]);
         priceAlertThresholds[1].toPreferences(alertPreferences,""+timePeriods[1]);
-        settingsChangedNotifier.notifySettingsChanged();
         closeStage();
     }
 
