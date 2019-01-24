@@ -291,6 +291,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
             ((CryptonoseGuiPairsController)fxmlLoader.getController()).init(exchangeSpecs,()->settingsChangedAtomic.set(true));
             Stage stage = new Stage();
+            stage.setTitle("Pairs settings: " + exchangeSpecs.getName());
             stage.setScene(new Scene(root));
             pairsButton.setDisable(true);
             stage.showAndWait();
