@@ -72,6 +72,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public TitledPane logTitledPane;
     @FXML
     public CheckBox showTableCheckBox;
+    @FXML
+    public Button pairsButton;
+    @FXML
+    public Button alertSettingsButton;
 
     private Pane graphicsPane;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
@@ -126,6 +130,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.priceAlertTabController = cryptonoseGuiPriceAlertsTabController;
         this.graphicsPane = graphicsPane;
         this.exchangeSpecs=exchangeSpecs;
+        pairsButton.setOnMouseClicked(event -> pairsClick());
+        alertSettingsButton.setOnMouseClicked(event -> alertSettingsClick());
         cryptonosePreferences=Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
         alertPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(exchangeSpecs.getName());
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts(cryptonosePreferences);
@@ -278,7 +284,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         });
     }
 
-    @FXML
     public void pairsClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPairs.fxml"));
@@ -287,7 +292,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             ((CryptonoseGuiPairsController)fxmlLoader.getController()).init(exchangeSpecs,()->settingsChangedAtomic.set(true));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
+            pairsButton.setDisable(true);
             stage.showAndWait();
+            pairsButton.setDisable(false);
             if(settingsChangedAtomic.get()) {
                 if(engine!=null)
                     engine.stop();
@@ -298,7 +305,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
     }
 
-    @FXML
     public void alertSettingsClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAlertSettings.fxml"));
@@ -310,7 +316,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             Stage stage = new Stage();
             stage.setTitle("Alerts conditions: " + exchangeSpecs.getName());
             stage.setScene(new Scene(root));
+            alertSettingsButton.setDisable(true);
             stage.showAndWait();
+            alertSettingsButton.setDisable(false);
             if(settingsChangedAtomic.get())
                 initPriceAlertThresholds();
         } catch(IOException e) {
@@ -323,7 +331,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             connectionStatusLabel.setText(cryptonoseGuiConnectionStatus.getText());
             graphicsPane.setStyle("-fx-background-color: " + cryptonoseGuiConnectionStatus.getColor());
         });
-        CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs,cryptonoseGuiConnectionStatus);
+        if(!cryptonoseGuiConnectionStatus.getText().equals("connecting"))
+            CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs,cryptonoseGuiConnectionStatus);
     }
 
     @Override
@@ -338,6 +347,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case DISCONNECTED:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
+                break;
+            case RECONNECTING:
+                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING);
                 break;
             case NO_PAIRS:
                 Platform.runLater(()->{

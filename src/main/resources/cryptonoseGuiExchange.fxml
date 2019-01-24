@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<VBox fx:id="mainVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox fx:id="mainVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController">
    <children>
       <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="7.0" VBox.vgrow="NEVER">
          <children>
@@ -71,8 +63,8 @@
                   <CheckBox fx:id="notificationCheckBox" mnemonicParsing="false" selected="true" text="Notification" />
                   <Region HBox.hgrow="ALWAYS" />
                   <CheckBox fx:id="showTableCheckBox" mnemonicParsing="false" selected="true" text="Show Table" />
-                  <Button mnemonicParsing="false" onAction="#pairsClick" text="Pairs..." />
-                  <Button mnemonicParsing="false" onAction="#alertSettingsClick" text="Alert conditions..." />
+                  <Button fx:id="pairsButton" mnemonicParsing="false" text="Pairs..." />
+                  <Button fx:id="alertSettingsButton" mnemonicParsing="false" text="Alert conditions..." />
                </children>
             </HBox>
          </content>
