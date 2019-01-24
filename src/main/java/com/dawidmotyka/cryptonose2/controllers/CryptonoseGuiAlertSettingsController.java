@@ -126,7 +126,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         }
         setExchangeClass(exchangeSpecs);
         this.timePeriods=timePeriods;
-
+        this.settingsChangedNotifier=settingsChangedNotifier;
         fillTextFields();
     }
 
