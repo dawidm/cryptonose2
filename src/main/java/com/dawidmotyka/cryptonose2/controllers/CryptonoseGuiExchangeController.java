@@ -49,6 +49,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final boolean CURRENCIES_TABLE_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
     public static final long NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED=60;
+    public static final DecimalFormat PRICE_DECIMAL_FORMAT=new DecimalFormat("#.########");
     public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.CONTROLSFX;
 
     @FXML
@@ -123,7 +124,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if(item==null)
                 setText(null);
             else
-                setText(new DecimalFormat("#.########").format(item));
+                setText(PRICE_DECIMAL_FORMAT.format(item));
         }
     }
 
@@ -412,13 +413,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void handlePriceAlert(PriceAlert priceAlert) {
         priceAlertTabController.addAlert(priceAlert);
-        String alertString = String.format("Price alert on %s, %s: change by %.2f (relative: %.2f) during last %d minutes, final price: %.8f",
+        String alertString = String.format("Price alert on %s, %s: change by %.2f (relative: %.2f), period: %s, final price: %s",
                 priceAlert.getFormattedPair(),
                 exchangeSpecs.getName(),
                 priceAlert.getPriceChange(),
                 priceAlert.getRelativePriceChange(),
-                priceAlert.getPeriodSeconds()/60,
-                priceAlert.getFinalPrice());
+                TimeConverter.secondsToMinutesHoursDays((int)priceAlert.getPeriodSeconds()),
+                PRICE_DECIMAL_FORMAT.format(priceAlert.getFinalPrice()));
         consoleLog(alertString);
         if (runBrowserCheckBox.isSelected()) {
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
