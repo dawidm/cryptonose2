@@ -3,7 +3,7 @@ package com.dawidmotyka.cryptonose2.controllers;
 import com.dawidmotyka.cryptonose2.*;
 import com.dawidmotyka.cryptonoseengine.*;
 import com.dawidmotyka.dmutils.TimeConverter;
-import com.dawidmotyka.exchangeutils.exchangespecs.*;
+import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import com.dawidmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,7 +22,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -160,44 +159,29 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
-        if(exchangeSpecs.getClass().equals(PoloniexExchangeSpecs.class)
-                || exchangeSpecs.getClass().equals(BittrexExchangeSpecs.class)
-                || exchangeSpecs.getClass().equals(BinanceExchangeSpecs.class)
-                || exchangeSpecs.getClass().equals(BitfinexExchangeSpecs.class)) {
-            Preferences pairsPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
-            String markets = pairsPreferences.get("markets","");
-            ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
-            if(!markets.equals("")) {
-                Arrays.stream(markets.split(",")).forEach(market -> {
-                    Double minVolume = pairsPreferences.getDouble(market,-1.0);
-                    if(minVolume>=0)
-                        pairSelectionCriteria.add(new PairSelectionCriteria(market,minVolume));
-                });
-            }
-            String pairs = pairsPreferences.get("pairsApiSymbols",null);
-            String[] additionalPairs;
-            if(pairs==null || pairs.equals(""))
-                additionalPairs = new String[0];
-            else
-                additionalPairs=pairs.split(",");
-            engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
-                    this,
-                    TIME_PERIODS,
-                    RELATIVE_CHANGE_NUM_CANDLES,
-                    pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
-                    additionalPairs);
-            engine.enableInitEngineWithLowerPeriodChartData();
-        } else if (exchangeSpecs.getClass().equals(XtbExchangeSpecs.class)) {
-            Properties properties = new Properties();
-            String propertiesFileName=exchangeSpecs.getClass().getSimpleName()+".settings";
-            try {
-                properties.load(new FileInputStream(propertiesFileName));
-                engine = CryptonoseGenericEngine.withProvidedCurrencyPairs(exchangeSpecs,this,TIME_PERIODS,RELATIVE_CHANGE_NUM_CANDLES,properties.getProperty("pairs").split(","));
-            } catch (IOException e) {
-                consoleLog("error reading pairs from " + propertiesFileName);
-                return;
-            }
+        Preferences pairsPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
+        String markets = pairsPreferences.get("markets","");
+        ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
+        if(!markets.equals("")) {
+            Arrays.stream(markets.split(",")).forEach(market -> {
+                Double minVolume = pairsPreferences.getDouble(market,-1.0);
+                if(minVolume>=0)
+                    pairSelectionCriteria.add(new PairSelectionCriteria(market,minVolume));
+            });
         }
+        String pairs = pairsPreferences.get("pairsApiSymbols",null);
+        String[] additionalPairs;
+        if(pairs==null || pairs.equals(""))
+            additionalPairs = new String[0];
+        else
+            additionalPairs=pairs.split(",");
+        engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
+                this,
+                TIME_PERIODS,
+                RELATIVE_CHANGE_NUM_CANDLES,
+                pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
+                additionalPairs);
+        engine.enableInitEngineWithLowerPeriodChartData();
         engine.setEngineMessageReceiver(this);
         engine.setEngineUpdateHeartbeatReceiver(this);
         new Thread(()->engine.start()).start();
