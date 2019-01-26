@@ -34,6 +34,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -95,8 +96,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private Map<String, TablePairPriceChanges> pairPriceChangesMap=new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList;
     private long lastTableSortMillis =0;
-    private long numTradesPerSecond=0;
-    private Object numTradesPerSecondLock=new Object();
+    private AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
         @Override
@@ -221,11 +221,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void startChangesPerSecondCounter() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            long currentTps;
-            synchronized (numTradesPerSecondLock) {
-                currentTps=numTradesPerSecond;
-                numTradesPerSecond=0;
-            }
+            int currentTps=numTradesPerSecondAtomicInteger.get();
+            numTradesPerSecondAtomicInteger.set(0);
             javafx.application.Platform.runLater(() -> tpsLabel.setText(""+currentTps));
         },1,1,TimeUnit.SECONDS);
     }
@@ -370,9 +367,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @Override
     public void receiveTransactionHeartbeat() {
         lastTradeTimeMillis=System.currentTimeMillis();
-        synchronized (numTradesPerSecondLock) {
-            numTradesPerSecond++;
-        }
+        numTradesPerSecondAtomicInteger.getAndIncrement();
     }
 
     @Override
