@@ -373,7 +373,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         synchronized (numTradesPerSecondLock) {
             numTradesPerSecond++;
         }
+    }
 
+    @Override
+    public void receiveChanges(PriceChanges priceChanges) {
+        List<PriceChanges> priceChangesList = new LinkedList<>();
+        priceChangesList.add(priceChanges);
+        receiveChanges(priceChangesList);
     }
 
     @Override
@@ -402,15 +408,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
     }
 
-    //TODO ugly, refactor
-    @Override
-    public void receiveChanges(PriceChanges priceChanges) {
-        //priceChanges.setRelativePriceChange(new Double(0.0));
-        List<PriceChanges> priceChangesList = new LinkedList<>();
-        priceChangesList.add(priceChanges);
-        receiveChanges(priceChangesList);
-    }
-
     private void handlePriceAlert(PriceAlert priceAlert) {
         priceAlertTabController.addAlert(priceAlert);
         String alertString = String.format("Price alert on %s, %s: change by %.2f (relative: %.2f), period: %s, final price: %s",
@@ -426,7 +423,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
         if(notificationCheckBox.isSelected()) {
             CryptonoseGuiNotification.notifyPriceAlert(NOTIFICATION_LIBRARY,priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
-            //showNotification(priceAlert);
         }
         if (soundCheckBox.isSelected()) {
             cryptonoseGuiSoundAlerts.soundAlert(priceAlert);
