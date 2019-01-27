@@ -1,4 +1,7 @@
+title: [Cryptonose2]
+description: [Cryptonose2 is an application helpful for cryptocurrency traders]
 theme: jekyll-theme-minimal
 show_downloads: true
+logo: [images/icon256.png]
 plugins:
   - jekyll-sitemap
