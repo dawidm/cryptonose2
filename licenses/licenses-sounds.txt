@@ -1,0 +1,9 @@
+Sound samples used by application:
+
+soundR.wav:
+cf_FX_batch_jingle_glock_N--kloing.aif by cfork, license: CC BY 3.0
+https://freesound.org/people/cfork/sounds/26875/
+
+soundD.wav
+waterdrop24.wav by JaZzy JunGgle, license: CC BY 3.0
+https://plus.google.com/115458043589025908190
