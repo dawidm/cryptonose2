@@ -3,9 +3,6 @@ Following components are used by this application:
 XChange, license: MIT
 https://knowm.org/open-source/xchange/
 
-SwingFx Twinkle, license: GPL v3
-http://www.swingfx.ch/
-
 ControlsFX, license: BSD
 https://github.com/controlsfx/controlsfx
 
