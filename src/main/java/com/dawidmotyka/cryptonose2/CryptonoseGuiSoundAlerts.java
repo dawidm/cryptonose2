@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-/**
- * Created by dawid on 8/15/17.
- */
 public class CryptonoseGuiSoundAlerts {
 
     public static final int ALERT_RISING = 1;
     public static final int ALERT_FALLING = 2;
+    public static final String DEFAULT_RISING_SOUND_FILE="soundR.wav";
+    public static final String DEFAULT_DROPPING_SOUND_FILE="soundD.wav";
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiSoundAlerts.class.getName());
 
@@ -38,9 +37,9 @@ public class CryptonoseGuiSoundAlerts {
     public void soundAlert(int type) {
         String audioPath;
         if(type==ALERT_RISING)
-            audioPath = preferences.get("soundRisingPath", "");
+            audioPath = preferences.get("soundRisingPath", DEFAULT_RISING_SOUND_FILE);
         else
-            audioPath = preferences.get("soundDroppingPath", "");
+            audioPath = preferences.get("soundDroppingPath", DEFAULT_DROPPING_SOUND_FILE);
         if (audioPath.equals("")) {
             logger.warning("Alert sound file not set");
         }

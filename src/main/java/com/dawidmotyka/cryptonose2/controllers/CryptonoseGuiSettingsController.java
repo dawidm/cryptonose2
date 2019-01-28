@@ -47,8 +47,8 @@ public class CryptonoseGuiSettingsController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
         browserPathEditText.setText(preferences.get("browserPath", ""));
-        priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath", ""));
-        priceFallingSoundFileEditText.setText(preferences.get("soundDroppingPath", ""));
+        priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath",CryptonoseGuiSoundAlerts.DEFAULT_RISING_SOUND_FILE));
+        priceFallingSoundFileEditText.setText(preferences.get("soundDroppingPath", CryptonoseGuiSoundAlerts.DEFAULT_DROPPING_SOUND_FILE));
         if(CryptonoseGuiBrowser.isDefaultBrowserSupported()) {
             defBrowserCheckbox.setSelected(preferences.getBoolean("tryUseDefBrowser",true));
             browserPathHBox.setDisable(defBrowserCheckbox.isSelected());
