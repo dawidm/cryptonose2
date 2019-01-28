@@ -89,7 +89,12 @@ public class CryptonoseGuiController extends Application {
                 logger.warning(e.getLocalizedMessage());
             }
         }
-        primaryStage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icon24.png")));
+        primaryStage.getIcons().addAll(
+                new Image(getClass().getClassLoader().getResourceAsStream("icon_new_16.png")),
+                new Image(getClass().getClassLoader().getResourceAsStream("icon_new_32.png")),
+                new Image(getClass().getClassLoader().getResourceAsStream("icon_new_64.png")),
+                new Image(getClass().getClassLoader().getResourceAsStream("icon_new_128.png")),
+                new Image(getClass().getClassLoader().getResourceAsStream("icon_new_256.png")));
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         if(preferences.getBoolean("mainIsMaximized",false)) {
             primaryStage.setMaximized(true);
