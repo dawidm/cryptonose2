@@ -12,9 +12,6 @@ https://github.com/dorkbox/Notify
 SLF4J, license: MIT
 https://www.slf4j.org/
 
-bittrex4j, license: GPL v3
-https://github.com/CCob/bittrex4j
-
 Java Websocket, by Nathan Rajlich, license: MIT
 https://github.com/TooTallNate/Java-WebSocket
 
