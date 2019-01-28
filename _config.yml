@@ -1,6 +1,8 @@
 title: Cryptonose2
-description: Cryptonose2 is an application helpful for cryptocurrency traders
+description: Cryptonose2 is a desktop application useful for Cryptocurrency traders
 theme: jekyll-theme-minimal
 show_downloads: false
 logo: images/icon256.png
 google_analytics: UA-133319780-1
+plugins:
+  - jekyll-seo-tag

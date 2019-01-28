@@ -1,3 +1,7 @@
 {% include menu.md %}
 
-cryptonose2@gmail.com
+# Contact
+
+Author: Dawid Motyka
+
+E-mail address: [cryptonose2@gmail.com](mailto:cryptonose2@gmail.com)
