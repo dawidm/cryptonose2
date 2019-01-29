@@ -84,6 +84,7 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        Locale.setDefault(Locale.US);
         this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));

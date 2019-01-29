@@ -114,22 +114,29 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private PriceAlertThresholds[] readTextFields() throws NumberFormatException {
-        return new PriceAlertThresholds[]{
-                new PriceAlertThresholds(
-                        Double.parseDouble(p1requiredRisingTextField.getText()),
-                        Double.parseDouble(p1requiredDroppingTextField.getText()),
-                        Double.parseDouble(p1requiredRelativeRisingTextField.getText()),
-                        Double.parseDouble(p1requiredRelativeDroppingTextField.getText()),
-                        Double.parseDouble(p1sufficientRelativeRisingTextField.getText()),
-                        Double.parseDouble(p1sufficientRelativeDroppingTextField.getText())),
-                new PriceAlertThresholds(
-                        Double.parseDouble(p2requiredRisingTextField.getText()),
-                        Double.parseDouble(p2requiredDroppingTextField.getText()),
-                        Double.parseDouble(p2requiredRelativeRisingTextField.getText()),
-                        Double.parseDouble(p2requiredRelativeDroppingTextField.getText()),
-                        Double.parseDouble(p2sufficientRelativeRisingTextField.getText()),
-                        Double.parseDouble(p2sufficientRelativeDroppingTextField.getText()))
-        };
+        try {
+            return new PriceAlertThresholds[]{
+                    new PriceAlertThresholds(
+                            Double.parseDouble(p1requiredRisingTextField.getText()),
+                            Double.parseDouble(p1requiredDroppingTextField.getText()),
+                            Double.parseDouble(p1requiredRelativeRisingTextField.getText()),
+                            Double.parseDouble(p1requiredRelativeDroppingTextField.getText()),
+                            Double.parseDouble(p1sufficientRelativeRisingTextField.getText()),
+                            Double.parseDouble(p1sufficientRelativeDroppingTextField.getText())),
+                    new PriceAlertThresholds(
+                            Double.parseDouble(p2requiredRisingTextField.getText()),
+                            Double.parseDouble(p2requiredDroppingTextField.getText()),
+                            Double.parseDouble(p2requiredRelativeRisingTextField.getText()),
+                            Double.parseDouble(p2requiredRelativeDroppingTextField.getText()),
+                            Double.parseDouble(p2sufficientRelativeRisingTextField.getText()),
+                            Double.parseDouble(p2sufficientRelativeDroppingTextField.getText()))
+            };
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Error, please check if provided values are correct", ButtonType.OK);
+            alert.setTitle("Error");
+            alert.showAndWait();
+            return null;
+        }
     }
 
     public void init(ExchangeSpecs exchangeSpecs, int[] timePeriods) {
