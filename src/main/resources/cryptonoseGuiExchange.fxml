@@ -66,9 +66,9 @@
          <content>
             <HBox alignment="CENTER_LEFT" fillHeight="false" nodeOrientation="LEFT_TO_RIGHT" spacing="7.0">
                <children>
-                  <Label style="-fx-font-weight: bold;" text="On alert: ">
+                  <Label text="On alert: ">
                      <font>
-                        <Font name="SansSerif Regular" size="13.0" />
+                        <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
                   <CheckBox fx:id="soundCheckBox" mnemonicParsing="false" selected="true" text="Sound" />
