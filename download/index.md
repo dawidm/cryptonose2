@@ -2,7 +2,7 @@
 
 # Get Cryptonose 2.9
 
-Cryptonose2 need Java Runtine Environment 8 to work. If you don't have it, Windows version will open download page. For jar version, you can get JRE at [https://www.java.com/en/download/](https://www.java.com/en/download/).
+Cryptonose2 needs Java Runtine Environment 8 to work. If you don't have it, Windows version will open download page. For jar version, you can get JRE at [https://www.java.com/en/download/](https://www.java.com/en/download/).
 
 ## Installer
 Recommended for **Windows**. Tested on Windows 7 and Windows 10.
