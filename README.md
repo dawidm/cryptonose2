@@ -1,8 +1,8 @@
 {% include menu.md %}
 
-# Cryptonose2
+# Cryptonose 2
 
-![cryptonose2 price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
+![cryptonose 2 price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
 
 ## What is Cryptonose?
 Cryptonose is a desktop application that keeps track of significant price changes within small time periods (5 minutes, 30 minutes) on cryptocurrency markets. It works in real time, connecting directly to supported cryptocurrency exchanges, giving you instant alert when price rises or drops.
@@ -18,7 +18,7 @@ You may want to try Cryptonose if you are day trader on cryptocurrency markets. 
 ## Supported exchanges
 Currently supported exchanges: **Binance, Bitfinex, Poloniex**. Another exchanges may be added in the future, but existing ones provide data for most of popular markets, so you can use Cryptonose even if you trade on another exchange.
 
-![cryptonose2 exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
+![cryptonose 2 exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
 
 ___
 
