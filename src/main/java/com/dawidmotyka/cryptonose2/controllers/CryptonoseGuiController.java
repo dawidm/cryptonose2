@@ -23,6 +23,7 @@ import com.dawidmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import com.dawidmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
 import com.dawidmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
+import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -91,6 +92,7 @@ public class CryptonoseGuiController extends Application {
         Locale.setDefault(Locale.US);
         this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
+        StyleManager.getInstance().addUserAgentStylesheet("style.css");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
         fxmlLoader.setController(this);
         Node cryptonoseGuiFxNode = fxmlLoader.load();
