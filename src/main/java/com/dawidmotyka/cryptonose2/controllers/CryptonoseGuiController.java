@@ -18,7 +18,11 @@ package com.dawidmotyka.cryptonose2.controllers;
  */
 
 import com.dawidmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
-import com.dawidmotyka.exchangeutils.exchangespecs.*;
+import com.dawidmotyka.exchangeutils.binance.BinanceExchangeSpecs;
+import com.dawidmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
+import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import com.dawidmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
+import com.dawidmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

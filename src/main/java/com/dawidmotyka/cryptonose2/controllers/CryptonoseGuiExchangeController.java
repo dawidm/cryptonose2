@@ -15,9 +15,9 @@ package com.dawidmotyka.cryptonose2.controllers;
 
 import com.dawidmotyka.cryptonose2.*;
 import com.dawidmotyka.cryptonoseengine.*;
-import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import com.dawidmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
+import com.dawidmotyka.exchangeutils.tools.TimeConverter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -232,19 +232,19 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         lastPriceCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().lastPriceProperty());
         lastPriceCol.setCellFactory(col -> new PriceTableCell());
         lastPriceCol.setPrefWidth(150);
-        TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[0]) +" % change");
+        TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[0]) +" % change");
         p1ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1PercentChangeProperty());
         p1ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1ChangeCol.setPrefWidth(100);
-        TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[0])+" relative");
+        TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[0])+" relative");
         p1RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1RelativeChangeProperty());
         p1RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p1RelativeChangeCol.setPrefWidth(100);
-        TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[1])+" % change");
+        TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[1])+" % change");
         p2ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2PercentChangeProperty());
         p2ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2ChangeCol.setPrefWidth(100);
-        TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToMinutesHoursDays(TIME_PERIODS[1])+" relative");
+        TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[1])+" relative");
         p2RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2RelativeChangeProperty());
         p2RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
         p2RelativeChangeCol.setPrefWidth(100);
@@ -407,7 +407,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 exchangeSpecs.getName(),
                 priceAlert.getPriceChange(),
                 priceAlert.getRelativePriceChange(),
-                TimeConverter.secondsToMinutesHoursDays((int)priceAlert.getPeriodSeconds()),
+                TimeConverter.secondsToFullMinutesHoursDays((int)priceAlert.getPeriodSeconds()),
                 PRICE_DECIMAL_FORMAT.format(priceAlert.getFinalPrice()));
         consoleLog(alertString);
         if (runBrowserCheckBox.isSelected()) {

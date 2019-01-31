@@ -15,8 +15,8 @@ package com.dawidmotyka.cryptonose2.controllers;
 
 import com.dawidmotyka.cryptonose2.DecimalFormatterUnaryOperator;
 import com.dawidmotyka.cryptonose2.PriceAlertThresholds;
-import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import com.dawidmotyka.exchangeutils.tools.TimeConverter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -93,7 +93,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     private void fillTextFields() {
             int p1timePeriod=timePeriods[0];
             PriceAlertThresholds priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p1timePeriod);
-            p1titleLabel.setText(TimeConverter.secondsToMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
+            p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
             String format = "%.2f";
             p1requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
             p1requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
@@ -103,7 +103,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             p1sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
             int p2timePeriod=timePeriods[1];
             priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p2timePeriod);
-            p2titleLabel.setText(TimeConverter.secondsToMinutesHoursDays(p2timePeriod)+" period alerts thresholds");
+            p2titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p2timePeriod)+" period alerts thresholds");
             p2requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
             p2requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
             p2requiredRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeRisingValue()));

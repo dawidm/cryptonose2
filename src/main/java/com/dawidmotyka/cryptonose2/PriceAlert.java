@@ -13,9 +13,9 @@
 
 package com.dawidmotyka.cryptonose2;
 
-import com.dawidmotyka.dmutils.TimeConverter;
 import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
+import com.dawidmotyka.exchangeutils.tools.TimeConverter;
 
 /**
  *
@@ -98,7 +98,7 @@ public class PriceAlert {
     }
 
     public String getFormattedTimePeriod() {
-        return TimeConverter.secondsToMinutesHoursDays((int)periodSeconds);
+        return TimeConverter.secondsToFullMinutesHoursDays((int)periodSeconds);
     }
 
     public String getFormattedPair() {

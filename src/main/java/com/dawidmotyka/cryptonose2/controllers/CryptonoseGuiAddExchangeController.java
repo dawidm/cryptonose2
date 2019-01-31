@@ -49,7 +49,7 @@ public class CryptonoseGuiAddExchangeController implements Initializable {
         }
         ObservableList<Object> itemsObservableList = FXCollections.observableList(new ArrayList<>());
         exchangeListView.setItems(itemsObservableList);
-        itemsObservableList.addAll(exchangeSpecs);
+        itemsObservableList.add(exchangeSpecs);
         exchangeListView.setOnMouseClicked(event -> {
             if(event.getClickCount()==1) {
                 ExchangeSpecs selectedExchangeSpecs=(ExchangeSpecs)exchangeListView.getSelectionModel().getSelectedItem();
