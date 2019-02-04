@@ -164,7 +164,7 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void loadPairs() {
         try {
-            PairDataProvider pairDataProvider = PairDataProvider.forExchange(exchangeSpecs);
+            PairDataProvider pairDataProvider = exchangeSpecs.getPairDataProvider();
             List<CurrencyPair> currencyPairList= Arrays.stream(pairDataProvider.getPairsApiSymbols()).
                     map(pairSymbol -> new CurrencyPair(
                             PairSymbolConverter.apiSymbolToBaseCurrencySymbol(exchangeSpecs,pairSymbol),
