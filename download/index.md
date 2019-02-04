@@ -17,7 +17,7 @@ This should work on **Windows, Linux and Mac Os X**. Tested on Ubuntu 16.04, Win
 ## Source code
 Source code is available on github. Source code for this release:
 
-[2.9.2.tar.gz](https://github.com/dawidm/cryptonose2/archive/2.9.2.tar.gz)
+[v2.9.2.tar.gz](https://github.com/dawidm/cryptonose2/archive/v2.9.2.tar.gz)
 
 ___
 
