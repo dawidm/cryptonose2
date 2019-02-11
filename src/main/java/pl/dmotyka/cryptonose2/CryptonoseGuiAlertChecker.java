@@ -11,10 +11,10 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2;
 
-import com.dawidmotyka.cryptonoseengine.PriceChanges;
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.cryptonoseengine.PriceChanges;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 import java.util.HashMap;
 import java.util.LinkedList;

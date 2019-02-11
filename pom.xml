@@ -87,7 +87,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiController</mainClass>
+                            <mainClass>pl.dmotyka.cryptonose2.controllers.CryptonoseGuiController</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

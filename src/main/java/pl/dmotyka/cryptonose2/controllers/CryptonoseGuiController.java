@@ -11,18 +11,12 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
 /**
  * Created by dawid on 8/1/17.
  */
 
-import com.dawidmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
-import com.dawidmotyka.exchangeutils.binance.BinanceExchangeSpecs;
-import com.dawidmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import com.dawidmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
-import com.dawidmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
 import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -41,6 +35,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.exchangeutils.binance.BinanceExchangeSpecs;
+import pl.dmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
+import pl.dmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
 
 import java.io.IOException;
 import java.util.*;

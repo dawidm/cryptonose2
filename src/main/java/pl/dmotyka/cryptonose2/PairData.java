@@ -11,7 +11,7 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2;
 
 /**
  *

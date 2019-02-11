@@ -11,12 +11,12 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2;
 
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import dorkbox.notify.Notify;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 import java.text.DecimalFormat;
 

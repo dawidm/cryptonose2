@@ -11,12 +11,12 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2;
 
-import com.dawidmotyka.cryptonoseengine.PriceChanges;
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import javafx.beans.property.SimpleDoubleProperty;
+import pl.dmotyka.cryptonoseengine.PriceChanges;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 /**
  * Created by dawid on 8/9/17.

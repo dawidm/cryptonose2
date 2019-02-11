@@ -11,10 +11,8 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.cryptonose2.CryptonoseGuiBrowser;
-import com.dawidmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,6 +24,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
+import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
 
 import javax.sound.sampled.AudioFileFormat;
 import java.io.File;

@@ -11,14 +11,14 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class CryptonoseGuiAddExchangeController implements Initializable {
         }
         ObservableList<Object> itemsObservableList = FXCollections.observableList(new ArrayList<>());
         exchangeListView.setItems(itemsObservableList);
-        itemsObservableList.add(exchangeSpecs);
+        itemsObservableList.addAll(exchangeSpecs);
         exchangeListView.setOnMouseClicked(event -> {
             if(event.getClickCount()==1) {
                 ExchangeSpecs selectedExchangeSpecs=(ExchangeSpecs)exchangeListView.getSelectionModel().getSelectedItem();

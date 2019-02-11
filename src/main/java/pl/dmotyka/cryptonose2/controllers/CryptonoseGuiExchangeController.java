@@ -11,13 +11,8 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.cryptonose2.*;
-import com.dawidmotyka.cryptonoseengine.*;
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import com.dawidmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
-import com.dawidmotyka.exchangeutils.tools.TimeConverter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -34,6 +29,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pl.dmotyka.cryptonose2.*;
+import pl.dmotyka.cryptonoseengine.*;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
+import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -99,7 +99,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private CryptonoseGenericEngine engine;
     long lastTradeTimeMillis = 0;
     private ScheduledExecutorService scheduledExecutorService;
-    private Map<Long,PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
+    private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
     private Preferences alertPreferences;
     private Preferences cryptonosePreferences;

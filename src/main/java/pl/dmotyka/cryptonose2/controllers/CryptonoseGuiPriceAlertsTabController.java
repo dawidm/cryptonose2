@@ -11,13 +11,13 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.cryptonose2.PriceAlert;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import pl.dmotyka.cryptonose2.PriceAlert;
 
 import java.io.IOException;
 import java.net.URL;

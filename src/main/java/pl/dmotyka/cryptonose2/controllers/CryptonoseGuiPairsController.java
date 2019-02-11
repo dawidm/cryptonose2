@@ -11,11 +11,8 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import com.dawidmotyka.exchangeutils.pairdataprovider.PairDataProvider;
-import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,6 +33,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.pairdataprovider.PairDataProvider;
+import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 import java.net.URL;
 import java.util.*;

@@ -11,14 +11,14 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.cryptonose2.CryptonoseGuiBrowser;
-import com.dawidmotyka.cryptonose2.PriceAlert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
+import pl.dmotyka.cryptonose2.PriceAlert;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

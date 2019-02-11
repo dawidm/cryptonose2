@@ -11,18 +11,18 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.controllers;
 
-import com.dawidmotyka.cryptonose2.DecimalFormatterUnaryOperator;
-import com.dawidmotyka.cryptonose2.PriceAlertThresholds;
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import com.dawidmotyka.exchangeutils.tools.TimeConverter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import pl.dmotyka.cryptonose2.DecimalFormatterUnaryOperator;
+import pl.dmotyka.cryptonose2.PriceAlertThresholds;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -11,37 +11,30 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2;
+
+import javafx.scene.control.TextFormatter;
+
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
+import java.util.function.UnaryOperator;
 
 /**
- * Created by dawid on 8/2/17.
+ * Created by dawid on 8/20/17.
  */
-public class CryptonoseGuiConnectionStatus {
-
-    private final String text;
-    private final String color;
-
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_CONNECTED = new CryptonoseGuiConnectionStatus("connected", "limegreen");
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_CONNECTING = new CryptonoseGuiConnectionStatus("connecting", "yellow");
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_DISCONNECTED = new CryptonoseGuiConnectionStatus("disconnected", "red");
-
-    public CryptonoseGuiConnectionStatus(String text, String color) {
-        this.text = text;
-        this.color = color;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
+public class DecimalFormatterUnaryOperator implements UnaryOperator<TextFormatter.Change> {
     @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof CryptonoseGuiConnectionStatus && (text.equals(((CryptonoseGuiConnectionStatus)obj).text)))
-            return true;
-        return false;
+    public TextFormatter.Change apply(TextFormatter.Change change) {
+        if (change.getControlNewText().isEmpty()) {
+            return change;
+        }
+        ParsePosition parsePosition = new ParsePosition( 0 );
+        Object object = new DecimalFormat("#.#").parse(change.getControlNewText(), parsePosition);
+        if (object == null || parsePosition.getIndex() < change.getControlNewText().length()) {
+            return null;
+        }
+        else {
+            return change;
+        }
     }
 }

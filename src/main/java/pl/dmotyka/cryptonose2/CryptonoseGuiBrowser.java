@@ -11,11 +11,11 @@
  *
  */
 
-package com.dawidmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2;
 
-import com.dawidmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
-import com.dawidmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import com.dawidmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
+import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 import java.awt.*;
 import java.io.IOException;
