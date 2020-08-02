@@ -13,20 +13,26 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
 import pl.dmotyka.cryptonose2.DecimalFormatterUnaryOperator;
 import pl.dmotyka.cryptonose2.PriceAlertThresholds;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 /**
  * Created by dawid on 8/20/17.
@@ -68,7 +74,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     @FXML
     public TitledPane p2periodSettingsTitledPane;
 
-    private int[] timePeriods;
+    private long[] timePeriods;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,7 +97,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void fillTextFields() {
-            int p1timePeriod=timePeriods[0];
+            long p1timePeriod=timePeriods[0];
             PriceAlertThresholds priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p1timePeriod);
             p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
             String format = "%.2f";
@@ -101,7 +107,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             p1requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
             p1sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
             p1sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
-            int p2timePeriod=timePeriods[1];
+            long p2timePeriod=timePeriods[1];
             priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p2timePeriod);
             p2titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p2timePeriod)+" period alerts thresholds");
             p2requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
@@ -139,7 +145,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         }
     }
 
-    public void init(ExchangeSpecs exchangeSpecs, int[] timePeriods) {
+    public void init(ExchangeSpecs exchangeSpecs, long[] timePeriods) {
         if(timePeriods.length<2) {
             throw new IllegalArgumentException("timePeriods array should have at least 2 elements");
         }

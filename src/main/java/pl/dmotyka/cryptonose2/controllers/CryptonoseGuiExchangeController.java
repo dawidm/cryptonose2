@@ -13,6 +13,28 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.io.IOException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,32 +45,40 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import pl.dmotyka.cryptonose2.*;
-import pl.dmotyka.cryptonoseengine.*;
+
+import pl.dmotyka.cryptonose2.CryptonoseGuiAlertChecker;
+import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
+import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.cryptonose2.CryptonoseGuiNotification;
+import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
+import pl.dmotyka.cryptonose2.PriceAlert;
+import pl.dmotyka.cryptonose2.PriceAlertThresholds;
+import pl.dmotyka.cryptonose2.TablePairPriceChanges;
+import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
+import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;
+import pl.dmotyka.cryptonoseengine.EngineMessage;
+import pl.dmotyka.cryptonoseengine.EngineMessageReceiver;
+import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
+import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
-
-import java.io.IOException;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * Created by dawid on 8/1/17.
@@ -57,7 +87,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
-    public static final int[] TIME_PERIODS = {300,1800};
+    public static final long[] TIME_PERIODS = {300,1800};
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean CURRENCIES_TABLE_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
@@ -349,7 +379,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case NO_PAIRS:
                 Platform.runLater(()->{
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Got 0 currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Got 0 valid currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
                     alert.getDialogPane().setPrefWidth(500);
                     alert.setTitle("Pairs settings: " + exchangeSpecs.getName());
                     alert.showAndWait();
