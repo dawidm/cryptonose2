@@ -17,7 +17,20 @@ package pl.dmotyka.cryptonose2.controllers;
  * Created by dawid on 8/1/17.
  */
 
-import com.sun.javafx.css.StyleManager;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,19 +48,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
 import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.exchangeutils.binance.BinanceExchangeSpecs;
 import pl.dmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
 import pl.dmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 public class CryptonoseGuiController extends Application {
 
@@ -92,7 +99,6 @@ public class CryptonoseGuiController extends Application {
         Locale.setDefault(Locale.US);
         this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-        StyleManager.getInstance().addUserAgentStylesheet("style.css");
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
         fxmlLoader.setController(this);
         Node cryptonoseGuiFxNode = fxmlLoader.load();

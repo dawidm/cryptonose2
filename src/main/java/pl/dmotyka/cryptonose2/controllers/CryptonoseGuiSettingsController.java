@@ -13,6 +13,16 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
+import javax.sound.sampled.AudioFileFormat;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,22 +34,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
-
-import javax.sound.sampled.AudioFileFormat;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 /**
  * Created by dawid on 8/8/17.
  */
-public class CryptonoseGuiSettingsController implements Initializable{
+public class CryptonoseGuiSettingsController implements Initializable {
 
     @FXML
     public TextField browserPathEditText;
