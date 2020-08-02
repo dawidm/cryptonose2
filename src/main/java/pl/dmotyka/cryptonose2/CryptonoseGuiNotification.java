@@ -13,12 +13,13 @@
 
 package pl.dmotyka.cryptonose2;
 
-import dorkbox.notify.Notify;
+import java.text.DecimalFormat;
+
 import javafx.util.Duration;
+
+import dorkbox.notify.Notify;
 import org.controlsfx.control.Notifications;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-
-import java.text.DecimalFormat;
 
 public class CryptonoseGuiNotification {
 

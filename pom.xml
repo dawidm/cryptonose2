@@ -30,7 +30,7 @@
         <dependency>
             <groupId>pl.dmotyka</groupId>
             <artifactId>exchangeutils</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.1</version>
         </dependency>
         <dependency>
             <groupId>pl.dmotyka</groupId>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>8.40.14</version>
+            <version>8.40.17</version>
         </dependency>
         <dependency>
             <groupId>com.dorkbox</groupId>

@@ -93,7 +93,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
     public static final long NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED=60;
     public static final DecimalFormat PRICE_DECIMAL_FORMAT=new DecimalFormat("#.########");
-    public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.CONTROLSFX;
+    public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
     @FXML
     public VBox mainVBox;
