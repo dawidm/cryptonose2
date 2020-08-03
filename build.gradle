@@ -1,3 +1,5 @@
+import javax.sound.sampled.AudioSystem
+
 plugins {
     id 'java'
     id 'application'
@@ -7,9 +9,7 @@ plugins {
 
 group 'pl.dmotyka'
 version '2.9.4'
-
-sourceCompatibility = 11
-targetCompatibility = 11
+description 'Alerts about significant price changes on cryptocurrency exchanges'
 
 repositories {
     mavenCentral()
@@ -28,13 +28,27 @@ javafx {
     modules = ['javafx.controls', 'javafx.graphics', 'javafx.fxml']
 }
 
-mainClassName = "cryptonose/pl.dmotyka.cryptonose2.AppStarter"
+mainClassName = "pl.dmotyka.cryptonose2.AppStarter"
 
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
-        name = 'helloFX'
+        name = 'Cryptonose'
     }
     forceMerge('log4j-api')
+
+    jpackage {
+        // Set the environment property BADASS_JLINK_JPACKAGE_HOME or explicitly configure the below property
+        jpackageHome = '/usr/lib/jvm/adoptopenjdk-14-openj9-amd64'
+        imageOptions += ['--icon', 'src/main/resources/launcher.png']
+        installerOptions += [
+                '--description', project.description,
+                '--app-version', version,
+                '--linux-shortcut'
+        ]
+        if (org.gradle.internal.os.OperatingSystem.current().windows) {
+            installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu']
+        }
+    }
 }
 
