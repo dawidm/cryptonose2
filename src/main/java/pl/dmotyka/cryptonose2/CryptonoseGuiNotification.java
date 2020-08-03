@@ -18,7 +18,7 @@ import java.text.DecimalFormat;
 import javafx.util.Duration;
 
 import dorkbox.notify.Notify;
-import org.controlsfx.control.Notifications;
+//import org.controlsfx.control.Notifications;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class CryptonoseGuiNotification {
@@ -58,17 +58,17 @@ public class CryptonoseGuiNotification {
     }
 
     private static void notifyControlsFx(String title, String text, Runnable action) {
-        javafx.application.Platform.runLater(()-> {
-            Notifications notifications = Notifications.
-                    create().
-                    darkStyle().
-                    title(title).
-                    text(text).
-                    hideAfter(Duration.millis(HIDE_AFTER));
-            if(action!=null)
-                notifications.onAction((actionEvent) -> action.run());
-            notifications.show();
-        });
+//        javafx.application.Platform.runLater(()-> {
+//            Notifications notifications = Notifications.
+//                    create().
+//                    darkStyle().
+//                    title(title).
+//                    text(text).
+//                    hideAfter(Duration.millis(HIDE_AFTER));
+//            if(action!=null)
+//                notifications.onAction((actionEvent) -> action.run());
+//            notifications.show();
+//        });
     }
 
     private static void notifyDorkbox(String title, String text, Runnable action) {

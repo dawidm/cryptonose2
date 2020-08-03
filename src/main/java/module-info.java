@@ -8,6 +8,5 @@ module cryptonose {
     requires javafx.fxml;
     requires xchange.core;
     requires Notify;
-    requires controlsfx;
     exports pl.dmotyka.cryptonose2.controllers;
 }
