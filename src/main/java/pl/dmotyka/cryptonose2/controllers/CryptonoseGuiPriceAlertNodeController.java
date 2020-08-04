@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -28,7 +28,6 @@ import java.time.format.DateTimeFormatter;
  */
 public class CryptonoseGuiPriceAlertNodeController {
     public HBox mainHBox;
-    public ImageView arrowImageView;
     public Label changeLabel;
     public Label pairNameLabel;
     public Label finalPriceLabel;
@@ -36,22 +35,18 @@ public class CryptonoseGuiPriceAlertNodeController {
     public Label exchangeLabel;
     public Label timeLabel;
 
-    private static final String RISING_ARROW_FILENAME = "arrow-up-24.png";
-    private static final String DROPPING_ARROW_FILENAME = "arrow-down-24.png";
-    private final Image priceRisingImage = new Image(getClass().getClassLoader().getResourceAsStream(RISING_ARROW_FILENAME));
-    private final Image priceDroppingImage = new Image(getClass().getClassLoader().getResourceAsStream(DROPPING_ARROW_FILENAME));
-
     public void fillPane(PriceAlert priceAlert) {
+        String arrowString;
         if(priceAlert.getPriceChange()<0) {
-            arrowImageView.setImage(priceDroppingImage);
+            arrowString = "\u2198";
             changeLabel.setStyle(changeLabel.getStyle() + "-fx-text-fill: red");
         }
         else {
-            arrowImageView.setImage(priceRisingImage);
+            arrowString = "\u2197";
             changeLabel.setStyle(changeLabel.getStyle() + "-fx-text-fill: green");
         }
         pairNameLabel.setText(priceAlert.getFormattedPair());
-        changeLabel.setText(String.format("%.2f (%.2f)",priceAlert.getPriceChange(),priceAlert.getRelativePriceChange()));
+        changeLabel.setText(String.format("%.2f (%.2f) %s",priceAlert.getPriceChange(),priceAlert.getRelativePriceChange(),arrowString));
         finalPriceLabel.setText(String.format("%.8f",priceAlert.getFinalPrice()));
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
         if(priceAlert.getExchangeSpecs()!=null) {
