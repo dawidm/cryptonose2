@@ -454,7 +454,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void initPriceAlertThresholds() {
         logger.info("updating alerts values for " + exchangeSpecs);
         for(long currentTimePeriod : TIME_PERIODS) {
-            priceAlertThresholdsMap.put(new Long(currentTimePeriod),
+            priceAlertThresholdsMap.put(currentTimePeriod,
                     PriceAlertThresholds.fromPreferences(
                             alertPreferences,
                             ""+currentTimePeriod
