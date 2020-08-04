@@ -7,7 +7,7 @@ plugins {
 
 group 'pl.dmotyka'
 version '2.9.5'
-description 'Alerts about significant price changes on cryptocurrency exchanges'
+description 'Real-time alerts about significant price changes on cryptocurrency exchanges'
 
 repositories {
     mavenCentral()
@@ -41,13 +41,19 @@ jlink {
         installerOptions += [
                 '--description', project.description,
                 '--app-version', version,
+                '--copyright', 'Copyrigtht 2020 Dawid Motyka',
+                '--license-file', 'LICENSE.txt',
+                '--vendor', 'Dawid Motyka'
         ]
         if (org.gradle.internal.os.OperatingSystem.current().linux) {
             imageOptions += ['--icon', 'src/main/resources/launcher.png']
             installerOptions += [
+                    '--linux-menu-group', 'Internet',
                     '--description', project.description,
                     '--app-version', version,
-                    '--linux-shortcut'
+                    '--linux-shortcut',
+                    '--linux-deb-maintainer', 'cryptonose2@gmail.com',
+                    '--linux-rpm-license-type', 'MIT'
             ]
         }
         if (org.gradle.internal.os.OperatingSystem.current().windows) {
@@ -59,4 +65,3 @@ jlink {
         }
     }
 }
-
