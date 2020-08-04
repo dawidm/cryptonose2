@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -35,6 +36,16 @@ public class CryptonoseGuiSoundAlerts {
 
     public CryptonoseGuiSoundAlerts(Preferences preferences) {
         this.preferences = preferences;
+        try {
+            System.out.println(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).toURI().getPath());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        System.out.println(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).getFile());
+        System.out.println(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).getPath());
+        System.out.println(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).toExternalForm());
+        System.out.println(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).toString());
+        System.out.println(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).getRef());
     }
 
     public static AudioFileFormat.Type[] getAudioFileTypes() {
