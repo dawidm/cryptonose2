@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'pl.dmotyka'
-version '2.9.4'
+version '2.9.5'
 description 'Alerts about significant price changes on cryptocurrency exchanges'
 
 repositories {
@@ -41,13 +41,23 @@ jlink {
         // Set the environment property BADASS_JLINK_JPACKAGE_HOME or explicitly configure the below property
         jpackageHome = '/usr/lib/jvm/adoptopenjdk-14-openj9-amd64'
         imageOptions += ['--icon', 'src/main/resources/launcher.png']
+        installerType="dmg"
         installerOptions += [
                 '--description', project.description,
                 '--app-version', version,
-                '--linux-shortcut'
         ]
+        if (org.gradle.internal.os.OperatingSystem.current().linux) {
+            installerOptions += [
+                    '--description', project.description,
+                    '--app-version', version,
+                    '--linux-shortcut'
+            ]
+        }
         if (org.gradle.internal.os.OperatingSystem.current().windows) {
-            installerOptions += ['--win-per-user-install', '--win-dir-chooser', '--win-menu']
+            installerOptions += ['--win-per-user-install',
+                                 '--win-dir-chooser',
+                                 '--win-menu',
+                                 '--win-shortcut',]
         }
     }
 }
