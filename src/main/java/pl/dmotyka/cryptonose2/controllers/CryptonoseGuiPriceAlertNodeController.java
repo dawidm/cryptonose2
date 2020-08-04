@@ -46,7 +46,8 @@ public class CryptonoseGuiPriceAlertNodeController {
             changeLabel.setStyle(changeLabel.getStyle() + "-fx-text-fill: green");
         }
         pairNameLabel.setText(priceAlert.getFormattedPair());
-        changeLabel.setText(String.format("%.2f (%.2f) %s",priceAlert.getPriceChange(),priceAlert.getRelativePriceChange(),arrowString));
+        String changeText = String.format("%.2f%% (%.2f) %s",Math.abs(priceAlert.getPriceChange()),Math.abs(priceAlert.getRelativePriceChange()),arrowString);
+        changeLabel.setText(changeText);
         finalPriceLabel.setText(String.format("%.8f",priceAlert.getFinalPrice()));
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
         if(priceAlert.getExchangeSpecs()!=null) {
