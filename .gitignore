@@ -1,4 +1,9 @@
 .idea/
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+build
 target/
 *.iml
 BittrexExchangeSpecs.settings
