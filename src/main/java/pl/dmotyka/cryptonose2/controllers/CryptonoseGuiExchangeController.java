@@ -360,11 +360,12 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             case CONNECTED:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED);
                 break;
-            case DISCONNECTED:
-                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
-                break;
+            case CONNECTING:
             case RECONNECTING:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING);
+                break;
+            case DISCONNECTED:
+                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
                 break;
             case NO_PAIRS:
                 Platform.runLater(()->{
