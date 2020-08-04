@@ -12,6 +12,8 @@ Cryptonose needs to know on which currency pairs it should track price changes. 
 * ***Choose markets***. Most of exchanges provide markets with more than one quote currency. Example of BTC markets (BTC as quote currency): ETH/BTC, LTC/BTC, XMR/BTC. You can use this option to track all pairs with significant volume. Select one one or more markets, then click on _Min 24h volume_ table cell to set volume and press Enter co confirm.
 * ***Select additional pairs***. Manually choose currency pairs. You can use only this option or combine it with _Choose markets_ filter.
 
+![cryptonose paris configuration]({{ site.baseurl }}/images/pairs-settings.png "Pairs configuration window")
+
 Note that choosing a lot of currency pairs will cause longer initialization (Cryptonose needs to get chart data from exchange). Bitfinex has quite strict limits for downloading chart data - getting data for one currency pair will take at least 18 seconds.  
 Very low volume currency pairs could trigger a lot of undesirable price alerts. You should choose currency pairs carefully.
 
@@ -24,7 +26,7 @@ Very low volume currency pairs could trigger a lot of undesirable price alerts. 
   * _Notification_ - show notification with alert details
 
 ## Price alerts tab
-![cryptonose2 price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
+![cryptonose price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
 ### What is relative price change?
 Relative price change is an indicator reflecting price change in given period in comparison to the average price change in the same time periods in past. The "past" is set to 50 periods.
 To visualize, example values of relative price change: 
@@ -33,14 +35,15 @@ To visualize, example values of relative price change:
 * 8 is very much - almost surely something interesting is happening with the price 
 
 ### Price alert
-![cryptonose2 price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")
+![cryptonose price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")
 * ***Price change*** - percent change in the price in given period. In parentheses - relative price change.
 * ***Pair*** - currency pair name in format _base/quote_. The color is different for every exchange.
 * ***Final price***. Example: if price alert is triggered by price drop from 0.15 to 0.14, the final price is 0.14
 * ***Period***. In parentheses - the real duration of price change in seconds.
 
 ## Exchange tab
-![cryptonose2 exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
+![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
+* ***Tab header***. On the tab header, near the exchange name, you can se a square indicating connection status. Red - disconnected, yellow - connecting, green - connected.
 * ***Log*** - describes what is happening.
 * **Table** - shows after clicking _Show table_. Visible table may increase resources (CPU) usage. Column names are self-explanatory, with one exception. There was not enough place for the word "change" in relative change columns ;) You can open web browser with market webpage by double-clicking on a row.
 * ***Sound, Browser*** and ***Notification*** - same as is _Global options_ but for selected exchange only
@@ -55,7 +58,7 @@ Price alert is triggered by:
 
 #### Example
 
-![cryptonose2 alert threshold]({{ site.baseurl }}/images/cryptonose-thresholds.png "5m period price alert thresholds")
+![cryptonose alert threshold]({{ site.baseurl }}/images/cryptonose-thresholds.png "5m period price alert thresholds")
 * Price rise 3.5%, relative 4.5 will trigger an alert.
 * Price drop -3.5%, relative -4.5 will trigger an alert.
 * Price rise 3.5%, relative 3 will not trigger an alert - relative change is too low.
