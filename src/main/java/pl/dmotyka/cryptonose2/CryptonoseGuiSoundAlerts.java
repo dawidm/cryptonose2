@@ -22,7 +22,7 @@ import java.util.prefs.Preferences;
 public class CryptonoseGuiSoundAlerts {
 
     public static final int ALERT_RISING = 1;
-    public static final int ALERT_FALLING = 2;
+    public static final int ALERT_DROPPING = 2;
     public static final String DEFAULT_RISING_SOUND_FILE="soundR.wav";
     public static final String DEFAULT_DROPPING_SOUND_FILE="soundD.wav";
 
@@ -44,19 +44,24 @@ public class CryptonoseGuiSoundAlerts {
         if(priceAlert.getPriceChange()>=0)
             soundAlert(CryptonoseGuiSoundAlerts.ALERT_RISING);
         else
-            soundAlert(CryptonoseGuiSoundAlerts.ALERT_FALLING);
+            soundAlert(CryptonoseGuiSoundAlerts.ALERT_DROPPING);
     }
 
     public void soundAlert(int type) {
-        String audioPath;
-        if(type==ALERT_RISING)
-            audioPath = preferences.get("soundRisingPath", DEFAULT_RISING_SOUND_FILE);
-        else
-            audioPath = preferences.get("soundDroppingPath", DEFAULT_DROPPING_SOUND_FILE);
-        if (audioPath.equals("")) {
-            logger.warning("Alert sound file not set");
+        String audioPath = null;
+        if(type==ALERT_RISING) {
+            audioPath = preferences.get("soundRisingPath", "");
+            if (preferences.getBoolean("defaultRisingSound", true) || audioPath == null || audioPath.isBlank()) {
+                audioPath = getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).getPath();
+            }
+        } else {
+            audioPath = preferences.get("soundDroppingPath", "");
+            if (preferences.getBoolean("defaultDroppingSound",true) || audioPath == null || audioPath.isBlank()) {
+                audioPath = getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE).getPath();
+            }
         }
-        new Thread(()->playFile(audioPath)).start();
+        String finalAudioPath = audioPath;
+        new Thread(()->playFile(finalAudioPath)).start();
     }
 
     private synchronized void playFile(String filename) {
@@ -64,11 +69,10 @@ public class CryptonoseGuiSoundAlerts {
             if (clip != null) {
                 if (clip.isRunning())
                     return;
-                else {
-                    clip.close();
-                    audioInputStream.close();
-                }
+                clip.close();
             }
+            if (audioInputStream != null)
+                audioInputStream.close();
             audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);

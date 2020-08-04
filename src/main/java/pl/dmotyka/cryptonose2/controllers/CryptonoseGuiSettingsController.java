@@ -48,13 +48,21 @@ public class CryptonoseGuiSettingsController implements Initializable {
     @FXML
     public TextField priceRisingSoundFileEditText;
     @FXML
-    public TextField priceFallingSoundFileEditText;
+    public TextField priceDroppingSoundFileEditText;
+    @FXML
+    public Button priceRisingSoundFileButton;
+    @FXML
+    public Button priceDroppingSoundFileButton;
     @FXML
     public HBox browserPathHBox;
     @FXML
     public Text supportedAudioFilesText;
     @FXML
     public CheckBox defBrowserCheckbox;
+    @FXML
+    public CheckBox defaultRisingSoundCheckBox;
+    @FXML
+    public CheckBox defaultDroppingSoundCheckBox;
 
     private Preferences preferences;
 
@@ -62,8 +70,6 @@ public class CryptonoseGuiSettingsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
         browserPathEditText.setText(preferences.get("browserPath", ""));
-        priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath",CryptonoseGuiSoundAlerts.DEFAULT_RISING_SOUND_FILE));
-        priceFallingSoundFileEditText.setText(preferences.get("soundDroppingPath", CryptonoseGuiSoundAlerts.DEFAULT_DROPPING_SOUND_FILE));
         if(CryptonoseGuiBrowser.isDefaultBrowserSupported()) {
             defBrowserCheckbox.setSelected(preferences.getBoolean("tryUseDefBrowser",true));
             browserPathHBox.setDisable(defBrowserCheckbox.isSelected());
@@ -74,6 +80,12 @@ public class CryptonoseGuiSettingsController implements Initializable {
         }
         supportedAudioFilesText.textProperty().setValue(supportedAudioFilesText.getText()
                 +Arrays.stream(CryptonoseGuiSoundAlerts.getAudioFileTypes()).map(type -> String.format("%s (*.%s)",type.toString(), type.getExtension())).collect(Collectors.joining(", ")));
+        priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath",CryptonoseGuiSoundAlerts.DEFAULT_RISING_SOUND_FILE));
+        priceDroppingSoundFileEditText.setText(preferences.get("soundDroppingPath", CryptonoseGuiSoundAlerts.DEFAULT_DROPPING_SOUND_FILE));
+        defaultRisingSoundCheckBox.setSelected(preferences.getBoolean("defaultRisingSound",true));
+        defaultRisingSoundUpdateSelected(defaultRisingSoundCheckBox.isSelected());
+        defaultDroppingSoundCheckBox.setSelected(preferences.getBoolean("defaultDroppingSound",true));
+        defaultDroppingSoundUpdateSelected(defaultDroppingSoundCheckBox.isSelected());
     }
 
     public void selectBrowserClick(ActionEvent actionEvent) {
@@ -100,8 +112,8 @@ public class CryptonoseGuiSettingsController implements Initializable {
         selectSoundFile(priceRisingSoundFileEditText);
     }
 
-    public void selectFallingSoundFileClick(ActionEvent actionEvent) {
-        selectSoundFile(priceFallingSoundFileEditText);
+    public void selectDroppingSoundFileClick(ActionEvent actionEvent) {
+        selectSoundFile(priceDroppingSoundFileEditText);
     }
 
     void selectSoundFile(TextField targetEditText) {
@@ -117,7 +129,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
                 targetEditText.setText(file.getCanonicalPath());
             }
             else {
-                throw new IOException();
+                throw new IOException("Cannot read file: " + file.getCanonicalPath());
             }
         }
         catch (IOException e) {
@@ -132,8 +144,10 @@ public class CryptonoseGuiSettingsController implements Initializable {
     public void saveClick(ActionEvent actionEvent) {
         preferences.putBoolean("tryUseDefBrowser",defBrowserCheckbox.isSelected());
         preferences.put("browserPath", browserPathEditText.getText());
+        preferences.putBoolean("defaultRisingSound", defaultRisingSoundCheckBox.isSelected());
+        preferences.putBoolean("defaultDroppingSound", defaultDroppingSoundCheckBox.isSelected());
         preferences.put("soundRisingPath", priceRisingSoundFileEditText.getText());
-        preferences.put("soundDroppingPath", priceFallingSoundFileEditText.getText());
+        preferences.put("soundDroppingPath", priceDroppingSoundFileEditText.getText());
         closeStage(actionEvent);
     }
 
@@ -144,9 +158,25 @@ public class CryptonoseGuiSettingsController implements Initializable {
     }
 
     public void defBrowserCheckboxOnAction(ActionEvent actionEvent) {
-        if(((CheckBox)actionEvent.getSource()).isSelected())
-            browserPathHBox.setDisable(true);
-        else
-            browserPathHBox.setDisable(false);
+        browserPathHBox.setDisable(((CheckBox)actionEvent.getSource()).isSelected());
     }
+
+    private void defaultRisingSoundUpdateSelected(boolean selected) {
+        priceRisingSoundFileEditText.setDisable(selected);
+        priceRisingSoundFileButton.setDisable(selected);
+    }
+
+    private void defaultDroppingSoundUpdateSelected(boolean selected) {
+        priceDroppingSoundFileEditText.setDisable(selected);
+        priceDroppingSoundFileButton.setDisable(selected);
+    }
+
+    public void defaultRisingSoundOnAction(ActionEvent actionEvent) {
+        defaultRisingSoundUpdateSelected(((CheckBox)actionEvent.getSource()).isSelected());
+    }
+
+    public void defaultDroppingSoundOnAction(ActionEvent actionEvent) {
+        defaultDroppingSoundUpdateSelected(((CheckBox)actionEvent.getSource()).isSelected());
+    }
+
 }
