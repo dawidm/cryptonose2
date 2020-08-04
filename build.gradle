@@ -1,5 +1,3 @@
-import javax.sound.sampled.AudioSystem
-
 plugins {
     id 'java'
     id 'application'
@@ -41,7 +39,6 @@ jlink {
         // Set the environment property BADASS_JLINK_JPACKAGE_HOME or explicitly configure the below property
         jpackageHome = '/usr/lib/jvm/adoptopenjdk-14-openj9-amd64'
         imageOptions += ['--icon', 'src/main/resources/launcher.png']
-        installerType="dmg"
         installerOptions += [
                 '--description', project.description,
                 '--app-version', version,
