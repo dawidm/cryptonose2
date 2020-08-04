@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -52,14 +53,15 @@ public class CryptonoseGuiSoundAlerts {
         if(type==ALERT_RISING) {
             audioPath = preferences.get("soundRisingPath", "");
             if (preferences.getBoolean("defaultRisingSound", true) || audioPath == null || audioPath.isBlank()) {
-                audioPath = getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE).getPath();
+                audioPath = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE)).getFile();
             }
         } else {
             audioPath = preferences.get("soundDroppingPath", "");
             if (preferences.getBoolean("defaultDroppingSound",true) || audioPath == null || audioPath.isBlank()) {
-                audioPath = getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE).getPath();
+                audioPath = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE)).getFile();
             }
         }
+        logger.fine("Audio file path: " + audioPath);
         String finalAudioPath = audioPath;
         new Thread(()->playFile(finalAudioPath)).start();
     }
