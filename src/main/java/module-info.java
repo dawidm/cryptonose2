@@ -9,5 +9,6 @@ module cryptonose {
     requires xchange.core;
     requires Notify;
     requires java.sql;
+    requires jdk.crypto.ec;
     exports pl.dmotyka.cryptonose2.controllers;
 }
