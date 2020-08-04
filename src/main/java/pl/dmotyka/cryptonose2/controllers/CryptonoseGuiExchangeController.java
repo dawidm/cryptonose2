@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -103,8 +103,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public Label lastTradeLabel;
     @FXML
     public Label connectionStatusLabel;
-    @FXML
-    public Label tpsLabel;
     @FXML
     public CheckBox soundCheckBox;
     @FXML
@@ -234,7 +232,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public void initialize(URL location, ResourceBundle resources) {
         scheduledExecutorService = Executors.newScheduledThreadPool(3);
         startLastTransactionTimer();
-        startChangesPerSecondCounter();
         pairPriceChangesMap = new HashMap<>();
         tablePairPriceChangesObservableList = FXCollections.observableArrayList();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
@@ -244,14 +241,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 updateTable(Arrays.asList(engine.requestAllPairsChanges()));
         });
         initShortcuts();
-    }
-
-    private void startChangesPerSecondCounter() {
-        scheduledExecutorService.scheduleAtFixedRate(() -> {
-            int currentTps=numTradesPerSecondAtomicInteger.get();
-            numTradesPerSecondAtomicInteger.set(0);
-            javafx.application.Platform.runLater(() -> tpsLabel.setText(""+currentTps));
-        },1,1,TimeUnit.SECONDS);
     }
 
     private void initTable() {
