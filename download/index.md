@@ -1,23 +1,28 @@
 {% include menu.md %}
 
-# Get Cryptonose 2.9
+# Get Cryptonose 2.9.7
 
-Cryptonose2 needs Java Runtine Environment 8 to work. If you don't have it, Windows version will open download page. For jar version, you can get JRE at [https://www.java.com/en/download/](https://www.java.com/en/download/).
+## Windows installer
+[**Download Widnows version** (Cryptonose-2.9.7.exe)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/Cryptonose-2.9.7.exe)
 
-## Installer
-Recommended for **Windows**. Tested on Windows 7 and Windows 10.
+## Linux packages
+DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using DEBs):\
+[**Download Linux DEB** (cryptonose_2.9.7-1_amd64.deb)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose_2.9.7-1_amd64.deb)\
+RPM package (Fedora, SUSE and other using RPMs):\
+[**Download Linux RPM** (cryptonose-2.9.7-1.x86_64.rpm)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.rpm)
 
-[setup-cryptonose2.9.2.exe](https://github.com/dawidm/cryptonose2/releases/download/v2.9.2/setup-cryptonose2.9.2.exe)
-
-## Jar Java executable
-This should work on **Windows, Linux and Mac Os X**. Tested on Ubuntu 16.04, Windows 7, Windows 10 with JRE 8u172. Not tested on Mac Os X. On some systems you can run it by just double clicking on the jar file. You can also use a shell command: `java -jar cryptonose2-2.9.2.jar`
-
-[jar-cryptonose2.9.2.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.2/jar-cryptonose2.9.2.zip)
+## Binaries
+For other Linux distros and if you don't want to install on Linux/Windows.\
+[cryptonose-2.9.7-1.x86_64.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.zip)\
+The executable is `bin/Cryptonose` (Linux), `bin/Cryptonose.bat` (Windows).
 
 ## Source code
-Source code is available on github. Source code for this release:
+Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.9.7).\
+Archive: [v2.9.7.zip](https://github.com/dawidm/cryptonose2/archive/v2.9.7.zip).
 
-[v2.9.2.tar.gz](https://github.com/dawidm/cryptonose2/archive/v2.9.2.tar.gz)
+## Licenses
+[Cryptonose license](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/LICENSE.txt)\
+[Third party licenses](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/LICENSE-3RD-PARTY.txt)
 
 ___
 
