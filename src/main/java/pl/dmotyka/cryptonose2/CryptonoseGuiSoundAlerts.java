@@ -14,8 +14,8 @@
 package pl.dmotyka.cryptonose2;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -49,24 +49,24 @@ public class CryptonoseGuiSoundAlerts {
     }
 
     public void soundAlert(int type) {
-        String audioPath = null;
+        URL audioURL = null;
         if(type==ALERT_RISING) {
-            audioPath = preferences.get("soundRisingPath", "");
+            String audioPath = preferences.get("soundRisingPath", "");
             if (preferences.getBoolean("defaultRisingSound", true) || audioPath == null || audioPath.isBlank()) {
-                audioPath = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE)).getFile();
+                audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE));
             }
         } else {
-            audioPath = preferences.get("soundDroppingPath", "");
+            String audioPath = preferences.get("soundDroppingPath", "");
             if (preferences.getBoolean("defaultDroppingSound",true) || audioPath == null || audioPath.isBlank()) {
-                audioPath = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE)).getFile();
+                audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE));
             }
         }
-        logger.fine("Audio file path: " + audioPath);
-        String finalAudioPath = audioPath;
-        new Thread(()->playFile(finalAudioPath)).start();
+        logger.fine("Audio file: " + audioURL.getFile());
+        URL finalAudioURL = audioURL;
+        new Thread(()->playFile(finalAudioURL)).start();
     }
 
-    private synchronized void playFile(String filename) {
+    private synchronized void playFile(URL audioURL) {
         try {
             if (clip != null) {
                 if (clip.isRunning())
@@ -75,7 +75,7 @@ public class CryptonoseGuiSoundAlerts {
             }
             if (audioInputStream != null)
                 audioInputStream.close();
-            audioInputStream = AudioSystem.getAudioInputStream(new File(filename));
+            audioInputStream = AudioSystem.getAudioInputStream(audioURL);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
