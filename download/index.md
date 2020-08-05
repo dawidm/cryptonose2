@@ -3,25 +3,32 @@
 # Get Cryptonose 2.9.7
 
 ## Windows installer
-[**Download Widnows version** (Cryptonose-2.9.7.exe)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/Cryptonose-2.9.7.exe)
+[**Download Windows version** (Cryptonose-2.9.7.exe)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/Cryptonose-2.9.7.exe)
 
 ## Linux packages
-DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using DEBs):\
-[**Download Linux DEB** (cryptonose_2.9.7-1_amd64.deb)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose_2.9.7-1_amd64.deb)\
-RPM package (Fedora, SUSE and other using RPMs):\
+DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using DEBs):
+
+[**Download Linux DEB** (cryptonose_2.9.7-1_amd64.deb)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose_2.9.7-1_amd64.deb)
+
+RPM package (Fedora, SUSE and other using RPMs):
+
 [**Download Linux RPM** (cryptonose-2.9.7-1.x86_64.rpm)](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.rpm)
 
 ## Binaries
-For other Linux distros and if you don't want to install on Linux/Windows.\
-[cryptonose-2.9.7-1.x86_64.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.zip)\
+For other Linux distros and if you don't want to install on Linux/Windows.
+
+[cryptonose-2.9.7-1.x86_64.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.zip)
+
 The executable is `bin/Cryptonose` (Linux), `bin/Cryptonose.bat` (Windows).
 
 ## Source code
-Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.9.7).\
+Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.9.7).
+
 Archive: [v2.9.7.zip](https://github.com/dawidm/cryptonose2/archive/v2.9.7.zip).
 
 ## Licenses
-[Cryptonose license](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/LICENSE.txt)\
+[Cryptonose license](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/LICENSE.txt)
+
 [Third party licenses](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/LICENSE-3RD-PARTY.txt)
 
 ___
