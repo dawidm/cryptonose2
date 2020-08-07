@@ -14,12 +14,12 @@ RPM package (Fedora, SUSE and other using RPMs):
 
 [<span style="color:green; font-weight: bold">Download Linux RPM (cryptonose-2.9.7-1.x86_64.rpm)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.rpm)
 
-## Binaries
-For other Linux distros and if you don't want to install on Linux/Windows.
+## Linux binaries
+For other Linux distros:
 
 [cryptonose-2.9.7-1.x86_64.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.zip)
 
-The executable is `bin/Cryptonose` (Linux), `bin/Cryptonose.bat` (Windows).
+The executable is `bin/Cryptonose`.
 
 ## Source code
 Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.9.7).
