@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2;
 import java.text.DecimalFormat;
 
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
 //import org.controlsfx.control.Notifications;
@@ -72,9 +73,11 @@ public class CryptonoseGuiNotification {
     }
 
     private static void notifyDorkbox(String title, String text, Runnable action) {
+        Screen screen = Screen.getPrimary();
+        double scaleX = screen.getOutputScaleX();
         Font defaultFont = Font.getDefault();
-        Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(defaultFont.getSize()*1.2));
-        Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)defaultFont.getSize());
+        Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(defaultFont.getSize()*1.2*scaleX));
+        Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(defaultFont.getSize()*scaleX));
         Notify notify = Notify.create().darkStyle().hideAfter(HIDE_AFTER).text(text).title(title);
         if(action!=null)
             notify=notify.onAction((notify1 -> action.run()));
