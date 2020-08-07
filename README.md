@@ -2,7 +2,7 @@
 
 # Cryptonose
 
-![cryptonose price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
+![cryptonose price alerts tab]({{ site.baseurl }}/images/desktop-screenshot.png "Main window, price alerts")
 
 ## What is Cryptonose?
 Cryptonose is a **free and open source** desktop application that keeps track of significant price changes within small time periods (5 minutes, 30 minutes) on cryptocurrency markets. It works in real time, connecting directly to supported cryptocurrency exchanges, giving you instant alert when price rises or drops.
