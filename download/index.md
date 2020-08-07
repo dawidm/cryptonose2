@@ -1,6 +1,6 @@
 {% include menu.md %}
 
-# Get Cryptonose 2.9.7
+# Get Cryptonose 2.9.8
 
 ## Windows installer
 [<span style="color:green; font-weight: bold">Download Windows version (Cryptonose-2.9.7.exe)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/Cryptonose-2.9.7.exe)
@@ -8,23 +8,30 @@
 ## Linux packages
 DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using DEBs):
 
-[<span style="color:green; font-weight: bold">Download Linux DEB (cryptonose_2.9.7-1_amd64.deb)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose_2.9.7-1_amd64.deb)
+[<span style="color:green; font-weight: bold">Download Linux DEB (cryptonose_2.9.8-1_amd64.deb)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.8/cryptonose_2.9.8-1_amd64.deb)
 
 RPM package (Fedora, SUSE and other using RPMs):
 
-[<span style="color:green; font-weight: bold">Download Linux RPM (cryptonose-2.9.7-1.x86_64.rpm)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.rpm)
+[<span style="color:green; font-weight: bold">Download Linux RPM (cryptonose-2.9.8-1.x86_64.rpm)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.8/cryptonose-2.9.8-1.x86_64.rpm)
+
+## Windows binaries
+May be used as porable version:
+
+...
+
+The executable file is `Cryptonose/bin/Cryptonose`.
 
 ## Linux binaries
 For other Linux distros:
 
-[cryptonose-2.9.7-1.x86_64.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/cryptonose-2.9.7-1.x86_64.zip)
+[cryptonose-2.9.8-Linux-x86_64.zip](https://github.com/dawidm/cryptonose2/releases/download/v2.9.8/cryptonose-2.9.8-Linux-x86_64.zip)
 
-The executable is `bin/Cryptonose`.
+The executable is `Cryptonose/bin/Cryptonose`.
 
 ## Source code
-Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.9.7).
+Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.9.8).
 
-Archive: [v2.9.7.zip](https://github.com/dawidm/cryptonose2/archive/v2.9.7.zip).
+Archive: [v2.9.8.zip](https://github.com/dawidm/cryptonose2/archive/v2.9.8.zip).
 
 ## Licenses
 [Cryptonose license](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/LICENSE.txt)
