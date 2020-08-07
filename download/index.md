@@ -3,7 +3,7 @@
 # Get Cryptonose 2.9.8
 
 ## Windows installer
-[<span style="color:green; font-weight: bold">Download Windows version (Cryptonose-2.9.7.exe)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.7/Cryptonose-2.9.7.exe)
+[<span style="color:green; font-weight: bold">Download Windows version (Cryptonose-2.9.8.exe)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.8/Cryptonose-2.9.8.exe)
 
 ## Linux packages
 DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using DEBs):
@@ -13,13 +13,6 @@ DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using D
 RPM package (Fedora, SUSE and other using RPMs):
 
 [<span style="color:green; font-weight: bold">Download Linux RPM (cryptonose-2.9.8-1.x86_64.rpm)</span>](https://github.com/dawidm/cryptonose2/releases/download/v2.9.8/cryptonose-2.9.8-1.x86_64.rpm)
-
-## Windows binaries
-May be used as porable version:
-
-...
-
-The executable file is `Cryptonose/bin/Cryptonose`.
 
 ## Linux binaries
 For other Linux distros:
