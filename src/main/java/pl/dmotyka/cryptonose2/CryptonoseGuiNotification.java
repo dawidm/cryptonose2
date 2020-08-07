@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -15,7 +15,7 @@ package pl.dmotyka.cryptonose2;
 
 import java.text.DecimalFormat;
 
-import javafx.util.Duration;
+import javafx.scene.text.Font;
 
 import dorkbox.notify.Notify;
 //import org.controlsfx.control.Notifications;
@@ -72,6 +72,9 @@ public class CryptonoseGuiNotification {
     }
 
     private static void notifyDorkbox(String title, String text, Runnable action) {
+        Font defaultFont = Font.getDefault();
+        Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(defaultFont.getSize()*1.2));
+        Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)defaultFont.getSize());
         Notify notify = Notify.create().darkStyle().hideAfter(HIDE_AFTER).text(text).title(title);
         if(action!=null)
             notify=notify.onAction((notify1 -> action.run()));
