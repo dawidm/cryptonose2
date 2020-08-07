@@ -106,7 +106,7 @@ public class CryptonoseGuiController extends Application {
         Preferences preferences = Preferences.userNodeForPackage(this.getClass());
         String activeExchanges=preferences.get("activeExchanges","");
         String[] loadedExchanges=activeExchanges.split(",");
-        List<ExchangeSpecs> loadedExchangesList =new ArrayList<>(loadedExchanges.length);
+        List<ExchangeSpecs> loadedExchangesList =new ArrayList<>();
         for(String currentLoadedExchange : loadedExchanges) {
             try {
                 ExchangeSpecs exchangeSpecs = ExchangeSpecs.fromStringName(currentLoadedExchange);
@@ -165,6 +165,7 @@ public class CryptonoseGuiController extends Application {
         for (ExchangeSpecs exchangeSpecs : loadedExchangesList) {
             loadExchange(exchangeSpecs,false);
         }
+        checkIfAllExchangesLoaded();
         soundCheckBox.setOnMouseClicked(event -> {
             for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
                 cryptonoseGuiExchangeController.enablePlaySound(soundCheckBox.isSelected());
@@ -208,6 +209,7 @@ public class CryptonoseGuiController extends Application {
                 logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
                 new Thread(()-> cryptonoseGuiExchangeController.close()).start();
                 activeExchangesControllersMap.remove(exchangeSpecs);
+                checkIfAllExchangesLoaded();
             });
             cryptonoseGuiExchangeController.soundCheckBox.setSelected(soundCheckBox.isSelected());
             cryptonoseGuiExchangeController.runBrowserCheckBox.setSelected(runBrowserCheckBox.isSelected());
@@ -217,6 +219,14 @@ public class CryptonoseGuiController extends Application {
         } catch (IOException e) {
             logger.log(Level.SEVERE,"when loading exchange",e);
             throw new Error();
+        }
+    }
+
+    void checkIfAllExchangesLoaded() {
+        if (activeExchangesControllersMap.size() == EXCHANGE_SPECSS.length) {
+            addExchangeButton.setDisable(true);
+        } else {
+            addExchangeButton.setDisable(false);
         }
     }
 
@@ -243,13 +253,14 @@ public class CryptonoseGuiController extends Application {
             Parent root = fxmlLoader.load();
             Set<ExchangeSpecs> allExchanges = new HashSet<>(Arrays.asList(EXCHANGE_SPECSS));
             allExchanges.removeAll(activeExchangesControllersMap.keySet());
-            ((CryptonoseGuiAddExchangeController)fxmlLoader.getController()).init(this,allExchanges.toArray(new ExchangeSpecs[allExchanges.size()]));
+            ((CryptonoseGuiAddExchangeController)fxmlLoader.getController()).init(this,allExchanges.toArray(new ExchangeSpecs[0]));
             Stage stage = new Stage();
             stage.setTitle("Add exchange");
             stage.setScene(new Scene(root));
             addExchangeButton.setDisable(true);
             stage.showAndWait();
             addExchangeButton.setDisable(false);
+            checkIfAllExchangesLoaded();
         } catch(IOException e) {
             throw new Error(e);
         }
