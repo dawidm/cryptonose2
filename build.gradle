@@ -22,6 +22,9 @@ group 'pl.dmotyka'
 version '2.9.8'
 description 'Real-time alerts about significant price changes on cryptocurrency exchanges'
 
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -84,3 +87,11 @@ jlink {
         }
     }
 }
+
+task packZip(type: Exec) {
+    if (org.gradle.internal.os.OperatingSystem.current().linux) {
+        commandLine 'bash', './pack_zip.sh', 'cryptonose-' + version + '-' + org.gradle.internal.os.OperatingSystem.current().name + '.zip'
+    }
+}
+
+jpackage.finalizedBy packZip
