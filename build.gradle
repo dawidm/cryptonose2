@@ -66,7 +66,8 @@ jlink {
         if (org.gradle.internal.os.OperatingSystem.current().linux) {
             imageOptions += ['--icon', 'src/main/resources/launcher.png']
             installerOptions += [
-                    '--linux-menu-group', 'Internet',
+                    '--resource-dir', "build/jpackage/Cryptonose/lib",
+                    '--linux-menu-group', 'Network',
                     '--description', project.description,
                     '--app-version', version,
                     '--linux-shortcut',
