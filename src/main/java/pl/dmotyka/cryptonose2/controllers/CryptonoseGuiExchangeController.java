@@ -55,7 +55,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -121,6 +120,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public Button alertSettingsButton;
 
     private Pane graphicsPane;
+    private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
     private ExchangeSpecs exchangeSpecs;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
@@ -168,8 +168,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
     }
 
-    public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, Pane graphicsPane) {
+    public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, Pane graphicsPane) {
         this.priceAlertTabController = cryptonoseGuiPriceAlertsTabController;
+        this.cryptonoseGuiController = cryptonoseGuiController;
         this.graphicsPane = graphicsPane;
         this.exchangeSpecs=exchangeSpecs;
         pairsButton.setOnMouseClicked(event -> pairsClick());
@@ -242,7 +243,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         showLogCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             logTitledPane.setVisible(newValue);
         });
-        initShortcuts();
+        soundCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
+        runBrowserCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
+        notificationCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
     }
 
     private void initTable() {
@@ -279,27 +282,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 if (node instanceof TableRow || node.getParent() instanceof TableRow) {
                     CryptonoseGuiBrowser.runBrowser(((TablePairPriceChanges)currenciesTableView.getSelectionModel().getSelectedItem()).getPairName(),exchangeSpecs);
                 }
-            }
-        });
-    }
-
-    private void initShortcuts() {
-        mainVBox.setOnKeyPressed(event -> {
-            if(event.getCode()==KeyCode.S) {
-                soundCheckBox.setSelected(!soundCheckBox.isSelected());
-                return;
-            }
-            if(event.getCode()==KeyCode.B) {
-                runBrowserCheckBox.setSelected(!runBrowserCheckBox.isSelected());
-                return;
-            }
-            if(event.getCode()==KeyCode.N) {
-                notificationCheckBox.setSelected(!notificationCheckBox.isSelected());
-                return;
-            }
-            if(event.getCode()==KeyCode.T) {
-                showLogCheckBox.setSelected(!showLogCheckBox.isSelected());
-                return;
             }
         });
     }
@@ -488,5 +470,15 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         currenciesTableView.setVisible(!enable);
         if(!enable)
             updateTable(Arrays.asList(engine.requestAllPairsChanges()));
+    }
+
+    public boolean getIsSoundEnabled() {
+        return soundCheckBox.isSelected();
+    }
+    public boolean getIsBrowserEnabled() {
+        return runBrowserCheckBox.isSelected();
+    }
+    public boolean getIsNotifEnabled() {
+        return notificationCheckBox.isSelected();
     }
 }

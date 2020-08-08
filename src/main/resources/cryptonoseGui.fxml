@@ -23,8 +23,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<VBox prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="mainVbox" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" />
       <TitledPane animated="false" collapsible="false" VBox.vgrow="NEVER">

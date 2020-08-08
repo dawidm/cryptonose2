@@ -70,6 +70,8 @@ public class CryptonoseGuiController extends Application {
             new BitfinexExchangeSpecs()};
 
     @FXML
+    public VBox mainVbox;
+    @FXML
     public TabPane mainTabPane;
     @FXML
     public CheckBox soundCheckBox;
@@ -171,32 +173,60 @@ public class CryptonoseGuiController extends Application {
         }
         checkIfAllExchangesLoaded();
         soundCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
-                cryptonoseGuiExchangeController.enablePlaySound(soundCheckBox.isSelected());
-            }
+            globalEnableSound(soundCheckBox.isSelected());
         });
         runBrowserCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
-                cryptonoseGuiExchangeController.enableRunBrowser(runBrowserCheckBox.isSelected());
-            }
+            globalEnableBrowser(runBrowserCheckBox.isSelected());
         });
         notificationCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
-                cryptonoseGuiExchangeController.enableNotification(notificationCheckBox.isSelected());
-            }
+            globalEnableNotif(notificationCheckBox.isSelected());
         });
         powerSaveCheckBox.setSelected(powerSave);
         for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
             cryptonoseGuiExchangeController.enablePowerSave(powerSave);
         }
         powerSaveCheckBox.setOnMouseClicked(event -> {
-            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
-                cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
-            }
+            enablePowerSave(powerSaveCheckBox.isSelected());
         });
         addExchangeButton.setOnMouseClicked(event -> addExchangeClick());
         settingsButton.setOnMouseClicked(event -> settingsClick());
         primaryStage.show();
+        updateCheckboxes();
+        initShortcuts();
+    }
+
+    private void initShortcuts() {
+        mainVbox.setOnKeyPressed(event -> {
+            if(event.getCode()==KeyCode.S) {
+                if (soundCheckBox.isIndeterminate())
+                    soundCheckBox.setSelected(true);
+                else
+                    soundCheckBox.setSelected(!soundCheckBox.isSelected());
+                globalEnableSound(soundCheckBox.isSelected());
+                return;
+            }
+            if(event.getCode()==KeyCode.B) {
+                if (runBrowserCheckBox.isIndeterminate())
+                    runBrowserCheckBox.setSelected(true);
+                else
+                    runBrowserCheckBox.setSelected(!runBrowserCheckBox.isSelected());
+                globalEnableBrowser(runBrowserCheckBox.isSelected());
+                return;
+            }
+            if(event.getCode()==KeyCode.N) {
+                if (notificationCheckBox.isIndeterminate())
+                    notificationCheckBox.setSelected(true);
+                else
+                    notificationCheckBox.setSelected(!notificationCheckBox.isSelected());
+                globalEnableNotif(notificationCheckBox.isSelected());
+                return;
+            }
+            if(event.getCode()==KeyCode.P) {
+                powerSaveCheckBox.setSelected(!powerSaveCheckBox.isSelected());
+                enablePowerSave(powerSaveCheckBox.isSelected());
+                return;
+            }
+        });
     }
 
     public void loadExchange(ExchangeSpecs exchangeSpecs, boolean activate) {
@@ -217,7 +247,7 @@ public class CryptonoseGuiController extends Application {
             if(activate)
                 mainTabPane.getSelectionModel().select(tab);
             CryptonoseGuiExchangeController cryptonoseGuiExchangeController = fxmlLoader.getController();
-            cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,graphicsPane);
+            cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this,graphicsPane);
             tab.setOnCloseRequest((event) -> {
                 logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
                 new Thread(()-> cryptonoseGuiExchangeController.close()).start();
@@ -299,5 +329,58 @@ public class CryptonoseGuiController extends Application {
         }
     }
 
+    public void updateCheckboxes() {
+        soundCheckBox.setAllowIndeterminate(true);
+        runBrowserCheckBox.setAllowIndeterminate(true);
+        notificationCheckBox.setAllowIndeterminate(true);
+        int soundSum = 0;
+        int browserSum = 0;
+        int notifSum = 0;
+        int numExchanges = activeExchangesControllersMap.size();
+        for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+            if (cryptonoseGuiExchangeController.getIsSoundEnabled())
+                soundSum++;
+            if (cryptonoseGuiExchangeController.getIsBrowserEnabled())
+                browserSum++;
+            if (cryptonoseGuiExchangeController.getIsNotifEnabled())
+                notifSum++;
+        }
+        Map<CheckBox, Integer> checkboxSumMap = Map.of(soundCheckBox, soundSum, runBrowserCheckBox, browserSum, notificationCheckBox, notifSum);
+        for (var entry: checkboxSumMap.entrySet()) {
+            if (entry.getValue() == numExchanges)
+                entry.getKey().setSelected(true);
+            else if (entry.getValue() == 0)
+                entry.getKey().setSelected(false);
+            else
+                entry.getKey().setIndeterminate(true);
+        }
+    }
 
+    private void globalEnableSound(boolean enable) {
+        soundCheckBox.setIndeterminate(false);
+        soundCheckBox.setAllowIndeterminate(false);
+        for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+            cryptonoseGuiExchangeController.enablePlaySound(enable);
+        }
+    }
+    private void globalEnableBrowser(boolean enable) {
+        runBrowserCheckBox.setIndeterminate(false);
+        runBrowserCheckBox.setAllowIndeterminate(false);
+        for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+            cryptonoseGuiExchangeController.enableRunBrowser(enable);
+        }
+    }
+    private void globalEnableNotif(boolean enable) {
+        notificationCheckBox.setIndeterminate(false);
+        notificationCheckBox.setAllowIndeterminate(false);
+        for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+            cryptonoseGuiExchangeController.enableNotification(enable);
+        }
+    }
+
+    private void enablePowerSave(boolean selected) {
+        for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+            cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
+        }
+    }
 }
