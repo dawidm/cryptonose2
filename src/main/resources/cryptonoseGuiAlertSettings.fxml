@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose2
   ~
-  ~ Copyright © 2019 Dawid Motyka
+  ~ Copyright © 2019-2020 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -13,11 +13,19 @@
   ~
   -->
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController">
+
+<HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -140,8 +148,9 @@
             <HBox alignment="CENTER_RIGHT" spacing="7.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#cancelClick" prefWidth="100.0" text="Cancel" />
+                  <Pane HBox.hgrow="ALWAYS" />
                   <Button minWidth="100.0" mnemonicParsing="false" onAction="#saveForAllExchangesClick" text="Save for all exchanges" />
-                  <Button mnemonicParsing="false" onAction="#saveClick" prefWidth="100.0" text="Save" />
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveClick" text="Save" />
                </children>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" />
