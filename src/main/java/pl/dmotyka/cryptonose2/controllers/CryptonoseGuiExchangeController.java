@@ -15,7 +15,6 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -57,6 +56,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -89,9 +89,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public static final long[] TIME_PERIODS = {300,1800};
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
-    private static final boolean CURRENCIES_TABLE_VISIBLE = false;
-    private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
-    public static final long NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED=60;
+    private static final boolean LOG_VISIBLE = false;
+    private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;
     private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
     @FXML
@@ -111,9 +110,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public TableView currenciesTableView;
     @FXML
+    public HBox tableDisabledHbox;
+    @FXML
     public TitledPane logTitledPane;
     @FXML
-    public CheckBox showTableCheckBox;
+    public CheckBox showLogCheckBox;
     @FXML
     public Button pairsButton;
     @FXML
@@ -173,6 +174,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.exchangeSpecs=exchangeSpecs;
         pairsButton.setOnMouseClicked(event -> pairsClick());
         alertSettingsButton.setOnMouseClicked(event -> alertSettingsClick());
+        currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
+        tableDisabledHbox.managedProperty().bind(tableDisabledHbox.visibleProperty());
+        logTitledPane.managedProperty().bind(logTitledPane.visibleProperty());
+        tableDisabledHbox.visibleProperty().bind(currenciesTableView.visibleProperty().not());
         cryptonosePreferences=Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
         alertPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(exchangeSpecs.getName());
         alertPreferences.addPreferenceChangeListener(evt -> {
@@ -234,10 +239,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         pairPriceChangesMap = new HashMap<>();
         tablePairPriceChangesObservableList = FXCollections.observableArrayList();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
-        showTableCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            currenciesTableView.setVisible(newValue);
-            if(newValue)
-                updateTable(Arrays.asList(engine.requestAllPairsChanges()));
+        showLogCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            logTitledPane.setVisible(newValue);
         });
         initShortcuts();
     }
@@ -268,9 +271,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         p2RelativeChangeCol.setPrefWidth(100);
         currenciesTableView.setItems(tablePairPriceChangesObservableList);
         currenciesTableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol);
-        currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
-        currenciesTableView.setVisible(CURRENCIES_TABLE_VISIBLE);
-        showTableCheckBox.setSelected(CURRENCIES_TABLE_VISIBLE);
+        logTitledPane.setVisible(LOG_VISIBLE);
+        showLogCheckBox.setSelected(LOG_VISIBLE);
         currenciesTableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
@@ -296,7 +298,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 return;
             }
             if(event.getCode()==KeyCode.T) {
-                showTableCheckBox.setSelected(!showTableCheckBox.isSelected());
+                showLogCheckBox.setSelected(!showLogCheckBox.isSelected());
                 return;
             }
         });
@@ -398,7 +400,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         List<PriceAlert> priceAlerts = cryptonoseGuiAlertChecker.checkAlerts(priceChangesList);
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
-        if(showTableCheckBox.isSelected())
+        if(currenciesTableView.isVisible())
             updateTable(priceChangesList);
     }
 
@@ -456,9 +458,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (lastTradeTimeMillis!=0) {
                 long lastTradeSecondsAgo = (System.currentTimeMillis() - lastTradeTimeMillis) / 1000;
-                if(lastTradeSecondsAgo>NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED) {
-
-                }
                 javafx.application.Platform.runLater(() -> {
                     lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago");
                 });
@@ -476,10 +475,18 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public void enablePlaySound(boolean enable) {
         soundCheckBox.setSelected(enable);
     }
+
     public void enableRunBrowser(boolean enable) {
         runBrowserCheckBox.setSelected(enable);
     }
+
     public void enableNotification(boolean enable) {
         notificationCheckBox.setSelected(enable);
+    }
+
+    public void enablePowerSave(boolean enable) {
+        currenciesTableView.setVisible(!enable);
+        if(!enable)
+            updateTable(Arrays.asList(engine.requestAllPairsChanges()));
     }
 }

@@ -81,6 +81,8 @@ public class CryptonoseGuiController extends Application {
     public Button addExchangeButton;
     @FXML
     public Button settingsButton;
+    @FXML
+    public CheckBox powerSaveCheckBox;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
 
@@ -105,6 +107,7 @@ public class CryptonoseGuiController extends Application {
         primaryStage.setTitle("Cryptonose");
         Preferences preferences = Preferences.userNodeForPackage(this.getClass());
         String activeExchanges=preferences.get("activeExchanges","");
+        boolean powerSave = preferences.getBoolean("powerSave", false);
         String[] loadedExchanges=activeExchanges.split(",");
         List<ExchangeSpecs> loadedExchangesList =new ArrayList<>();
         for(String currentLoadedExchange : loadedExchanges) {
@@ -154,6 +157,7 @@ public class CryptonoseGuiController extends Application {
         primaryStage.setOnCloseRequest(handler -> {
             saveSceneSizePosition();
             saveExchangesList();
+            saveOtherSettings();
             System.exit(0);
         });
         fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPriceAlertsTab.fxml"));
@@ -179,6 +183,15 @@ public class CryptonoseGuiController extends Application {
         notificationCheckBox.setOnMouseClicked(event -> {
             for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
                 cryptonoseGuiExchangeController.enableNotification(notificationCheckBox.isSelected());
+            }
+        });
+        powerSaveCheckBox.setSelected(powerSave);
+        for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+            cryptonoseGuiExchangeController.enablePowerSave(powerSave);
+        }
+        powerSaveCheckBox.setOnMouseClicked(event -> {
+            for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
+                cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
             }
         });
         addExchangeButton.setOnMouseClicked(event -> addExchangeClick());
@@ -245,6 +258,11 @@ public class CryptonoseGuiController extends Application {
         Preferences preferences = Preferences.userNodeForPackage(this.getClass());
         String activeExchangesString= activeExchangesControllersMap.keySet().stream().map(activeExchange -> activeExchange.getName()).collect(Collectors.joining(","));
         preferences.put("activeExchanges",activeExchangesString);
+    }
+
+    private void saveOtherSettings() {
+        Preferences preferences = Preferences.userNodeForPackage(this.getClass());
+        preferences.putBoolean("powerSave", powerSaveCheckBox.isSelected());
     }
 
     public void addExchangeClick() {
