@@ -331,8 +331,11 @@ public class CryptonoseGuiController extends Application {
 
     public void updateCheckboxes() {
         soundCheckBox.setAllowIndeterminate(true);
+        soundCheckBox.setIndeterminate(false);
         runBrowserCheckBox.setAllowIndeterminate(true);
+        runBrowserCheckBox.setIndeterminate(false);
         notificationCheckBox.setAllowIndeterminate(true);
+        notificationCheckBox.setIndeterminate(false);
         int soundSum = 0;
         int browserSum = 0;
         int notifSum = 0;
