@@ -19,7 +19,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.PriceAlert;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 
+import java.text.DecimalFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -48,7 +50,7 @@ public class CryptonoseGuiPriceAlertNodeController {
         pairNameLabel.setText(priceAlert.getFormattedPair());
         String changeText = String.format("%.2f%% (%.2f) %s",Math.abs(priceAlert.getPriceChange()),Math.abs(priceAlert.getRelativePriceChange()),arrowString);
         changeLabel.setText(changeText);
-        finalPriceLabel.setText(String.format("%.8f",priceAlert.getFinalPrice()));
+        finalPriceLabel.setText(DecimalFormatter.formatDecimalPrice(priceAlert.getFinalPrice()));
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
         if(priceAlert.getExchangeSpecs()!=null) {
             exchangeLabel.setText(priceAlert.getExchangeSpecs().getName());

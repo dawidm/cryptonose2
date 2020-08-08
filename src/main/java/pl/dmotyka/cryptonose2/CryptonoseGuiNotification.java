@@ -20,12 +20,12 @@ import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
 //import org.controlsfx.control.Notifications;
+import pl.dmotyka.cryptonose2.controllers.DecimalFormatter;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class CryptonoseGuiNotification {
 
     public static final int HIDE_AFTER=7000;
-    public static final DecimalFormat PRICE_DECIMAL_FORMAT=new DecimalFormat("#.########");
 
     public enum NotificationLibrary {CONTROLSFX,DORKBOX};
 
@@ -35,7 +35,7 @@ public class CryptonoseGuiNotification {
                 priceAlert.getRelativePriceChange(),
                 priceAlert.getFormattedTimePeriod(),
                 priceAlert.getChangeTimeSeconds(),
-                PRICE_DECIMAL_FORMAT.format(priceAlert.getFinalPrice()));
+                DecimalFormatter.formatDecimalPrice(priceAlert.getFinalPrice()));
         String notifyTitle = String.format("%s, %s", priceAlert.getFormattedPair(), priceAlert.getExchangeSpecs().getName());
         switch (notificationLibrary) {
             case CONTROLSFX:

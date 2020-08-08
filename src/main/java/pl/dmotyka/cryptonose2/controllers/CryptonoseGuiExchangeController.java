@@ -92,8 +92,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final boolean CURRENCIES_TABLE_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS =1000;
     public static final long NO_TRADES_PERIOD_SECONDS_TO_SET_DISCONNECTED=60;
-    public static final DecimalFormat PRICE_DECIMAL_FORMAT=new DecimalFormat("#.########");
-    public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
+    private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
     @FXML
     public VBox mainVBox;
@@ -164,7 +163,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if(item==null)
                 setText(null);
             else
-                setText(PRICE_DECIMAL_FORMAT.format(item));
+                setText(DecimalFormatter.formatDecimalPrice(item.doubleValue()));
         }
     }
 
@@ -428,7 +427,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 priceAlert.getPriceChange(),
                 priceAlert.getRelativePriceChange(),
                 TimeConverter.secondsToFullMinutesHoursDays((int)priceAlert.getPeriodSeconds()),
-                PRICE_DECIMAL_FORMAT.format(priceAlert.getFinalPrice()));
+                DecimalFormatter.formatDecimalPrice(priceAlert.getFinalPrice()));
         consoleLog(alertString);
         if (runBrowserCheckBox.isSelected()) {
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
