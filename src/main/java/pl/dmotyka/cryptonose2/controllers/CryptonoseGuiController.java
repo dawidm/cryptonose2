@@ -20,6 +20,7 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +41,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
@@ -80,7 +83,7 @@ public class CryptonoseGuiController extends Application {
     @FXML
     public CheckBox notificationCheckBox;
     @FXML
-    public Button addExchangeButton;
+    public MenuButton addExchangeMenuButton;
     @FXML
     public Button settingsButton;
     @FXML
@@ -188,7 +191,7 @@ public class CryptonoseGuiController extends Application {
         powerSaveCheckBox.setOnMouseClicked(event -> {
             enablePowerSave(powerSaveCheckBox.isSelected());
         });
-        addExchangeButton.setOnMouseClicked(event -> addExchangeClick());
+        addExchangeMenuButton.setOnShowing(event -> addExchangeClick());
         settingsButton.setOnMouseClicked(event -> settingsClick());
         primaryStage.show();
         updateCheckboxes();
@@ -267,9 +270,9 @@ public class CryptonoseGuiController extends Application {
 
     void checkIfAllExchangesLoaded() {
         if (activeExchangesControllersMap.size() == EXCHANGE_SPECSS.length) {
-            addExchangeButton.setDisable(true);
+            addExchangeMenuButton.setDisable(true);
         } else {
-            addExchangeButton.setDisable(false);
+            addExchangeMenuButton.setDisable(false);
         }
     }
 
@@ -296,21 +299,18 @@ public class CryptonoseGuiController extends Application {
     }
 
     public void addExchangeClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAddExchange.fxml"));
-            Parent root = fxmlLoader.load();
-            Set<ExchangeSpecs> allExchanges = new HashSet<>(Arrays.asList(EXCHANGE_SPECSS));
-            allExchanges.removeAll(activeExchangesControllersMap.keySet());
-            ((CryptonoseGuiAddExchangeController)fxmlLoader.getController()).init(this,allExchanges.toArray(new ExchangeSpecs[0]));
-            Stage stage = new Stage();
-            stage.setTitle("Add exchange");
-            stage.setScene(new Scene(root));
-            addExchangeButton.setDisable(true);
-            stage.showAndWait();
-            addExchangeButton.setDisable(false);
-            checkIfAllExchangesLoaded();
-        } catch(IOException e) {
-            throw new Error(e);
+        Set<ExchangeSpecs> allExchanges = new HashSet<>(Arrays.asList(EXCHANGE_SPECSS));
+        allExchanges.removeAll(activeExchangesControllersMap.keySet());
+        addExchangeMenuButton.getItems().clear();
+        ExchangeSpecs[] allExchangesSorted = Arrays.stream(allExchanges.toArray()).
+                sorted(Comparator.comparing(Object::toString)).toArray(ExchangeSpecs[]::new);
+        for (var exchange: allExchangesSorted) {
+            MenuItem item = new MenuItem(exchange.getName());
+            item.setOnAction(e -> {
+                loadExchange(exchange, true);
+                checkIfAllExchangesLoaded();
+            });
+            addExchangeMenuButton.getItems().add(item);
         }
     }
 
