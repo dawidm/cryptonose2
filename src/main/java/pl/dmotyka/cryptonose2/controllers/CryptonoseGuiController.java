@@ -260,6 +260,7 @@ public class CryptonoseGuiController extends Application {
             cryptonoseGuiExchangeController.soundCheckBox.setSelected(soundCheckBox.isSelected());
             cryptonoseGuiExchangeController.runBrowserCheckBox.setSelected(runBrowserCheckBox.isSelected());
             cryptonoseGuiExchangeController.notificationCheckBox.setSelected(notificationCheckBox.isSelected());
+            cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
             activeExchangesControllersMap.put(exchangeSpecs, cryptonoseGuiExchangeController);
 
         } catch (IOException e) {
