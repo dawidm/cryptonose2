@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'pl.dmotyka'
-version '2.9.8'
+version '2.10.0'
 description 'Real-time alerts about significant price changes on cryptocurrency exchanges'
 
 sourceCompatibility = '11'
