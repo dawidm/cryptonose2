@@ -36,6 +36,8 @@ dependencies {
     compile group: 'pl.dmotyka', name: 'exchangeutils', version:'1.5.2'
     compile group: 'pl.dmotyka', name: 'cryptonoseengine', version:'1.3.1'
     compile group: 'com.dorkbox', name: 'Notify', version:'3.7'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
 }
 
 javafx {
@@ -45,14 +47,14 @@ javafx {
 mainClassName = "pl.dmotyka.cryptonose2.AppStarter"
 
 run {
-    jvmArgs = ['-Dsun.java2d.uiScale=1.0']
+    jvmArgs = ['-Dsun.java2d.uiScale=1.0', '-Dversion='+project.version]
 }
 
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'Cryptonose'
-        jvmArgs = ['-Dsun.java2d.uiScale=1.0']
+        jvmArgs = ['-Dsun.java2d.uiScale=1.0', '-Dversion='+project.version]
     }
     forceMerge('log4j-api')
 

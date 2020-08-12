@@ -10,5 +10,7 @@ module cryptonose {
     requires Notify;
     requires java.sql;
     requires jdk.crypto.ec;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
     exports pl.dmotyka.cryptonose2.controllers;
 }
