@@ -5,6 +5,7 @@ module cryptonose {
     requires java.prefs;
     requires exchangeutils;
     requires cryptonoseengine;
+    requires minimalfxcharts;
     requires javafx.fxml;
     requires xchange.core;
     requires Notify;

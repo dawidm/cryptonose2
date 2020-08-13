@@ -14,41 +14,47 @@
   -->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.layout.*?>
-<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
    <children>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefWidth="200.0" HBox.hgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <Label fx:id="changeLabel" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="0.0% (0.0)" />
+                  <Label fx:id="changeLabel" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="0.0% (0.0)" HBox.hgrow="NEVER" />
+                  <StackPane fx:id="chartPane" maxWidth="64.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></StackPane>
                </children>
             </HBox>
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="pairNameLabel" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="?" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="150.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="finalPriceLabel" text="?" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="periodLabel" text="?" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="exchangeLabel" text="?" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0">
          <children>
             <Label fx:id="timeLabel" text="?" />
          </children>

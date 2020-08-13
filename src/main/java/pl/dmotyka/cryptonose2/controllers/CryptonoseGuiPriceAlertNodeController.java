@@ -13,31 +13,43 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonose2.PriceAlert;
-import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
-
-import java.text.DecimalFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+
+import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
+import pl.dmotyka.cryptonose2.PriceAlert;
+import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
+import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
 /**
  * Created by dawid on 9/3/17.
  */
 public class CryptonoseGuiPriceAlertNodeController {
+    @FXML
     public HBox mainHBox;
+    @FXML
     public Label changeLabel;
+    @FXML
     public Label pairNameLabel;
+    @FXML
     public Label finalPriceLabel;
+    @FXML
     public Label periodLabel;
+    @FXML
     public Label exchangeLabel;
+    @FXML
     public Label timeLabel;
+    @FXML
+    public StackPane chartPane;
 
-    public void fillPane(PriceAlert priceAlert) {
+    public void fillPane(PriceAlert priceAlert, ChartCandle[] chartCandles) {
         String arrowString;
         if(priceAlert.getPriceChange()<0) {
             arrowString = "\u2198";
@@ -47,8 +59,15 @@ public class CryptonoseGuiPriceAlertNodeController {
             arrowString = "\u2197";
             changeLabel.setStyle(changeLabel.getStyle() + "-fx-text-fill: green");
         }
+        if (chartCandles != null) {
+            MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles));
+            minimalFxChart.setMarginsHorizontalPercent(0.01);
+            minimalFxChart.setMarginsVerticalPercent(0.01);
+            minimalFxChart.setChartPaint(Color.BLACK);
+            chartPane.getChildren().add(minimalFxChart);
+        }
         pairNameLabel.setText(priceAlert.getFormattedPair());
-        String changeText = String.format("%.2f%% (%.2f) %s",Math.abs(priceAlert.getPriceChange()),Math.abs(priceAlert.getRelativePriceChange()),arrowString);
+        String changeText = String.format("%s %.2f%% (%.2f)",arrowString, Math.abs(priceAlert.getPriceChange()),Math.abs(priceAlert.getRelativePriceChange()));
         changeLabel.setText(changeText);
         finalPriceLabel.setText(DecimalFormatter.formatDecimalPrice(priceAlert.getFinalPrice()));
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
@@ -61,4 +80,9 @@ public class CryptonoseGuiPriceAlertNodeController {
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
     }
+
+    private double[] chartCandlesToClosePrices(ChartCandle[] chartCandles) {
+        return Arrays.stream(chartCandles).mapToDouble(candle -> candle.getClose()).toArray();
+    }
+
 }

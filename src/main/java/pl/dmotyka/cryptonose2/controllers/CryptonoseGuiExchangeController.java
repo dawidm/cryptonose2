@@ -75,6 +75,8 @@ import pl.dmotyka.cryptonoseengine.EngineMessage;
 import pl.dmotyka.cryptonoseengine.EngineMessageReceiver;
 import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
+import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;
+import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
@@ -87,6 +89,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
     public static final long[] TIME_PERIODS = {300,1800};
+    private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
+    public static final long MINI_CHART_TIMEFRAME_SEC = 3600;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean LOG_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;
@@ -404,7 +408,15 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void handlePriceAlert(PriceAlert priceAlert) {
-        priceAlertTabController.addAlert(priceAlert);
+        CurrencyPairTimePeriod currencyPairTimePeriod = new CurrencyPairTimePeriod(priceAlert.getPair(),MINI_CHART_TIME_PERIOD_SEC);
+        engine.requestCandlesGeneration(currencyPairTimePeriod);
+        ChartCandle[] chartCandles = engine.getCandleData(currencyPairTimePeriod);
+        int numCandles = (int)(MINI_CHART_TIMEFRAME_SEC / MINI_CHART_TIME_PERIOD_SEC);
+        if (chartCandles.length < numCandles)
+            chartCandles = null;
+        else
+            chartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length-numCandles, chartCandles.length);
+        priceAlertTabController.addAlert(priceAlert, chartCandles);
         String alertString = String.format("Price alert on %s, %s: change by %.2f (relative: %.2f), period: %s, final price: %s",
                 priceAlert.getFormattedPair(),
                 exchangeSpecs.getName(),
