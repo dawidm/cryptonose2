@@ -4,5 +4,5 @@ Modules:
 https://github.com/dawidm/cryptonoseengine  
 https://github.com/dawidm/exchangeutils  
 https://github.com/dawidm/dmutils  
-
+https://github.com/dawidm/minimal-fx-charts
 
