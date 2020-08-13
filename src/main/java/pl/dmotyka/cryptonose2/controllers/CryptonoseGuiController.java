@@ -27,12 +27,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -41,18 +43,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
+import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
+import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
 import pl.dmotyka.exchangeutils.binance.BinanceExchangeSpecs;
 import pl.dmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
@@ -88,6 +95,12 @@ public class CryptonoseGuiController extends Application {
     public Button settingsButton;
     @FXML
     public CheckBox powerSaveCheckBox;
+    @FXML
+    public HBox newVersionHBox;
+    @FXML
+    public Label newVersionShowLabel;
+    @FXML
+    public Label newVersionHideLabel;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
 
@@ -104,6 +117,7 @@ public class CryptonoseGuiController extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         Locale.setDefault(Locale.US);
+        checkVersion();
         this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
@@ -196,6 +210,58 @@ public class CryptonoseGuiController extends Application {
         primaryStage.show();
         updateCheckboxes();
         initShortcuts();
+    }
+
+    private void checkVersion() {
+        Platform.runLater(() -> {
+            newVersionHBox.setVisible(false);
+            newVersionHBox.setManaged(false);
+        });
+        Executors.newCachedThreadPool().submit(() -> {
+            VersionInfo versionInfo = null;
+            try {
+                versionInfo = UpdateChecker.getNewVersionURLOrNull();
+                if (versionInfo==null)
+                    return;
+                Preferences preferences = Preferences.userNodeForPackage(this.getClass());
+                String hiddenNewVersion = preferences.get("hiddenNewVersion", null);
+                if (hiddenNewVersion == null || !hiddenNewVersion.equals(versionInfo.getVersionString())) {
+                    VersionInfo finalVersionInfo = versionInfo;
+                    Platform.runLater(() -> {
+                        newVersionShowLabel.setOnMouseClicked(e -> {
+                            versionWindow(finalVersionInfo);
+                            preferences.put("hiddenNewVersion", finalVersionInfo.getVersionString());
+                            newVersionHBox.setVisible(false);
+                            newVersionHBox.setManaged(false);
+                        });
+                        newVersionHideLabel.setOnMouseClicked(e -> {
+                            preferences.put("hiddenNewVersion", finalVersionInfo.getVersionString());
+                            newVersionHBox.setVisible(false);
+                            newVersionHBox.setManaged(false);
+                        });
+                        newVersionHBox.setVisible(true);
+                        newVersionHBox.setManaged(true);
+                });
+                }
+            } catch (IOException | GetVersionException e) {
+                logger.log(Level.WARNING,"when checking version",e);
+            }
+        });
+    }
+
+    private void versionWindow(VersionInfo versionInfo) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiVersionWindow.fxml"));
+            Parent root = fxmlLoader.load();
+            CryptonoseGuiVersionWindowController cryptonoseGuiVersionWindowController = fxmlLoader.getController();
+            cryptonoseGuiVersionWindowController.init(versionInfo, this);
+            Stage stage = new Stage();
+            stage.setTitle("New version");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
     private void initShortcuts() {
