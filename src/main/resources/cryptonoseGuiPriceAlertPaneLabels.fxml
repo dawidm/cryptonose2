@@ -19,9 +19,14 @@
 <?import javafx.scene.layout.VBox?>
 <HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
    <children>
-      <VBox alignment="CENTER_LEFT" prefWidth="200.0" HBox.hgrow="ALWAYS">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="changeLabel" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Price change, chart (1h)" />
+            <Label fx:id="changeLabel" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Price change" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="changeLabel1" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Chart (1h)" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
@@ -44,7 +49,7 @@
             <Label fx:id="pairNameLabel3" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Exchange" />
          </children>
       </VBox>
-      <VBox prefWidth="100.0">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0">
          <children>
             <Label fx:id="pairNameLabel31" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Time" />
          </children>
