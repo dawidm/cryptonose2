@@ -6,6 +6,7 @@
 
 <a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.10.0/Cryptonose-2.10.0.exe">Download Windows version (Cryptonose-2.10.0.exe)</a>
 
+&nbsp;
 
 ## Linux packages
 
@@ -17,6 +18,7 @@ RPM package (Fedora, SUSE and other using RPMs):
 
 <a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.10.0/cryptonose-2.10.0-1.x86_64.rpm">Download Linux RPM (cryptonose-2.10.0-1.x86_64.rpm)</a>
 
+&nbsp;
 
 ## Linux binaries
 For other Linux distros:
