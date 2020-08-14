@@ -20,8 +20,11 @@ footer {
 	font-weight: bold;
 	text-decoration: none;
 	color: white;
+	border: 1px solid #009933;
 	border-radius: 20px;
 	padding: 15px;
+	margin-top: 25px;
+	margin-bottom: 25px;
 }
 .download-button:hover {
 	font-weight: bold;
