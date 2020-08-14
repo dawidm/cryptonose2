@@ -16,17 +16,17 @@ footer {
 	width: 900px;
 }
 .download-button {
-	background-color: #33cc33;
+	background-color: #27ae60;
 	font-weight: bold;
 	text-decoration: none;
 	color: white;
-	border: 1px solid #009933;
-	border-radius: 20px;
+	border-radius: 5px;
 	padding: 15px;
 	margin-top: 25px;
 	margin-bottom: 25px;
 }
 .download-button:hover {
+	background-color: #2ecc71;
 	font-weight: bold;
 	text-decoration: none;
 	color: white;
