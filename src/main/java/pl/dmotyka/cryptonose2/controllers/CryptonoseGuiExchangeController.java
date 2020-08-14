@@ -376,6 +376,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void receiveChanges(PriceChanges priceChanges) {
+        //TODO refactor?
         List<PriceChanges> priceChangesList = new LinkedList<>();
         priceChangesList.add(priceChanges);
         receiveChanges(priceChangesList);
@@ -409,8 +410,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void handlePriceAlert(PriceAlert priceAlert) {
         CurrencyPairTimePeriod currencyPairTimePeriod = new CurrencyPairTimePeriod(priceAlert.getPair(),MINI_CHART_TIME_PERIOD_SEC);
-        engine.requestCandlesGeneration(currencyPairTimePeriod);
-        ChartCandle[] chartCandles = engine.getCandleData(currencyPairTimePeriod);
+        ChartCandle[] chartCandles = engine.requestCandlesGeneration(currencyPairTimePeriod);
+        ChartCandle lastCandle = chartCandles[chartCandles.length-1];
+        chartCandles[chartCandles.length-1] = new ChartCandle(lastCandle.getHigh(),
+                lastCandle.getLow(),
+                lastCandle.getOpen(),
+                priceAlert.getFinalPrice(),
+                lastCandle.getTimestampSeconds());
         int numCandles = (int)(MINI_CHART_TIMEFRAME_SEC / MINI_CHART_TIME_PERIOD_SEC);
         if (chartCandles.length < numCandles)
             chartCandles = null;
