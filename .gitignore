@@ -8,6 +8,7 @@ target/
 *.iml
 BittrexExchangeSpecs.settings
 logging.settings
+logging*.settings
 package
 XtbExchangeSpecs.settings
 *.log
