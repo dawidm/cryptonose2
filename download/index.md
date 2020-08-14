@@ -27,12 +27,14 @@ For other Linux distros:
 
 The executable is `Cryptonose/bin/Cryptonose`.
 
+&nbsp;
 
 ## Source code
 Source code is available on [github repository](https://github.com/dawidm/cryptonose2/releases/tag/v2.10.0).
 
 Archive: [v2.10.0.zip](https://github.com/dawidm/cryptonose2/archive/v2.10.0.zip).
 
+&nbsp;
 
 ## Licenses
 [Cryptonose license](https://github.com/dawidm/cryptonose2/releases/download/v2.10.0/LICENSE.txt)
