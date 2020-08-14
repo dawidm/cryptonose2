@@ -21,7 +21,3 @@ You may want to try Cryptonose if you are day trader on cryptocurrency markets. 
 Currently supported exchanges: **Binance, Bitfinex, Poloniex**. Another exchanges may be added in the future, but existing ones provide data for most of popular markets, so you can use Cryptonose even if you trade on another exchange.
 
 ![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
-
-___
-
-{% include donate.md %}
