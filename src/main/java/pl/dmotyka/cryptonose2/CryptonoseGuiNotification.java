@@ -13,13 +13,11 @@
 
 package pl.dmotyka.cryptonose2;
 
-import java.text.DecimalFormat;
-
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
-//import org.controlsfx.control.Notifications;
+import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
 import pl.dmotyka.cryptonose2.controllers.DecimalFormatter;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
@@ -48,12 +46,17 @@ public class CryptonoseGuiNotification {
     }
 
     public static void notifyConnectionState(NotificationLibrary notificationLibrary,ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
+        String statusText;
+        if (cryptonoseGuiConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
+            statusText = String.format("No price updates for %d seconds", CryptonoseGuiExchangeController.NO_TRADES_SET_DISCONNECTED_SECONDS);
+        else
+            statusText = cryptonoseGuiConnectionStatus.getText();
         switch (notificationLibrary) {
             case CONTROLSFX:
-                notifyControlsFx(exchangeSpecs.getName(),cryptonoseGuiConnectionStatus.getText(),null);
+                notifyControlsFx(exchangeSpecs.getName(),statusText,null);
                 break;
             case DORKBOX:
-                notifyDorkbox(exchangeSpecs.getName(),cryptonoseGuiConnectionStatus.getText(),null);
+                notifyDorkbox(exchangeSpecs.getName(),statusText,null);
                 break;
         }
     }

@@ -31,6 +31,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -89,6 +90,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
     public static final long[] TIME_PERIODS = {300,1800};
+    public static final long NO_TRADES_SET_DISCONNECTED_SECONDS = 300;
+    public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
     public static final long MINI_CHART_TIMEFRAME_SEC = 3600;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
@@ -141,6 +144,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList;
     private long lastTableSortMillis =0;
     private AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
+    private AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
         @Override
@@ -328,13 +332,16 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
     }
 
-    private void setConnectionStatus(CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
+    private void setConnectionStatus(CryptonoseGuiConnectionStatus newConnectionStatus, boolean notify) {
+        if (connectionStatus.get() != null && newConnectionStatus.equals(connectionStatus.get()))
+            return;
+        connectionStatus.set(newConnectionStatus);
         javafx.application.Platform.runLater(() -> {
-            connectionStatusLabel.setText(cryptonoseGuiConnectionStatus.getText());
-            graphicsPane.setStyle("-fx-background-color: " + cryptonoseGuiConnectionStatus.getColor());
+            connectionStatusLabel.setText(newConnectionStatus.getText());
+            graphicsPane.setStyle("-fx-background-color: " + newConnectionStatus.getColor());
         });
-        if(!cryptonoseGuiConnectionStatus.getText().equals("connecting"))
-            CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs,cryptonoseGuiConnectionStatus);
+        if(notify)
+            CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
     }
 
     @Override
@@ -345,14 +352,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
-                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED);
+                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
             case RECONNECTING:
-                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING);
+                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING, false);
                 break;
             case DISCONNECTED:
-                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
+                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED, true);
                 break;
             case NO_PAIRS:
                 Platform.runLater(()->{
@@ -393,8 +400,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private synchronized void updateTable(List<PriceChanges> priceChangesList) {
         for (PriceChanges priceChanges : priceChangesList) {
-            TablePairPriceChanges tablePairPriceChanges =pairPriceChangesMap.get(priceChanges.getCurrencyPair());
-            if(tablePairPriceChanges ==null) {
+            TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
+            if(tablePairPriceChanges == null) {
                 tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair());
                 pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
                 tablePairPriceChangesObservableList.add(tablePairPriceChanges);
@@ -458,11 +465,28 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (lastTradeTimeMillis!=0) {
                 long lastTradeSecondsAgo = (System.currentTimeMillis() - lastTradeTimeMillis) / 1000;
-                javafx.application.Platform.runLater(() -> {
-                    lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago");
-                });
+                javafx.application.Platform.runLater(() -> lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago"));
+                CryptonoseGuiConnectionStatus statusNoTrades = CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES;
+                if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
+                    consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
+                    reconnectEngine();
+                } else if (lastTradeSecondsAgo > NO_TRADES_SET_DISCONNECTED_SECONDS) {
+                    consoleLog(String.format("No trades for %d seconds.", NO_TRADES_SET_DISCONNECTED_SECONDS));
+                    setConnectionStatus(statusNoTrades, true);
+                }
+                else if (connectionStatus.get().equals(statusNoTrades))
+                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, false);
             }
         },1,1, TimeUnit.SECONDS);
+    }
+
+    private void reconnectEngine() {
+        lastTradeTimeMillis = 0;
+        pairPriceChangesMap.clear();
+        tablePairPriceChangesObservableList.clear();
+        javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
+        engine.stop();
+        engine.start();
     }
 
     private void consoleLog(String text) {
