@@ -1,0 +1,41 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+section {
+	width: 680px;
+}
+header {
+	width: 180px;
+}
+footer {
+	width: 180px;
+}
+.wrapper {
+	width: 900px;
+}
+.download-button {
+			background-color: #33cc33;
+			font-weight: bold;
+			text-decoration: none;
+			color: white;
+			border-radius: 20px;
+			padding: 15px;
+		}
+		.download-button:hover {
+			font-weight: bold;
+			text-decoration: none;
+			color: white;
+		}
+		.download-button:visited {
+			font-weight: bold;
+			text-decoration: none;
+			color: white;
+		}
+		.download-button:active {
+			font-weight: bold;
+			text-decoration: none;
+			color: white;
+		}
+
