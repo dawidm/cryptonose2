@@ -236,6 +236,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                 additionalPairs);
         engine.enableInitEngineWithLowerPeriodChartData();
+        engine.setCheckChangesDelayMs(100);
         engine.setEngineMessageReceiver(this);
         engine.setEngineUpdateHeartbeatReceiver(this);
         new Thread(()->engine.start()).start();
@@ -471,7 +472,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
                     reconnectEngine();
                 } else if (lastTradeSecondsAgo > NO_TRADES_SET_DISCONNECTED_SECONDS) {
-                    consoleLog(String.format("No trades for %d seconds.", NO_TRADES_SET_DISCONNECTED_SECONDS));
+                    if (!connectionStatus.get().equals(statusNoTrades))
+                        consoleLog(String.format("No trades for %d seconds.", NO_TRADES_SET_DISCONNECTED_SECONDS));
                     setConnectionStatus(statusNoTrades, true);
                 }
                 else if (connectionStatus.get().equals(statusNoTrades))
