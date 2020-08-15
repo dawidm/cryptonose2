@@ -93,7 +93,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public static final long NO_TRADES_SET_DISCONNECTED_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
-    public static final long MINI_CHART_TIMEFRAME_SEC = 3600;
+    public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean LOG_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;

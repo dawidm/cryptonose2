@@ -26,7 +26,7 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="changeLabel1" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Chart (1h)" />
+            <Label fx:id="changeLabel1" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Chart (2h)" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
