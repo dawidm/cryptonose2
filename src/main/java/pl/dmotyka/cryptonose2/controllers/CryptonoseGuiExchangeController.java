@@ -15,11 +15,13 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -353,6 +355,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
+                lastTradeTimeMillis=0;
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
@@ -439,6 +442,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 TimeConverter.secondsToFullMinutesHoursDays((int)priceAlert.getPeriodSeconds()),
                 DecimalFormatter.formatDecimalPrice(priceAlert.getFinalPrice()));
         consoleLog(alertString);
+        SimpleDateFormat preciseTimeDateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+        String preciseTime = preciseTimeDateFormat.format(new Date(System.currentTimeMillis()));
+        logger.info(preciseTime + ": " + alertString);
         if (runBrowserCheckBox.isSelected()) {
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         }
