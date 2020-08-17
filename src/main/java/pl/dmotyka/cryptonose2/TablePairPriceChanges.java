@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -14,6 +14,7 @@
 package pl.dmotyka.cryptonose2;
 
 import javafx.beans.property.SimpleDoubleProperty;
+
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
@@ -76,11 +77,11 @@ public class TablePairPriceChanges {
         switch(period) {
             case PERIOD1:
                 p1PercentChange.setValue(priceChanges.getPercentChange());
-                p1RelativeChange.set(priceChanges.getRelativePriceChange());
+                p1RelativeChange.setValue(priceChanges.getRelativeLastPriceChange()!=null?priceChanges.getRelativePriceChange():0);
                 break;
             case PERIOD2:
                 p2PercentChange.setValue(priceChanges.getPercentChange());
-                p2RelativeChange.set(priceChanges.getRelativePriceChange());
+                p2RelativeChange.setValue(priceChanges.getRelativeLastPriceChange()!=null?priceChanges.getRelativePriceChange():0);
                 break;
         }
         lastPrice.set(priceChanges.getLastPrice());
