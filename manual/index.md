@@ -70,5 +70,6 @@ Price alert is triggered by:
 ## Notification
 
 ![cryptonose notification]({{ site.baseurl }}/images/notification.png "cryptonose desktop notification")
+
 You can **click on the notification to run web browser**.
 Notification shows details of price alert: percent change, relative change, time period, real change period, final price.
