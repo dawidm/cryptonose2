@@ -48,7 +48,7 @@ javafx {
 mainClassName = "pl.dmotyka.cryptonose2.AppStarter"
 
 run {
-    jvmArgs = ['-Dsun.java2d.uiScale=1.0', '-Dversion='+project.version]
+    jvmArgs = ['-Dsun.java2d.uiScale=1.0', '-Djava.util.logging.config.file=logging-debug.settings', '-Dversion='+project.version]
 }
 
 jlink {

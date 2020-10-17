@@ -1,0 +1,34 @@
+# >java -Djava.util.logging.config.file=logging.settings
+#
+# If this property is not specified, then the config file is
+# retrieved from its default location at:
+#
+# JDK_HOME/jre/lib/logging.properties
+
+# Global logging properties.
+# ------------------------------------------
+# The set of handlers to be loaded upon startup.
+# Comma-separated list of class names.
+# (? LogManager docs say no comma here, but JDK example has comma.)
+handlers=java.util.logging.ConsoleHandler
+
+# Default global logging level.
+# Loggers and Handlers may override this level
+pl.dmotyka.level=FINE
+
+# Loggers
+# ------------------------------------------
+# Loggers are usually attached to packages.
+# Here, the level for each package is specified.
+# The global level is used by default, so levels
+# specified here simply act as an override.
+# pl.dmotyka.cryptonose2.level=FINEST
+
+# Handlers
+# -----------------------------------------
+
+# --- ConsoleHandler ---
+# Override of global logging level
+java.util.logging.ConsoleHandler.level=ALL
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] %4$s: %5$s {%2$s} %6$s%n
