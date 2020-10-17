@@ -1,0 +1,17 @@
+.root {
+    -fx-font-smoothing-type: inherit;
+}
+
+.h1 {
+    -fx-font-size: 200%;
+    -fx-font-weight: bold;
+}
+
+.h2 {
+    -fx-font-weight: bold;
+}
+
+.priceAlertsLabel {
+    -fx-font-size: 110%;
+    -fx-font-weight: bold;
+}

@@ -23,9 +23,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController">
+<HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController" stylesheets="style-fonts.css">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -35,7 +33,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label style="-fx-font-weight: bold;" text="Requiered % change" />
+                              <Label styleClass="h2" text="Requiered % change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
                               <TextField fx:id="p1requiredRisingTextField" prefWidth="70.0" />
@@ -45,7 +43,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label style="-fx-font-weight: bold;" text="Requiered relative change" />
+                              <Label styleClass="h2" text="Requiered relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
                               <TextField fx:id="p1requiredRelativeRisingTextField" prefWidth="70.0" />
@@ -59,7 +57,7 @@
                         <Separator prefWidth="200.0" />
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label style="-fx-font-weight: bold;" text="Sufficient relative change" />
+                              <Label styleClass="h2" text="Sufficient relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
                               <TextField fx:id="p1sufficientRelativeRisingTextField" prefWidth="70.0" />
@@ -75,11 +73,7 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label fx:id="p1titleLabel" text="Title">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
+                  <Label styleClass="h2" fx:id="p1titleLabel" text="Title"/>
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
@@ -92,7 +86,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label style="-fx-font-weight: bold;" text="Requiered % change" />
+                              <Label styleClass="h2" text="Requiered % change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
                               <TextField fx:id="p2requiredRisingTextField" prefWidth="70.0" />
@@ -102,7 +96,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label style="-fx-font-weight: bold;" text="Requiered relative change">
+                              <Label styleClass="h2" text="Requiered relative change">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin></Label>
@@ -119,7 +113,7 @@
                         <Separator prefWidth="200.0" />
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label style="-fx-font-weight: bold;" text="Sufficient relative change" />
+                              <Label styleClass="h2" text="Sufficient relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
                               <TextField fx:id="p2sufficientRelativeRisingTextField" prefWidth="70.0" />
@@ -135,11 +129,7 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label fx:id="p2titleLabel" text="Title">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
+                  <Label styleClass="h2" fx:id="p2titleLabel" text="Title"/>
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />

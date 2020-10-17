@@ -25,16 +25,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<VBox fx:id="mainVbox" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="mainVbox" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="style-fonts.css">
    <children>
       <HBox fx:id="newVersionHBox" VBox.vgrow="NEVER">
          <children>
-            <Label text="New version available:" textFill="RED">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
+            <Label styleClass="h2" text="New version available:" textFill="RED"/>
             <Label fx:id="newVersionShowLabel" text="show" underline="true">
                <HBox.margin>
                   <Insets left="5.0" />
@@ -61,11 +56,7 @@
          <content>
             <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" spacing="7.0">
                <children>
-                  <Label text="On alert: ">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
+                  <Label styleClass="h2" text="On alert: "/>
                   <CheckBox fx:id="soundCheckBox" mnemonicParsing="false" selected="true" text="Sound" />
                   <CheckBox fx:id="runBrowserCheckBox" mnemonicParsing="false" text="Browser" />
                   <CheckBox fx:id="notificationCheckBox" mnemonicParsing="false" selected="true" text="Notification" />
@@ -81,11 +72,7 @@
             </HBox>
          </content>
          <graphic>
-            <Label text="Global options">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
+            <Label styleClass="h2" text="Global options"/>
          </graphic>
       </TitledPane>
    </children>

@@ -17,41 +17,41 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController" stylesheets="style-fonts.css">
    <children>
       <VBox alignment="CENTER_LEFT" prefWidth="130.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="changeLabel" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Price change" />
+            <Label styleClass="priceAlertsLabel" fx:id="changeLabel" alignment="CENTER" text="Price change" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="changeLabel1" alignment="CENTER" style="-fx-font-size: 15; -fx-font-weight: bold;" text="Chart (2h)" />
+            <Label styleClass="priceAlertsLabel" fx:id="changeLabel1" alignment="CENTER" text="Chart (2h)" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="pairNameLabel" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Pair" />
+            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel" alignment="CENTER" text="Pair" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="pairNameLabel1" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Final price" />
+            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel1" alignment="CENTER" text="Final price" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="pairNameLabel2" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Period" />
+            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel2" alignment="CENTER" text="Period" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="pairNameLabel3" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Exchange" />
+            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel3" alignment="CENTER" text="Exchange" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0">
          <children>
-            <Label fx:id="pairNameLabel31" alignment="CENTER" style="-fx-font-size: 14; -fx-font-weight: bold;" text="Time" />
+            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel31" alignment="CENTER" text="Time" />
          </children>
       </VBox>
    </children>

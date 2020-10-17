@@ -23,25 +23,15 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-
-<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController">
+<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController" stylesheets="style-fonts.css">
    <children>
       <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="7.0" VBox.vgrow="NEVER">
          <children>
-            <Label style="-fx-font-weight: bold;" text="Connection status">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
+            <Label styleClass="h2" text="Connection status"/>
             <Label fx:id="connectionStatusLabel" text="disconnected" />
-            <Label layoutX="10.0" layoutY="10.0" style="-fx-font-weight: bold;" text="Last update">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
+            <Label styleClass="h2" layoutX="10.0" layoutY="10.0" text="Last update"/>
             <Label fx:id="lastTradeLabel" layoutX="282.0" layoutY="10.0" text="no updates yet" />
             <Region HBox.hgrow="ALWAYS" />
          </children>
@@ -68,11 +58,7 @@
       </TableView>
       <TitledPane fx:id="logTitledPane" animated="false" collapsible="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="200.0" VBox.vgrow="ALWAYS">
          <graphic>
-            <Label text="Log">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
+            <Label styleClass="h2" text="Log"/>
          </graphic>
          <content>
             <TextArea fx:id="consoleTextArea" editable="false" wrapText="true" />
@@ -82,11 +68,7 @@
          <content>
             <HBox alignment="CENTER_LEFT" fillHeight="false" nodeOrientation="LEFT_TO_RIGHT" spacing="7.0">
                <children>
-                  <Label text="On alert: ">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Label>
+                  <Label styleClass="h2" text="On alert: "/>
                   <CheckBox fx:id="soundCheckBox" mnemonicParsing="false" selected="true" text="Sound" />
                   <CheckBox fx:id="runBrowserCheckBox" mnemonicParsing="false" text="Browser" />
                   <CheckBox fx:id="notificationCheckBox" mnemonicParsing="false" selected="true" text="Notification" />
@@ -98,11 +80,7 @@
             </HBox>
          </content>
          <graphic>
-            <Label text="Exchange options">
-               <font>
-                  <Font name="System Bold" size="13.0" />
-               </font>
-            </Label>
+            <Label styleClass="h2" text="Exchange options"/>
          </graphic>
       </TitledPane>
    </children>
