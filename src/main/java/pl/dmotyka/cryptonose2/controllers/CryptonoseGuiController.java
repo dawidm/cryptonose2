@@ -50,7 +50,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -302,17 +301,14 @@ public class CryptonoseGuiController extends Application {
             UILoader<CryptonoseGuiExchangeController> uiLoader = new UILoader<>("cryptonoseGuiExchange.fxml");
             Node cryptonoseGuiNode = uiLoader.getRoot();
             Tab tab = new Tab(exchangeSpecs.getName());
-            Pane graphicsPane = new Pane();
-            graphicsPane.setPrefWidth(10);
-            graphicsPane.setPrefHeight(10);
-            graphicsPane.setStyle("-fx-background-color: " + CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED.getColor());
-            tab.setGraphic(graphicsPane);
+            ColorIndicatorBox indicatorBox = new ColorIndicatorBox(1, CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED.getColor());
+            tab.setGraphic(indicatorBox);
             tab.setContent(cryptonoseGuiNode);
             mainTabPane.getTabs().add(tab);
             if(activate)
                 mainTabPane.getSelectionModel().select(tab);
             CryptonoseGuiExchangeController cryptonoseGuiExchangeController = uiLoader.getController();
-            cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this,graphicsPane);
+            cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
             tab.setOnCloseRequest((event) -> {
                 logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
                 new Thread(()-> cryptonoseGuiExchangeController.close()).start();

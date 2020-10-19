@@ -56,7 +56,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -125,7 +124,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public Button alertSettingsButton;
 
-    private Pane graphicsPane;
+    private ColorIndicatorBox indicatorBox;
     private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
     private ExchangeSpecs exchangeSpecs;
@@ -175,10 +174,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
     }
 
-    public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, Pane graphicsPane) {
+    public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, ColorIndicatorBox indicatorBox) {
         this.priceAlertTabController = cryptonoseGuiPriceAlertsTabController;
         this.cryptonoseGuiController = cryptonoseGuiController;
-        this.graphicsPane = graphicsPane;
+        this.indicatorBox = indicatorBox;
         this.exchangeSpecs=exchangeSpecs;
         pairsButton.setOnMouseClicked(event -> pairsClick());
         alertSettingsButton.setOnMouseClicked(event -> alertSettingsClick());
@@ -330,7 +329,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         connectionStatus.set(newConnectionStatus);
         javafx.application.Platform.runLater(() -> {
             connectionStatusLabel.setText(newConnectionStatus.getText());
-            graphicsPane.setStyle("-fx-background-color: " + newConnectionStatus.getColor());
+            indicatorBox.switchColor(newConnectionStatus.getColor());
         });
         if(notify)
             CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
