@@ -18,12 +18,12 @@ import java.net.URL;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
 import pl.dmotyka.cryptonose2.PriceAlert;
+import pl.dmotyka.cryptonose2.UILoader;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 
 /**
@@ -43,29 +43,29 @@ public class CryptonoseGuiPriceAlertsTabController implements Initializable{
         javafx.application.Platform.runLater(() -> {
             if (mainVBox.getChildren().size() == 1) {
                 mainVBox.getChildren().clear();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPriceAlertPaneLabels.fxml"));
                 try {
-                    Node priceAlertPaneLabels = fxmlLoader.load();
+                    UILoader<Object> uiLoader = new UILoader("cryptonoseGuiPriceAlertPaneLabels.fxml");
+                    Node priceAlertPaneLabels = uiLoader.getRoot();
                     mainVBox.getChildren().add(priceAlertPaneLabels);
                 } catch (IOException e) {
-                    System.err.println(e.getLocalizedMessage());
+                    throw new Error(e);
                 }
             }
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPriceAlertPane.fxml"));
             try {
-                Node alertPane = fxmlLoader.load();
-                ((CryptonoseGuiPriceAlertNodeController) fxmlLoader.getController()).fillPane(priceAlert, chartCandles);
+                UILoader<CryptonoseGuiPriceAlertNodeController> uiLoader = new UILoader<>("cryptonoseGuiPriceAlertPane.fxml");
+                Node alertPane = uiLoader.getRoot();
+                uiLoader.getController().fillPane(priceAlert, chartCandles);
                 mainVBox.getChildren().listIterator(1).add(alertPane);
                 //iterator for outdated alerts
                 if (mainVBox.getChildren().size() > maxAlerts + 1) {
-                    ListIterator listIterator = mainVBox.getChildren().listIterator(maxAlerts + 1);
+                    ListIterator<Node> listIterator = mainVBox.getChildren().listIterator(maxAlerts + 1);
                     while (listIterator.hasNext()) {
                         listIterator.next();
                         listIterator.remove();
                     }
                 }
             } catch (IOException e) {
-                System.err.println(e.getLocalizedMessage());
+                throw new Error(e);
             }
         });
     }

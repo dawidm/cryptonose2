@@ -17,7 +17,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController" stylesheets="style-fonts.css">
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" maxHeight="32.0" maxWidth="1.7976931348623157E308" minHeight="32.0" prefHeight="32.0" prefWidth="700.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="style-fonts.css">
    <children>
       <VBox alignment="CENTER_LEFT" prefWidth="130.0" HBox.hgrow="ALWAYS">
          <children>

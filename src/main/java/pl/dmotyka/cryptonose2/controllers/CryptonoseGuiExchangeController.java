@@ -42,11 +42,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -62,7 +59,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiAlertChecker;
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
@@ -72,6 +68,7 @@ import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
 import pl.dmotyka.cryptonose2.PriceAlert;
 import pl.dmotyka.cryptonose2.PriceAlertThresholds;
 import pl.dmotyka.cryptonose2.TablePairPriceChanges;
+import pl.dmotyka.cryptonose2.UILoader;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;
 import pl.dmotyka.cryptonoseengine.EngineMessage;
@@ -299,15 +296,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public void pairsClick() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPairs.fxml"));
-            Parent root = fxmlLoader.load();
+            UILoader<CryptonoseGuiPairsController> uiLoader = new UILoader<>("cryptonoseGuiPairs.fxml");
             AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
-            ((CryptonoseGuiPairsController)fxmlLoader.getController()).init(exchangeSpecs,()->settingsChangedAtomic.set(true));
-            Stage stage = new Stage();
-            stage.setTitle("Pairs settings: " + exchangeSpecs.getName());
-            stage.setScene(new Scene(root));
+            uiLoader.getController().init(exchangeSpecs,()->settingsChangedAtomic.set(true));
             pairsButton.setDisable(true);
-            stage.showAndWait();
+            uiLoader.stageShowAndWait("Pairs settings: " + exchangeSpecs.getName());
             pairsButton.setDisable(false);
             if(settingsChangedAtomic.get()) {
                 if(engine!=null)
@@ -321,14 +314,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public void alertSettingsClick() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiAlertSettings.fxml"));
-            Parent root = fxmlLoader.load();
-            ((CryptonoseGuiAlertSettingsController)fxmlLoader.getController()).init(exchangeSpecs,TIME_PERIODS);
-            Stage stage = new Stage();
-            stage.setTitle("Alerts conditions: " + exchangeSpecs.getName());
-            stage.setScene(new Scene(root));
+            UILoader<CryptonoseGuiAlertSettingsController> uiLoader = new UILoader<>("cryptonoseGuiAlertSettings.fxml");
+            uiLoader.getController().init(exchangeSpecs,TIME_PERIODS);
             alertSettingsButton.setDisable(true);
-            stage.showAndWait();
+            uiLoader.stageShowAndWait("Alerts conditions: " + exchangeSpecs.getName());
             alertSettingsButton.setDisable(false);
         } catch(IOException e) {
             throw new Error(e);

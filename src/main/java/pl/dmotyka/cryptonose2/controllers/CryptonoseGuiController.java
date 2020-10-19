@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -57,6 +56,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.cryptonose2.UILoader;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
@@ -116,13 +116,13 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
         this.primaryStage=primaryStage;
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGui.fxml"));
-        fxmlLoader.setController(this);
-        Node cryptonoseGuiFxNode = fxmlLoader.load();
+        UILoader<CryptonoseGuiController> uiLoader = new UILoader<>("cryptonoseGui.fxml", this);
+        Node cryptonoseGuiFxNode = uiLoader.getRoot();
         primaryStage.setTitle("Cryptonose");
         Preferences preferences = Preferences.userNodeForPackage(this.getClass());
         String activeExchanges=preferences.get("activeExchanges","");
@@ -179,9 +179,9 @@ public class CryptonoseGuiController extends Application {
             saveOtherSettings();
             System.exit(0);
         });
-        fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiPriceAlertsTab.fxml"));
-        Node priceAlertsPane = fxmlLoader.load();
-        priceAlertsTabController = fxmlLoader.getController();
+        UILoader<CryptonoseGuiPriceAlertsTabController> uiLoaderAlerts = new UILoader<>("cryptonoseGuiPriceAlertsTab.fxml");
+        Node priceAlertsPane = uiLoaderAlerts.getRoot();
+        priceAlertsTabController = uiLoaderAlerts.getController();
         Tab priceAlertsTab = new Tab("Price alerts",priceAlertsPane);
         priceAlertsTab.setClosable(false);
         mainTabPane.getTabs().add(priceAlertsTab);
@@ -251,17 +251,13 @@ public class CryptonoseGuiController extends Application {
 
     private void versionWindow(VersionInfo versionInfo) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiVersionWindow.fxml"));
-            Parent root = fxmlLoader.load();
-            CryptonoseGuiVersionWindowController cryptonoseGuiVersionWindowController = fxmlLoader.getController();
+            UILoader<CryptonoseGuiVersionWindowController> uiLoader = new UILoader<>("cryptonoseGuiVersionWindow.fxml");
+            CryptonoseGuiVersionWindowController cryptonoseGuiVersionWindowController = uiLoader.getController();
             cryptonoseGuiVersionWindowController.init(versionInfo, this);
-            Stage stage = new Stage();
-            stage.setTitle("New version");
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            uiLoader.stageShowAndWait("New version");
+        } catch (IOException e) {
+            throw new Error(e);
+        }
     }
 
     private void initShortcuts() {
@@ -300,11 +296,11 @@ public class CryptonoseGuiController extends Application {
 
     public void loadExchange(ExchangeSpecs exchangeSpecs, boolean activate) {
         try {
-            logger.info("loading "+exchangeSpecs.getName());
+            logger.info("loading "+ exchangeSpecs.getName());
             if(activeExchangesControllersMap.keySet().contains(exchangeSpecs))
                 return;
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiExchange.fxml"));
-            Node cryptonoseGuiNode = fxmlLoader.load();
+            UILoader<CryptonoseGuiExchangeController> uiLoader = new UILoader<>("cryptonoseGuiExchange.fxml");
+            Node cryptonoseGuiNode = uiLoader.getRoot();
             Tab tab = new Tab(exchangeSpecs.getName());
             Pane graphicsPane = new Pane();
             graphicsPane.setPrefWidth(10);
@@ -315,7 +311,7 @@ public class CryptonoseGuiController extends Application {
             mainTabPane.getTabs().add(tab);
             if(activate)
                 mainTabPane.getSelectionModel().select(tab);
-            CryptonoseGuiExchangeController cryptonoseGuiExchangeController = fxmlLoader.getController();
+            CryptonoseGuiExchangeController cryptonoseGuiExchangeController = uiLoader.getController();
             cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this,graphicsPane);
             tab.setOnCloseRequest((event) -> {
                 logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
@@ -383,13 +379,10 @@ public class CryptonoseGuiController extends Application {
 
     public void settingsClick() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("cryptonoseGuiSettings.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Cryptonose2 settings");
-            stage.setScene(new Scene(root));
+            UILoader<CryptonoseGuiSettingsController> uiLoader = new UILoader<>("cryptonoseGuiSettings.fxml");
+            Parent root = uiLoader.getRoot();
             settingsButton.setDisable(true);
-            stage.showAndWait();
+            uiLoader.stageShowAndWait("Cryptonose2 settings");
             settingsButton.setDisable(false);
         } catch(IOException e) {
             throw new Error(e);
