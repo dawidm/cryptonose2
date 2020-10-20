@@ -26,6 +26,8 @@ import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 
 public class UILoader <T> {
 
+    private static Integer FONT_SIZE = null;
+
     private final FXMLLoader fxmlLoader;
 
     public UILoader(String resourcesFXMLPath) throws IOException {
@@ -38,11 +40,11 @@ public class UILoader <T> {
             fxmlLoader.setController(controller);
         fxmlLoader.load();
         Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
-        if (!preferences.getBoolean("defaultFontSize", true)) {
-            int size = preferences.getInt("fontSize", CryptonoseSettings.FONT_SIZE_DEF_VALUE);
-            ((Parent)fxmlLoader.getRoot()).setStyle(String.format("-fx-font-size: %dpt;", size));
+        if (FONT_SIZE == null && !preferences.getBoolean("defaultFontSize", true)) {
+            FONT_SIZE = preferences.getInt("fontSize", CryptonoseSettings.FONT_SIZE_DEF_VALUE);
         }
-
+        if (FONT_SIZE != null)
+            ((Parent)fxmlLoader.getRoot()).setStyle(String.format("-fx-font-size: %dpt;", FONT_SIZE));
     }
 
     public Parent getRoot() {
