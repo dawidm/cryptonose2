@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -29,6 +29,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -37,6 +39,7 @@ import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 
 /**
  * Created by dawid on 8/8/17.
@@ -45,6 +48,8 @@ public class CryptonoseGuiSettingsController implements Initializable {
 
     @FXML
     public TextField browserPathEditText;
+    @FXML
+    public Button selectBrowserButton;
     @FXML
     public TextField priceRisingSoundFileEditText;
     @FXML
@@ -63,6 +68,10 @@ public class CryptonoseGuiSettingsController implements Initializable {
     public CheckBox defaultRisingSoundCheckBox;
     @FXML
     public CheckBox defaultDroppingSoundCheckBox;
+    @FXML
+    public CheckBox defFontCheckbox;
+    @FXML
+    public Spinner<Integer> fontSizeSpinner;
 
     private Preferences preferences;
 
@@ -72,10 +81,8 @@ public class CryptonoseGuiSettingsController implements Initializable {
         browserPathEditText.setText(preferences.get("browserPath", ""));
         if(CryptonoseGuiBrowser.isDefaultBrowserSupported()) {
             defBrowserCheckbox.setSelected(preferences.getBoolean("tryUseDefBrowser",true));
-            browserPathHBox.setDisable(defBrowserCheckbox.isSelected());
         } else {
             defBrowserCheckbox.setSelected(true);
-            defBrowserCheckbox.setDisable(true);
             defBrowserCheckbox.setText(defBrowserCheckbox.getText()+" (not supported)");
         }
         supportedAudioFilesText.textProperty().setValue(supportedAudioFilesText.getText()
@@ -83,9 +90,20 @@ public class CryptonoseGuiSettingsController implements Initializable {
         priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath",CryptonoseGuiSoundAlerts.DEFAULT_RISING_SOUND_FILE));
         priceDroppingSoundFileEditText.setText(preferences.get("soundDroppingPath", CryptonoseGuiSoundAlerts.DEFAULT_DROPPING_SOUND_FILE));
         defaultRisingSoundCheckBox.setSelected(preferences.getBoolean("defaultRisingSound",true));
-        defaultRisingSoundUpdateSelected(defaultRisingSoundCheckBox.isSelected());
         defaultDroppingSoundCheckBox.setSelected(preferences.getBoolean("defaultDroppingSound",true));
-        defaultDroppingSoundUpdateSelected(defaultDroppingSoundCheckBox.isSelected());
+        defFontCheckbox.setSelected(preferences.getBoolean("defaultFontSize", true));
+        Integer defFontSize = preferences.getInt("fontSize", CryptonoseSettings.FONT_SIZE_DEF_VALUE);
+        SpinnerValueFactory<Integer> valueFactory =
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(CryptonoseSettings.FONT_MIN_SIZE, CryptonoseSettings.FONT_MAX_SIZE, defFontSize);
+        fontSizeSpinner.setValueFactory(valueFactory);
+        fontSizeSpinner.disableProperty().bind(defFontCheckbox.selectedProperty());
+        browserPathEditText.disableProperty().bind(defBrowserCheckbox.selectedProperty());
+        selectBrowserButton.disableProperty().bind(defBrowserCheckbox.selectedProperty());
+        priceRisingSoundFileEditText.disableProperty().bind(defaultRisingSoundCheckBox.selectedProperty());
+        priceRisingSoundFileButton.disableProperty().bind(defaultRisingSoundCheckBox.selectedProperty());
+        priceDroppingSoundFileEditText.disableProperty().bind(defaultDroppingSoundCheckBox.selectedProperty());
+        priceDroppingSoundFileButton.disableProperty().bind(defaultDroppingSoundCheckBox.selectedProperty());
+
     }
 
     public void selectBrowserClick(ActionEvent actionEvent) {
@@ -148,6 +166,8 @@ public class CryptonoseGuiSettingsController implements Initializable {
         preferences.putBoolean("defaultDroppingSound", defaultDroppingSoundCheckBox.isSelected());
         preferences.put("soundRisingPath", priceRisingSoundFileEditText.getText());
         preferences.put("soundDroppingPath", priceDroppingSoundFileEditText.getText());
+        preferences.putBoolean("defaultFontSize", defFontCheckbox.isSelected());
+        preferences.putInt("fontSize", fontSizeSpinner.getValue());
         closeStage(actionEvent);
     }
 
@@ -155,28 +175,6 @@ public class CryptonoseGuiSettingsController implements Initializable {
         Button button = (Button) actionEvent.getSource();
         Stage stage = (Stage) button.getScene().getWindow();
         stage.close();
-    }
-
-    public void defBrowserCheckboxOnAction(ActionEvent actionEvent) {
-        browserPathHBox.setDisable(((CheckBox)actionEvent.getSource()).isSelected());
-    }
-
-    private void defaultRisingSoundUpdateSelected(boolean selected) {
-        priceRisingSoundFileEditText.setDisable(selected);
-        priceRisingSoundFileButton.setDisable(selected);
-    }
-
-    private void defaultDroppingSoundUpdateSelected(boolean selected) {
-        priceDroppingSoundFileEditText.setDisable(selected);
-        priceDroppingSoundFileButton.setDisable(selected);
-    }
-
-    public void defaultRisingSoundOnAction(ActionEvent actionEvent) {
-        defaultRisingSoundUpdateSelected(((CheckBox)actionEvent.getSource()).isSelected());
-    }
-
-    public void defaultDroppingSoundOnAction(ActionEvent actionEvent) {
-        defaultDroppingSoundUpdateSelected(((CheckBox)actionEvent.getSource()).isSelected());
     }
 
 }

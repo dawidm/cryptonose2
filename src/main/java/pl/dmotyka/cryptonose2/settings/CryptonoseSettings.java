@@ -15,4 +15,7 @@ package pl.dmotyka.cryptonose2.settings;
 
 public class CryptonoseSettings {
     public static final int DECIMAL_MAX_DIGITS = 9;
+    public static final int FONT_MIN_SIZE = 6;
+    public static final int FONT_MAX_SIZE = 20;
+    public static final int FONT_SIZE_DEF_VALUE = 12;
 }

@@ -14,11 +14,15 @@
 package pl.dmotyka.cryptonose2;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 
 public class UILoader <T> {
 
@@ -33,7 +37,12 @@ public class UILoader <T> {
         if (controller != null)
             fxmlLoader.setController(controller);
         fxmlLoader.load();
-        //((Parent)fxmlLoader.getRoot()).setStyle("-fx-font-size: 8pt;");
+        Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
+        if (!preferences.getBoolean("defaultFontSize", true)) {
+            int size = preferences.getInt("fontSize", CryptonoseSettings.FONT_SIZE_DEF_VALUE);
+            ((Parent)fxmlLoader.getRoot()).setStyle(String.format("-fx-font-size: %dpt;", size));
+        }
+
     }
 
     public Parent getRoot() {
