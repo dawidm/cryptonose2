@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController" stylesheets="style-fonts.css">
+<HBox fx:id="mainHBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController" stylesheets="style-fonts.css,style-alerts-settings.css">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -33,12 +33,12 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label styleClass="h2" text="Requiered % change" />
+                              <Label styleClass="h2" style="-fx-padding: 0 10em 0 0" text="Requiered % change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField fx:id="p1requiredRisingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p1requiredRisingTextField" />
                               <Label text="dropping" />
-                              <TextField fx:id="p1requiredDroppingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p1requiredDroppingTextField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
@@ -46,9 +46,9 @@
                               <Label styleClass="h2" text="Requiered relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField fx:id="p1requiredRelativeRisingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p1requiredRelativeRisingTextField" />
                               <Label text="dropping" />
-                              <TextField fx:id="p1requiredRelativeDroppingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p1requiredRelativeDroppingTextField" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -60,9 +60,9 @@
                               <Label styleClass="h2" text="Sufficient relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField fx:id="p1sufficientRelativeRisingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p1sufficientRelativeRisingTextField" />
                               <Label text="dropping" />
-                              <TextField fx:id="p1sufficientRelativeDroppingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p1sufficientRelativeDroppingTextField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER" />
@@ -89,9 +89,9 @@
                               <Label styleClass="h2" text="Requiered % change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField fx:id="p2requiredRisingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p2requiredRisingTextField" />
                               <Label text="dropping" />
-                              <TextField fx:id="p2requiredDroppingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p2requiredDroppingTextField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
@@ -102,9 +102,9 @@
                                  </HBox.margin></Label>
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField fx:id="p2requiredRelativeRisingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p2requiredRelativeRisingTextField" />
                               <Label text="dropping" />
-                              <TextField fx:id="p2requiredRelativeDroppingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p2requiredRelativeDroppingTextField" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -116,9 +116,9 @@
                               <Label styleClass="h2" text="Sufficient relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField fx:id="p2sufficientRelativeRisingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p2sufficientRelativeRisingTextField" />
                               <Label text="dropping" />
-                              <TextField fx:id="p2sufficientRelativeDroppingTextField" prefWidth="70.0" />
+                              <TextField styleClass="valueField" fx:id="p2sufficientRelativeDroppingTextField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER" />
@@ -137,7 +137,7 @@
             </TitledPane>
             <HBox alignment="CENTER_RIGHT" spacing="7.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#cancelClick" prefWidth="100.0" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />
                   <Pane HBox.hgrow="ALWAYS" />
                   <Button minWidth="100.0" mnemonicParsing="false" onAction="#saveForAllExchangesClick" text="Save for all exchanges" />
                   <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveClick" text="Save" />

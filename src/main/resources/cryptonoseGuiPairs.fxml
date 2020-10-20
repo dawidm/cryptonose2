@@ -28,9 +28,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<StackPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPairsController" stylesheets="style-fonts.css">
+<StackPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPairsController" stylesheets="style-fonts.css">
    <children>
-      <GridPane fx:id="loadingGridPane" visible="false">
+      <GridPane fx:id="loadingGridPane" visible="false" style="-fx-pref-width: 60em; -fx-pref-height: 30em;">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -100,8 +100,8 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0" VBox.vgrow="NEVER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#cancelClick" prefWidth="100.0" text="Cancel" />
-                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#saveClick" prefWidth="100.0" text="Save" />
+                  <Button mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />
+                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#saveClick" text="Save" />
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

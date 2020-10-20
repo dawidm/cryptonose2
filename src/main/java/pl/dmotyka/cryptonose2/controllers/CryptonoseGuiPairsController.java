@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -13,6 +13,20 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,7 +37,12 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -31,20 +50,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairDataProvider;
 import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
-
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 
 public class CryptonoseGuiPairsController implements Initializable {
 
@@ -196,17 +207,17 @@ public class CryptonoseGuiPairsController implements Initializable {
         }
         minVolumeTableView.getColumns().clear();
         TableColumn<MarketTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
-        activeTableColumn.setPrefWidth(10.0);
+        activeTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.2)); // because max width determines column sizes in CONSTRAINED_RESIZE_POLICY
         activeTableColumn.setEditable(true);
         activeTableColumn.setCellValueFactory(tableItem->tableItem.getValue().activeProperty());
         activeTableColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
         activeTableColumn.setOnEditCommit(event -> event.getRowValue().setActive(event.getNewValue()));
         TableColumn<MarketTableItem,String> marketTableColumn = new TableColumn("Market");
-        marketTableColumn.setPrefWidth(20.0);
+        marketTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.3));
         marketTableColumn.setCellValueFactory(tableItem->tableItem.getValue().nameProperty());
         marketTableColumn.setEditable(false);
         TableColumn<MarketTableItem,String> minVolTableColumn = new TableColumn("Min 24h volume");
-        minVolTableColumn.setPrefWidth(20.0);
+        minVolTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.5));
         minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().minVolumeProperty().asString());
         minVolTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         minVolTableColumn.setOnEditCommit(value -> {
