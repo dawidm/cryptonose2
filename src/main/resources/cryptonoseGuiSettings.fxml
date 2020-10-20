@@ -24,6 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
+
 <VBox spacing="9.0" stylesheets="style-fonts.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiSettingsController">
    <children>
       <TitledPane animated="false" collapsible="false">
@@ -87,19 +88,21 @@
          <content>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0">
                <children>
-                  <TextFlow />
                   <HBox alignment="CENTER_LEFT" spacing="9.0">
                      <children>
                         <CheckBox fx:id="defFontCheckbox" mnemonicParsing="false" selected="true" text="Use default font size" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="9.0" />
                   <HBox alignment="CENTER_LEFT" spacing="9.0">
                      <children>
                         <Label text="Custom font size:" />
                         <Spinner fx:id="fontSizeSpinner" editable="true" />
                      </children>
                   </HBox>
+                  <TextFlow>
+                     <children>
+                        <Label text="NOTICE: Please restart Cryptonose after changing font settings" />
+                     </children></TextFlow>
                </children>
             </VBox>
          </content>
