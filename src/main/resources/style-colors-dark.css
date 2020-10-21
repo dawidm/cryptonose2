@@ -1,0 +1,31 @@
+.price-rising {
+    -fx-text-fill: #2ECC40
+}
+
+.price-falling {
+    -fx-text-fill: #FF4136
+}
+
+.binance-color {
+    -fx-text-fill: #FFDC00
+}
+
+.poloniex-color {
+    -fx-text-fill: #3D9970
+}
+
+.bitfinex-color {
+    -fx-text-fill: #2ECC40
+}
+
+.connecting-indicator {
+    -fx-background-color: #FFDC00
+}
+
+.connected-indicator {
+    -fx-background-color: #2ECC40
+}
+
+.disconnected-indicator {
+    -fx-background-color: #FF4136
+}

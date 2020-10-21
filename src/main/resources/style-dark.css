@@ -1,0 +1,30 @@
+.root {
+    -fx-accent: #1e74c6;
+    -fx-focus-color: -fx-accent;
+    -fx-base: #373e43;
+    -fx-control-inner-background: derive(-fx-base, 15%);
+    -fx-control-inner-background-alt: -fx-control-inner-background ;
+    -fx-selection-bar: -fx-base;
+    -fx-selection-bar-non-focused: -fx-base;
+}
+
+.scroll-bar {
+    -fx-background-color: -fx-base
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: -fx-text-fill;
+}
+
+.text-field {
+    -fx-prompt-text-fill: derive(-fx-text-fill, -20%);
+}
+
+.table-cell > .check-box > .box {
+    -fx-border-color: derive(-fx-text-fill, -20%);
+}
+
+.list-cell > .check-box > .box {
+    -fx-border-color: derive(-fx-text-fill, -20%);
+}

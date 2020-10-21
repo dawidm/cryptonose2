@@ -53,17 +53,18 @@ public class CryptonoseGuiPriceAlertNodeController {
         String arrowString;
         if(priceAlert.getPriceChange()<0) {
             arrowString = "\u2198";
-            changeLabel.setStyle(changeLabel.getStyle() + "-fx-text-fill: red");
+            changeLabel.getStyleClass().add("price-falling");
         }
         else {
             arrowString = "\u2197";
-            changeLabel.setStyle(changeLabel.getStyle() + "-fx-text-fill: green");
+            changeLabel.getStyleClass().add("price-rising");
         }
         if (chartCandles != null) {
             MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles));
             minimalFxChart.setMarginsHorizontalPercent(0.01);
             minimalFxChart.setMarginsVerticalPercent(0.01);
             minimalFxChart.setChartPaint(Color.BLACK);
+            finalPriceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(finalPriceLabel.getTextFill()));
             chartPane.getChildren().add(minimalFxChart);
         }
         pairNameLabel.setText(priceAlert.getFormattedPair());
@@ -73,9 +74,10 @@ public class CryptonoseGuiPriceAlertNodeController {
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
         if(priceAlert.getExchangeSpecs()!=null) {
             exchangeLabel.setText(priceAlert.getExchangeSpecs().getName());
-            pairNameLabel.setStyle(pairNameLabel.getStyle() + "-fx-text-fill: #" + priceAlert.getExchangeSpecs().getColorHash());
+            pairNameLabel.getStyleClass().add(priceAlert.getExchangeSpecs().getName().toLowerCase()+"-color");
         }
         mainHBox.setOnMouseClicked((event) -> {
+            System.out.println(timeLabel.getTextFill());
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));

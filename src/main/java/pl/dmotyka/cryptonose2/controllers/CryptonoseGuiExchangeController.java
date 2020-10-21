@@ -56,7 +56,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiAlertChecker;
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
@@ -142,6 +141,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
+
         @Override
         protected void updateItem(Number item, boolean empty) {
             super.updateItem(item, empty);
@@ -149,9 +149,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 setText(null);
             if(item!=null) {
                 if (item.doubleValue() >= 0)
-                    setTextFill(Color.GREEN);
+                    getStyleClass().add("price-rising");
                 else
-                    setTextFill(Color.RED);
+                    getStyleClass().add("price-falling");
                 setText(String.format("%.2f", item));
             } else {
                 setText(null);
@@ -320,7 +320,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         connectionStatus.set(newConnectionStatus);
         javafx.application.Platform.runLater(() -> {
             connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
-            indicatorBox.switchColor(newConnectionStatus.getColor());
+            indicatorBox.switchColor(newConnectionStatus.getText().toLowerCase()+"-indicator");
         });
         if(notify)
             CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);

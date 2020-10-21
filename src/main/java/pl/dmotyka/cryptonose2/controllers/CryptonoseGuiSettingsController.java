@@ -28,11 +28,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -60,7 +60,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
     @FXML
     public HBox browserPathHBox;
     @FXML
-    public Text supportedAudioFilesText;
+    public Label supportedAudioFilesLabel;
     @FXML
     public CheckBox defBrowserCheckbox;
     @FXML
@@ -81,7 +81,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
             defBrowserCheckbox.setSelected(true);
             defBrowserCheckbox.setText(defBrowserCheckbox.getText()+" (not supported)");
         }
-        supportedAudioFilesText.textProperty().setValue(supportedAudioFilesText.getText()
+        supportedAudioFilesLabel.textProperty().setValue(supportedAudioFilesLabel.getText()
                 +Arrays.stream(CryptonoseGuiSoundAlerts.getAudioFileTypes()).map(type -> String.format("%s (*.%s)",type.toString(), type.getExtension())).collect(Collectors.joining(", ")));
         priceRisingSoundFileEditText.setText(CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH));
         priceDroppingSoundFileEditText.setText(CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH));

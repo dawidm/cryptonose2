@@ -17,7 +17,7 @@ import javafx.scene.layout.Pane;
 
 public class ColorIndicatorBox extends Pane {
 
-    private static final String STYLE_STRING = "-fx-pref-width: %.2fem; -fx-pref-height: %.2fem; -fx-background-color: %s;";
+    private static final String STYLE_STRING = "-fx-pref-width: %.2fem; -fx-pref-height: %.2fem;";
 
     private final double emSize;
 
@@ -27,8 +27,9 @@ public class ColorIndicatorBox extends Pane {
         this.setStyle(formatStyle(defaultColorCssString));
     }
 
-    public void switchColor(String cssColorString) {
-        this.setStyle(formatStyle(cssColorString));
+    public void switchColor(String cssStyleClass) {
+        this.getStyleClass().clear();
+        this.getStyleClass().add(cssStyleClass);
     }
 
     private String formatStyle(String cssColorString) {

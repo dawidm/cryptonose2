@@ -22,9 +22,6 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-
 <VBox spacing="9.0" stylesheets="style-fonts.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiSettingsController">
    <children>
       <TitledPane animated="false" collapsible="false">
@@ -37,7 +34,7 @@
                   <CheckBox fx:id="defBrowserCheckbox" mnemonicParsing="false" selected="true" text="Try to use default browser" />
                   <HBox fx:id="browserPathHBox" alignment="CENTER_LEFT" spacing="9.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Browser path (%s - chart URL): " />
+                        <Label text="Browser path (%s - chart URL): " />
                         <TextField fx:id="browserPathEditText" HBox.hgrow="ALWAYS" />
                         <Button fx:id="selectBrowserButton" mnemonicParsing="false" onAction="#selectBrowserClick" text="Select browser..." />
                      </children>
@@ -56,14 +53,10 @@
         <content>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0">
                <children>
-                  <TextFlow>
-                     <children>
-                        <Text fx:id="supportedAudioFilesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose files that will be played when price alert occurs. Supported types: " wrappingWidth="600.0" />
-                     </children>
-                  </TextFlow>
+                  <Label fx:id="supportedAudioFilesLabel" text="Choose files that will be played when price alert occurs. Supported types: " wrapText="true" />
                   <HBox alignment="CENTER_LEFT" spacing="9.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price rising:" />
+                        <Label text="Price rising:" />
                         <CheckBox fx:id="defaultRisingSoundCheckBox" mnemonicParsing="false" selected="true" text="Use default sound" />
                         <TextField fx:id="priceRisingSoundFileEditText" disable="true" editable="false" HBox.hgrow="ALWAYS" />
                         <Button fx:id="priceRisingSoundFileButton" disable="true" mnemonicParsing="false" onAction="#selectRisingSoundFileClick" text="Select file..." />
@@ -71,7 +64,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="9.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Price falling:" />
+                        <Label text="Price falling:" />
                         <CheckBox fx:id="defaultDroppingSoundCheckBox" mnemonicParsing="false" selected="true" text="Use default sound" />
                         <TextField fx:id="priceDroppingSoundFileEditText" disable="true" editable="false" HBox.hgrow="ALWAYS" />
                         <Button fx:id="priceDroppingSoundFileButton" disable="true" mnemonicParsing="false" onAction="#selectDroppingSoundFileClick" text="Select file..." />
@@ -99,10 +92,7 @@
                         <Spinner fx:id="fontSizeSpinner" editable="true" />
                      </children>
                   </HBox>
-                  <TextFlow>
-                     <children>
-                        <Label text="NOTICE: Please restart Cryptonose after changing font settings" />
-                     </children></TextFlow>
+                  <Label text="NOTICE: Please restart Cryptonose after changing font settings" />
                </children>
             </VBox>
          </content>
