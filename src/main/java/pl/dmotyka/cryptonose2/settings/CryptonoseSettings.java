@@ -184,10 +184,10 @@ public class CryptonoseSettings {
             case M30 -> new PriceAlertThresholds(
                     getDouble(Alert.REQUIRED_RISING_THRESHOLD_M30, forExchange),
                     getDouble(Alert.REQUIRED_FALLING_THRESHOLD_M30, forExchange),
-                    getDouble(Alert.REQUIRED_RELATIVE_RISING_THRESHOLD_M5, forExchange),
-                    getDouble(Alert.REQUIRED_RELATIVE_FALLING_THRESHOLD_M5, forExchange),
-                    getDouble(Alert.SUFFICIENT_RELATIVE_RISING_THRESHOLD_M5, forExchange),
-                    getDouble(Alert.SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M5, forExchange)
+                    getDouble(Alert.REQUIRED_RELATIVE_RISING_THRESHOLD_M30, forExchange),
+                    getDouble(Alert.REQUIRED_RELATIVE_FALLING_THRESHOLD_M30, forExchange),
+                    getDouble(Alert.SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30, forExchange),
+                    getDouble(Alert.SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30, forExchange)
             );
         };
 
