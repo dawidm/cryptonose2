@@ -242,9 +242,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         pairPriceChangesMap = new HashMap<>();
         tablePairPriceChangesObservableList = FXCollections.observableArrayList();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
-        showLogCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            logTitledPane.setVisible(newValue);
-        });
+        logTitledPane.visibleProperty().bind(showLogCheckBox.selectedProperty());
         soundCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
         runBrowserCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
         notificationCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
@@ -276,7 +274,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         p2RelativeChangeCol.setPrefWidth(100);
         currenciesTableView.setItems(tablePairPriceChangesObservableList);
         currenciesTableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol);
-        logTitledPane.setVisible(LOG_VISIBLE);
         showLogCheckBox.setSelected(LOG_VISIBLE);
         currenciesTableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
