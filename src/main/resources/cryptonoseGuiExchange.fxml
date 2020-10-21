@@ -23,8 +23,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
 <VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController" stylesheets="style-fonts.css">
    <children>
       <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="7.0" VBox.vgrow="NEVER">
@@ -41,14 +39,7 @@
       </HBox>
       <HBox fx:id="tableDisabledHbox" alignment="CENTER" fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" VBox.vgrow="ALWAYS">
          <children>
-            <TextFlow textAlignment="CENTER" HBox.hgrow="ALWAYS">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Table disabled in power saving mode" textAlignment="CENTER" textOrigin="CENTER" />
-               </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </TextFlow>
+            <Label text="Table disabled in power saving mode" textAlignment="CENTER"/>
          </children>
       </HBox>
       <TableView fx:id="currenciesTableView" focusTraversable="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" VBox.vgrow="ALWAYS">
