@@ -53,8 +53,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;

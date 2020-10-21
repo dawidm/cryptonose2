@@ -19,6 +19,8 @@ import javafx.stage.Screen;
 import dorkbox.notify.Notify;
 import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
 import pl.dmotyka.cryptonose2.controllers.DecimalFormatter;
+import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class CryptonoseGuiNotification {

@@ -14,7 +14,10 @@
 package pl.dmotyka.cryptonose2.controllers;
 
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,8 +32,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import pl.dmotyka.cryptonose2.DecimalFormatterUnaryOperator;
-import pl.dmotyka.cryptonose2.PriceAlertThresholds;
+import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
@@ -39,6 +41,19 @@ import pl.dmotyka.exchangeutils.tools.TimeConverter;
  * Created by dawid on 8/20/17.
  */
 public class CryptonoseGuiAlertSettingsController implements Initializable {
+
+    private static class DecimalInputChecker implements UnaryOperator<TextFormatter.Change> {
+        @Override
+        public TextFormatter.Change apply(TextFormatter.Change change) {
+            if (change.getControlNewText().isEmpty())
+                return change;
+            ParsePosition parsePosition = new ParsePosition( 0 );
+            Number n = new DecimalFormat("#.#").parse(change.getControlNewText(), parsePosition);
+            if (n == null || parsePosition.getIndex() < change.getControlNewText().length())
+                return null;
+            return change;
+        }
+    }
 
     @FXML
     public HBox mainHBox;
@@ -84,18 +99,18 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void addFormatters() {
-        p1requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p1requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p1requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p1requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p1sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p1sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p2requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p2requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p2requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p2requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p2sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
-        p2sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalFormatterUnaryOperator()));
+        p1requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p1requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p1requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p1requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p1sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p1sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p2requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p2requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p2requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p2requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p2sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p2sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
     }
 
     private void fillTextFields() {

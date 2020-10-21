@@ -60,13 +60,12 @@ import javafx.scene.paint.Color;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiAlertChecker;
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.CryptonoseGuiNotification;
 import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
-import pl.dmotyka.cryptonose2.PriceAlert;
-import pl.dmotyka.cryptonose2.PriceAlertThresholds;
-import pl.dmotyka.cryptonose2.TablePairPriceChanges;
 import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
+import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;

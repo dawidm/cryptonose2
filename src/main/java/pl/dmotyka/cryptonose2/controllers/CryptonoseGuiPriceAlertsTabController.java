@@ -22,8 +22,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
-import pl.dmotyka.cryptonose2.PriceAlert;
 import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 
 /**

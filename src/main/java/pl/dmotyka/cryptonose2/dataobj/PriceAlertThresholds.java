@@ -11,7 +11,7 @@
  *
  */
 
-package pl.dmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2.dataobj;
 
 /**
  * Created by dawid on 7/25/17.
