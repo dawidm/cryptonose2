@@ -123,8 +123,8 @@ public class CryptonoseGuiController extends Application {
         UILoader<CryptonoseGuiController> uiLoader = new UILoader<>("cryptonoseGui.fxml", this);
         Node cryptonoseGuiFxNode = uiLoader.getRoot();
         primaryStage.setTitle("Cryptonose");
+
         String activeExchanges= CryptonoseSettings.getString(CryptonoseSettings.GuiState.ACTIVE_EXCHANGES);
-        boolean powerSave = CryptonoseSettings.getBool(CryptonoseSettings.GuiState.POWER_SAVE);
         String[] loadedExchanges=activeExchanges.split(",");
         List<ExchangeSpecs> loadedExchangesList =new ArrayList<>();
         for(String currentLoadedExchange : loadedExchanges) {
@@ -135,12 +135,14 @@ public class CryptonoseGuiController extends Application {
                 logger.warning(e.getLocalizedMessage());
             }
         }
+
         primaryStage.getIcons().addAll(
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_16.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_32.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_64.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_128.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_256.png")));
+
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         if(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.MAIN_IS_MAXIMIZED)) {
             primaryStage.setMaximized(true);
@@ -163,6 +165,7 @@ public class CryptonoseGuiController extends Application {
                 primaryStage.setY(mainY);
             }
         }
+
         mainScene = new Scene((VBox) cryptonoseGuiFxNode);
         mainScene.setOnKeyPressed(event -> {
             if(mainTabPane.getSelectionModel().getSelectedItem().getContent().getOnKeyPressed()!=null)
@@ -174,6 +177,7 @@ public class CryptonoseGuiController extends Application {
                     mainTabPane.getSelectionModel().selectNext();
             }
         });
+
         primaryStage.setScene(mainScene);
         primaryStage.setOnCloseRequest(handler -> {
             saveSceneSizePosition();
@@ -181,16 +185,23 @@ public class CryptonoseGuiController extends Application {
             saveOtherSettings();
             System.exit(0);
         });
+
         UILoader<CryptonoseGuiPriceAlertsTabController> uiLoaderAlerts = new UILoader<>("cryptonoseGuiPriceAlertsTab.fxml");
         Node priceAlertsPane = uiLoaderAlerts.getRoot();
         priceAlertsTabController = uiLoaderAlerts.getController();
         Tab priceAlertsTab = new Tab("Price alerts",priceAlertsPane);
         priceAlertsTab.setClosable(false);
         mainTabPane.getTabs().add(priceAlertsTab);
+
+        soundCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.ALERT_SOUND));
+        runBrowserCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.ALERT_BROWSER));
+        notificationCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.ALERT_NOTIFICATION));
+
         for (ExchangeSpecs exchangeSpecs : loadedExchangesList) {
             loadExchange(exchangeSpecs,false);
         }
         checkIfAllExchangesLoaded();
+
         soundCheckBox.setOnMouseClicked(event -> {
             globalEnableSound(soundCheckBox.isSelected());
         });
@@ -200,17 +211,17 @@ public class CryptonoseGuiController extends Application {
         notificationCheckBox.setOnMouseClicked(event -> {
             globalEnableNotif(notificationCheckBox.isSelected());
         });
-        powerSaveCheckBox.setSelected(powerSave);
+        powerSaveCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.POWER_SAVE));
         for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
-            cryptonoseGuiExchangeController.enablePowerSave(powerSave);
+            cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
         }
         powerSaveCheckBox.setOnMouseClicked(event -> {
             enablePowerSave(powerSaveCheckBox.isSelected());
         });
         addExchangeMenuButton.setOnShowing(event -> addExchangeClick());
         settingsButton.setOnMouseClicked(event -> settingsClick());
+
         primaryStage.show();
-        updateCheckboxes();
         initShortcuts();
     }
 
@@ -354,6 +365,9 @@ public class CryptonoseGuiController extends Application {
 
     private void saveOtherSettings() {
         CryptonoseSettings.putBool(CryptonoseSettings.GuiState.POWER_SAVE, powerSaveCheckBox.isSelected());
+        CryptonoseSettings.putBool(CryptonoseSettings.GuiState.ALERT_SOUND, soundCheckBox.isSelected());
+        CryptonoseSettings.putBool(CryptonoseSettings.GuiState.ALERT_BROWSER, runBrowserCheckBox.isSelected());
+        CryptonoseSettings.putBool(CryptonoseSettings.GuiState.ALERT_NOTIFICATION, notificationCheckBox.isSelected());
     }
 
     public void addExchangeClick() {
@@ -405,10 +419,12 @@ public class CryptonoseGuiController extends Application {
         }
         Map<CheckBox, Integer> checkboxSumMap = Map.of(soundCheckBox, soundSum, runBrowserCheckBox, browserSum, notificationCheckBox, notifSum);
         for (var entry: checkboxSumMap.entrySet()) {
-            if (entry.getValue() == numExchanges)
+            if (entry.getValue() == numExchanges) {
                 entry.getKey().setSelected(true);
-            else if (entry.getValue() == 0)
+            }
+            else if (entry.getValue() == 0) {
                 entry.getKey().setSelected(false);
+            }
             else
                 entry.getKey().setIndeterminate(true);
         }
