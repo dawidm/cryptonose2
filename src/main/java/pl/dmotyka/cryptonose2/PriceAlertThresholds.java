@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -13,19 +13,10 @@
 
 package pl.dmotyka.cryptonose2;
 
-import java.util.prefs.Preferences;
-
 /**
  * Created by dawid on 7/25/17.
  */
 public class PriceAlertThresholds {
-
-    private static final Double DEFAULT_REQUIRED_RISING_VALUE = 3.0;
-    private static final Double DEFAULT_REQUIRED_FALLING_VALUE = 3.0;
-    private static final Double DEFAULT_REQUIRED_RELATIVE_RISING_VALUE = 4.0;
-    private static final Double DEFAULT_REQUIRED_RELATIVE_FALLING_VALUE = 4.0;
-    private static final Double DEFAULT_SUFFICIENT_RELATIVE_RISING_VALUE = 8.0;
-    private static final Double DEFAULT_SUFFICIENT_RELATIVE_FALLING_VALUE = 8.0;
 
     private double requiredRisingValue;
     private double requiredFallingValue;
@@ -89,26 +80,6 @@ public class PriceAlertThresholds {
 
     public void setSufficientRelativeFallingValue(double sufficientRelativeFallingValue) {
         this.sufficientRelativeFallingValue = sufficientRelativeFallingValue;
-    }
-
-    public static PriceAlertThresholds fromPreferences(Preferences preferences, String suffix) {
-        return new PriceAlertThresholds(
-                preferences.getDouble("requiredRisingValue"+suffix, DEFAULT_REQUIRED_RISING_VALUE),
-                preferences.getDouble("requiredFallingValue"+suffix, DEFAULT_REQUIRED_FALLING_VALUE),
-                preferences.getDouble("requiredRelativeRisingValue"+suffix, DEFAULT_REQUIRED_RELATIVE_RISING_VALUE),
-                preferences.getDouble("requiredRelativeFallingValue"+suffix, DEFAULT_REQUIRED_RELATIVE_FALLING_VALUE),
-                preferences.getDouble("sufficientRelativeRisingValue"+suffix, DEFAULT_SUFFICIENT_RELATIVE_RISING_VALUE),
-                preferences.getDouble("sufficientRelativeFallingValue"+suffix, DEFAULT_SUFFICIENT_RELATIVE_FALLING_VALUE)
-        );
-    }
-
-    public void toPreferences(Preferences preferences, String suffix) {
-        preferences.putDouble("requiredRisingValue"+suffix, requiredRisingValue);
-        preferences.putDouble("requiredFallingValue"+suffix, requiredFallingValue);
-        preferences.putDouble("requiredRelativeRisingValue"+suffix, requiredRelativeRisingValue);
-        preferences.putDouble("requiredRelativeFallingValue"+suffix, requiredRelativeFallingValue);
-        preferences.putDouble("sufficientRelativeRisingValue"+suffix, sufficientRelativeRisingValue);
-        preferences.putDouble("sufficientRelativeFallingValue"+suffix, sufficientRelativeFallingValue);
     }
 
 }

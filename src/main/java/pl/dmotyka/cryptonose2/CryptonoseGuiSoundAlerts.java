@@ -13,12 +13,19 @@
 
 package pl.dmotyka.cryptonose2;
 
-import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 
 public class CryptonoseGuiSoundAlerts {
 
@@ -29,13 +36,8 @@ public class CryptonoseGuiSoundAlerts {
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiSoundAlerts.class.getName());
 
-    private final Preferences preferences;
-    Clip clip;
-    AudioInputStream audioInputStream;
-
-    public CryptonoseGuiSoundAlerts(Preferences preferences) {
-        this.preferences = preferences;
-    }
+    private Clip clip;
+    private AudioInputStream audioInputStream;
 
     public static AudioFileFormat.Type[] getAudioFileTypes() {
         return AudioSystem.getAudioFileTypes();
@@ -51,13 +53,13 @@ public class CryptonoseGuiSoundAlerts {
     public void soundAlert(int type) {
         URL audioURL = null;
         if(type==ALERT_RISING) {
-            String audioPath = preferences.get("soundRisingPath", "");
-            if (preferences.getBoolean("defaultRisingSound", true) || audioPath == null || audioPath.isBlank()) {
+            String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH);
+            if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND) || audioPath == null || audioPath.isBlank()) {
                 audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE));
             }
         } else {
-            String audioPath = preferences.get("soundDroppingPath", "");
-            if (preferences.getBoolean("defaultDroppingSound",true) || audioPath == null || audioPath.isBlank()) {
+            String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH);
+            if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND) || audioPath == null || audioPath.isBlank()) {
                 audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE));
             }
         }

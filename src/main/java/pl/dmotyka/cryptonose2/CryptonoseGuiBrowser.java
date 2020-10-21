@@ -1,7 +1,7 @@
 /*
  * Cryptonose2
  *
- * Copyright © 2019 Dawid Motyka
+ * Copyright © 2019-2020 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -13,16 +13,15 @@
 
 package pl.dmotyka.cryptonose2;
 
-import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
-import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
-
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
+
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 public class CryptonoseGuiBrowser {
     
@@ -31,8 +30,7 @@ public class CryptonoseGuiBrowser {
     public static void runBrowser(String pair, ExchangeSpecs exchangeSpecs){
         pair= PairSymbolConverter.apiSymbolToChartUrlSymbol(exchangeSpecs, pair);
         String urlToOpen = exchangeSpecs.getMarketUrl() + pair;
-        Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
-        if(isDefaultBrowserSupported() && preferences.getBoolean("tryUseDefBrowser",true)) {
+        if(isDefaultBrowserSupported() && CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_BROWSER)) {
             new Thread(() -> {
                 try {
                     Desktop.getDesktop().browse(new URI(urlToOpen));
@@ -41,7 +39,7 @@ public class CryptonoseGuiBrowser {
                 }
             }).start();
         } else {
-            String browserPath = preferences.get("browserPath", "");
+            String browserPath = CryptonoseSettings.getString(CryptonoseSettings.General.BROWSER_PATH);
             if (browserPath.length() > 0) {
                 try {
                     Runtime.getRuntime().exec(String.format(browserPath, urlToOpen));

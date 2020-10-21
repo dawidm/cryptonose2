@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import javafx.application.Application;
@@ -56,6 +55,7 @@ import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
@@ -123,9 +123,8 @@ public class CryptonoseGuiController extends Application {
         UILoader<CryptonoseGuiController> uiLoader = new UILoader<>("cryptonoseGui.fxml", this);
         Node cryptonoseGuiFxNode = uiLoader.getRoot();
         primaryStage.setTitle("Cryptonose");
-        Preferences preferences = Preferences.userNodeForPackage(this.getClass());
-        String activeExchanges=preferences.get("activeExchanges","");
-        boolean powerSave = preferences.getBoolean("powerSave", false);
+        String activeExchanges= CryptonoseSettings.getString(CryptonoseSettings.GuiState.ACTIVE_EXCHANGES);
+        boolean powerSave = CryptonoseSettings.getBool(CryptonoseSettings.GuiState.POWER_SAVE);
         String[] loadedExchanges=activeExchanges.split(",");
         List<ExchangeSpecs> loadedExchangesList =new ArrayList<>();
         for(String currentLoadedExchange : loadedExchanges) {
@@ -143,16 +142,20 @@ public class CryptonoseGuiController extends Application {
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_128.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icon_new_256.png")));
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        if(preferences.getBoolean("mainIsMaximized",false)) {
+        if(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.MAIN_IS_MAXIMIZED)) {
             primaryStage.setMaximized(true);
         } else {
             double mainWidth, mainHeight, mainX, mainY;
-            mainWidth = preferences.getDouble("mainWidth", primaryScreenBounds.getWidth() * MAIN_WINDOW_WIDTH_DEF_MULTIPLIER);
-            mainHeight = preferences.getDouble("mainHeight", primaryScreenBounds.getHeight() * MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER);
+            mainWidth = CryptonoseSettings.getDouble(CryptonoseSettings.GuiState.MAIN_WIDTH);
+            if (mainWidth == 0.0)
+                mainWidth = primaryScreenBounds.getWidth() * MAIN_WINDOW_WIDTH_DEF_MULTIPLIER;
+            mainHeight = CryptonoseSettings.getDouble(CryptonoseSettings.GuiState.MAIN_HEIGHT);
+            if (mainHeight == 0.0)
+                mainHeight = primaryScreenBounds.getHeight() * MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER;
             primaryStage.setWidth(mainWidth);
             primaryStage.setHeight(mainHeight);
-            mainX = preferences.getDouble("mainX", -1.0);
-            mainY = preferences.getDouble("mainY", -1.0);
+            mainX = CryptonoseSettings.getDouble(CryptonoseSettings.GuiState.MAIN_X);
+            mainY = CryptonoseSettings.getDouble(CryptonoseSettings.GuiState.MAIN_Y);
             if (mainX < 0.0 || mainY < 0.0)
                 primaryStage.centerOnScreen();
             else {
@@ -222,19 +225,18 @@ public class CryptonoseGuiController extends Application {
                 versionInfo = UpdateChecker.getNewVersionURLOrNull();
                 if (versionInfo==null)
                     return;
-                Preferences preferences = Preferences.userNodeForPackage(this.getClass());
-                String hiddenNewVersion = preferences.get("hiddenNewVersion", null);
+                String hiddenNewVersion = CryptonoseSettings.getString(CryptonoseSettings.GuiState.HIDDEN_NEW_VERSION);
                 if (hiddenNewVersion == null || !hiddenNewVersion.equals(versionInfo.getVersionString())) {
                     VersionInfo finalVersionInfo = versionInfo;
                     Platform.runLater(() -> {
                         newVersionShowLabel.setOnMouseClicked(e -> {
                             versionWindow(finalVersionInfo);
-                            preferences.put("hiddenNewVersion", finalVersionInfo.getVersionString());
+                            CryptonoseSettings.putString(CryptonoseSettings.GuiState.HIDDEN_NEW_VERSION, finalVersionInfo.getVersionString());
                             newVersionHBox.setVisible(false);
                             newVersionHBox.setManaged(false);
                         });
                         newVersionHideLabel.setOnMouseClicked(e -> {
-                            preferences.put("hiddenNewVersion", finalVersionInfo.getVersionString());
+                            CryptonoseSettings.putString(CryptonoseSettings.GuiState.HIDDEN_NEW_VERSION, finalVersionInfo.getVersionString());
                             newVersionHBox.setVisible(false);
                             newVersionHBox.setManaged(false);
                         });
@@ -337,24 +339,21 @@ public class CryptonoseGuiController extends Application {
 
     private void saveSceneSizePosition() {
         if(mainScene!=null) {
-            Preferences preferences = Preferences.userNodeForPackage(this.getClass());
-            preferences.putBoolean("mainIsMaximized",primaryStage.isMaximized());
-            preferences.putDouble("mainWidth",primaryStage.getWidth());
-            preferences.putDouble("mainHeight",primaryStage.getHeight());
-            preferences.putDouble("mainX",primaryStage.getX());
-            preferences.putDouble("mainY",primaryStage.getY());
+            CryptonoseSettings.putBool(CryptonoseSettings.GuiState.MAIN_IS_MAXIMIZED, primaryStage.isMaximized());
+            CryptonoseSettings.putDouble(CryptonoseSettings.GuiState.MAIN_WIDTH, primaryStage.getWidth());
+            CryptonoseSettings.putDouble(CryptonoseSettings.GuiState.MAIN_HEIGHT, primaryStage.getHeight());
+            CryptonoseSettings.putDouble(CryptonoseSettings.GuiState.MAIN_X, primaryStage.getX());
+            CryptonoseSettings.putDouble(CryptonoseSettings.GuiState.MAIN_Y, primaryStage.getY());
         }
     }
 
     private void saveExchangesList() {
-        Preferences preferences = Preferences.userNodeForPackage(this.getClass());
         String activeExchangesString= activeExchangesControllersMap.keySet().stream().map(activeExchange -> activeExchange.getName()).collect(Collectors.joining(","));
-        preferences.put("activeExchanges",activeExchangesString);
+        CryptonoseSettings.putString(CryptonoseSettings.GuiState.ACTIVE_EXCHANGES, activeExchangesString);
     }
 
     private void saveOtherSettings() {
-        Preferences preferences = Preferences.userNodeForPackage(this.getClass());
-        preferences.putBoolean("powerSave", powerSaveCheckBox.isSelected());
+        CryptonoseSettings.putBool(CryptonoseSettings.GuiState.POWER_SAVE, powerSaveCheckBox.isSelected());
     }
 
     public void addExchangeClick() {

@@ -15,7 +15,6 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,6 +31,7 @@ import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.DecimalFormatterUnaryOperator;
 import pl.dmotyka.cryptonose2.PriceAlertThresholds;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
@@ -39,8 +39,6 @@ import pl.dmotyka.exchangeutils.tools.TimeConverter;
  * Created by dawid on 8/20/17.
  */
 public class CryptonoseGuiAlertSettingsController implements Initializable {
-
-    private Preferences alertPreferences;
 
     @FXML
     public HBox mainHBox;
@@ -78,6 +76,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     public Button saveButton;
 
     private long[] timePeriods;
+    private ExchangeSpecs exchangeSpecs;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -101,7 +100,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
 
     private void fillTextFields() {
             long p1timePeriod=timePeriods[0];
-            PriceAlertThresholds priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p1timePeriod);
+            PriceAlertThresholds priceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1timePeriod));
             p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
             String format = "%.2f";
             p1requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
@@ -111,7 +110,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             p1sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
             p1sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
             long p2timePeriod=timePeriods[1];
-            priceAlertThresholds = PriceAlertThresholds.fromPreferences(alertPreferences,""+p2timePeriod);
+            priceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p2timePeriod));
             p2titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p2timePeriod)+" period alerts thresholds");
             p2requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
             p2requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
@@ -153,13 +152,9 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         if(timePeriods.length<2) {
             throw new IllegalArgumentException("timePeriods array should have at least 2 elements");
         }
-        setExchangeClass(exchangeSpecs);
+        this.exchangeSpecs = exchangeSpecs;
         this.timePeriods=timePeriods;
         fillTextFields();
-    }
-
-    private void setExchangeClass(ExchangeSpecs exchangeSpecs) {
-        this.alertPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(exchangeSpecs.getName());
     }
 
     public void closeStage() {
@@ -176,9 +171,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.EXCHANGE_SPECSS) {
-                Preferences currentPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(currentExchangeSpecs.getName());
-                priceAlertThresholds[0].toPreferences(currentPreferences,""+timePeriods[0]);
-                priceAlertThresholds[1].toPreferences(currentPreferences,""+timePeriods[1]);
+                CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
+                CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
             }
             closeStage();
         }
@@ -186,9 +180,11 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
 
     public void saveClick() {
         PriceAlertThresholds[] priceAlertThresholds = readTextFields();
-        priceAlertThresholds[0].toPreferences(alertPreferences,""+timePeriods[0]);
-        priceAlertThresholds[1].toPreferences(alertPreferences,""+timePeriods[1]);
-        closeStage();
+        if (priceAlertThresholds != null) {
+            CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
+            CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
+            closeStage();
+        }
     }
 
     public void saveForAllExchangesClick() {

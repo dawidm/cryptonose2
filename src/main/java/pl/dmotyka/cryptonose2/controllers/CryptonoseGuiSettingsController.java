@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -73,26 +72,23 @@ public class CryptonoseGuiSettingsController implements Initializable {
     @FXML
     public Spinner<Integer> fontSizeSpinner;
 
-    private Preferences preferences;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
-        browserPathEditText.setText(preferences.get("browserPath", ""));
+        browserPathEditText.setText(CryptonoseSettings.getString(CryptonoseSettings.General.BROWSER_PATH));
         if(CryptonoseGuiBrowser.isDefaultBrowserSupported()) {
-            defBrowserCheckbox.setSelected(preferences.getBoolean("tryUseDefBrowser",true));
+            defBrowserCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_BROWSER));
         } else {
             defBrowserCheckbox.setSelected(true);
             defBrowserCheckbox.setText(defBrowserCheckbox.getText()+" (not supported)");
         }
         supportedAudioFilesText.textProperty().setValue(supportedAudioFilesText.getText()
                 +Arrays.stream(CryptonoseGuiSoundAlerts.getAudioFileTypes()).map(type -> String.format("%s (*.%s)",type.toString(), type.getExtension())).collect(Collectors.joining(", ")));
-        priceRisingSoundFileEditText.setText(preferences.get("soundRisingPath",CryptonoseGuiSoundAlerts.DEFAULT_RISING_SOUND_FILE));
-        priceDroppingSoundFileEditText.setText(preferences.get("soundDroppingPath", CryptonoseGuiSoundAlerts.DEFAULT_DROPPING_SOUND_FILE));
-        defaultRisingSoundCheckBox.setSelected(preferences.getBoolean("defaultRisingSound",true));
-        defaultDroppingSoundCheckBox.setSelected(preferences.getBoolean("defaultDroppingSound",true));
-        defFontCheckbox.setSelected(preferences.getBoolean("defaultFontSize", true));
-        Integer defFontSize = preferences.getInt("fontSize", CryptonoseSettings.FONT_SIZE_DEF_VALUE);
+        priceRisingSoundFileEditText.setText(CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH));
+        priceDroppingSoundFileEditText.setText(CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH));
+        defaultRisingSoundCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND));
+        defaultDroppingSoundCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND));
+        defFontCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE));
+        Integer defFontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PT);
         SpinnerValueFactory<Integer> valueFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(CryptonoseSettings.FONT_MIN_SIZE, CryptonoseSettings.FONT_MAX_SIZE, defFontSize);
         fontSizeSpinner.setValueFactory(valueFactory);
@@ -160,14 +156,14 @@ public class CryptonoseGuiSettingsController implements Initializable {
     }
 
     public void saveClick(ActionEvent actionEvent) {
-        preferences.putBoolean("tryUseDefBrowser",defBrowserCheckbox.isSelected());
-        preferences.put("browserPath", browserPathEditText.getText());
-        preferences.putBoolean("defaultRisingSound", defaultRisingSoundCheckBox.isSelected());
-        preferences.putBoolean("defaultDroppingSound", defaultDroppingSoundCheckBox.isSelected());
-        preferences.put("soundRisingPath", priceRisingSoundFileEditText.getText());
-        preferences.put("soundDroppingPath", priceDroppingSoundFileEditText.getText());
-        preferences.putBoolean("defaultFontSize", defFontCheckbox.isSelected());
-        preferences.putInt("fontSize", fontSizeSpinner.getValue());
+        CryptonoseSettings.putBool(CryptonoseSettings.General.USE_DEF_BROWSER, defBrowserCheckbox.isSelected());
+        CryptonoseSettings.putString(CryptonoseSettings.General.BROWSER_PATH, browserPathEditText.getText());
+        CryptonoseSettings.putBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND, defaultRisingSoundCheckBox.isSelected());
+        CryptonoseSettings.putBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND, defaultDroppingSoundCheckBox.isSelected());
+        CryptonoseSettings.putString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH, priceRisingSoundFileEditText.getText());
+        CryptonoseSettings.putString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH, priceDroppingSoundFileEditText.getText());
+        CryptonoseSettings.putBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE, defFontCheckbox.isSelected());
+        CryptonoseSettings.putInt(CryptonoseSettings.General.FONT_SIZE_PT, fontSizeSpinner.getValue());
         closeStage(actionEvent);
     }
 

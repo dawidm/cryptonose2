@@ -35,7 +35,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,6 +67,7 @@ import pl.dmotyka.cryptonose2.PriceAlert;
 import pl.dmotyka.cryptonose2.PriceAlertThresholds;
 import pl.dmotyka.cryptonose2.TablePairPriceChanges;
 import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;
 import pl.dmotyka.cryptonoseengine.EngineMessage;
@@ -134,8 +134,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private ScheduledExecutorService scheduledExecutorService;
     private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
-    private Preferences alertPreferences;
-    private Preferences cryptonosePreferences;
     private ScheduledFuture updatePreferencesScheduledFuture;
 
     private Map<String, TablePairPriceChanges> pairPriceChangesMap=new HashMap<>();
@@ -185,15 +183,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         tableDisabledHbox.managedProperty().bind(tableDisabledHbox.visibleProperty());
         logTitledPane.managedProperty().bind(logTitledPane.visibleProperty());
         tableDisabledHbox.visibleProperty().bind(currenciesTableView.visibleProperty().not());
-        cryptonosePreferences=Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("cryptonosePreferences");
-        alertPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("alertPreferences").node(exchangeSpecs.getName());
-        alertPreferences.addPreferenceChangeListener(evt -> {
+        CryptonoseSettings.getPrefsNode(CryptonoseSettings.PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs).addPreferenceChangeListener(evt -> {
             if(evt.getNode().name().equals(exchangeSpecs.getName())) {
                 if(updatePreferencesScheduledFuture==null || updatePreferencesScheduledFuture.isDone())
                 updatePreferencesScheduledFuture=scheduledExecutorService.schedule(()->initPriceAlertThresholds(),1,TimeUnit.SECONDS);
             }
         });
-        cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts(cryptonosePreferences);
+        cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts();
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         initTable();
@@ -211,17 +207,16 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
-        Preferences pairsPreferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
-        String markets = pairsPreferences.get("markets","");
+        String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
         if(!markets.equals("")) {
             Arrays.stream(markets.split(",")).forEach(market -> {
-                Double minVolume = pairsPreferences.getDouble(market,-1.0);
+                Double minVolume = CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market), exchangeSpecs);
                 if(minVolume>=0)
                     pairSelectionCriteria.add(new PairSelectionCriteria(market,minVolume));
             });
         }
-        String pairs = pairsPreferences.get("pairsApiSymbols",null);
+        String pairs = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs);
         String[] additionalPairs;
         if(pairs==null || pairs.equals(""))
             additionalPairs = new String[0];
@@ -448,10 +443,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         logger.info("updating alerts values for " + exchangeSpecs);
         for(long currentTimePeriod : TIME_PERIODS) {
             priceAlertThresholdsMap.put(currentTimePeriod,
-                    PriceAlertThresholds.fromPreferences(
-                            alertPreferences,
-                            ""+currentTimePeriod
-                    )
+                    CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(currentTimePeriod))
             );
         };
     }

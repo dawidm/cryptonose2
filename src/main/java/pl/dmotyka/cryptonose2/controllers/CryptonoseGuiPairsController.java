@@ -24,7 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -53,6 +52,7 @@ import javafx.stage.Stage;
 
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairDataProvider;
 import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
@@ -255,19 +255,19 @@ public class CryptonoseGuiPairsController implements Initializable {
     }
 
     public void loadPreferences() {
-        Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
-        String markets = preferences.get("markets","");
+        String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         if(!markets.equals("")) {
             Arrays.stream(markets.split(",")).forEach(market -> {
                 Optional<MarketTableItem> optionalMarketTableItem = marketsObservableList.stream().filter(marketTableItem -> marketTableItem.getName().equals(market)).findAny();
                 if(optionalMarketTableItem.isPresent()) {
                     MarketTableItem marketTableItem = optionalMarketTableItem.get();
                     marketTableItem.setActive(true);
-                    marketTableItem.setMinVolume(preferences.getDouble(market,DEFAULT_MIN_VOLUME));
+                    marketTableItem.setMinVolume(CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market),exchangeSpecs));
                 }
             });
-        }
-        Set<String> apiSymbolsSet = new HashSet<>(Arrays.asList(preferences.get("pairsApiSymbols","").split(",")));
+        };
+        String symbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs);
+        Set<String> apiSymbolsSet = new HashSet<>(Arrays.asList(symbols.split(",")));
         for(PairListItem pairListItem : pairsObservableList) {
             if(apiSymbolsSet.contains(PairSymbolConverter.toApiSymbol(exchangeSpecs,pairListItem.getCurrencyPair())))
                 pairListItem.setSelected(true);
@@ -275,22 +275,22 @@ public class CryptonoseGuiPairsController implements Initializable {
     }
 
     public void savePreferences() {
-        Preferences preferences = Preferences.userNodeForPackage(CryptonoseGuiExchangeController.class).node("pairsPreferences").node(exchangeSpecs.getName());
-        preferences.put("markets",
-                marketsObservableList.stream().
-                        filter(marketTableItem -> marketTableItem.isActive()).
-                        map(marketTableItem -> marketTableItem.getName()).
-                        collect(Collectors.joining(","))
-        );
+        String markets = marketsObservableList.stream().
+                filter(marketTableItem -> marketTableItem.isActive()).
+                map(marketTableItem -> marketTableItem.getName()).
+                collect(Collectors.joining(","));
+        CryptonoseSettings.putString(CryptonoseSettings.Pairs.MARKETS, markets, exchangeSpecs);
+
         marketsObservableList.stream().
                 filter(marketTableItem -> marketTableItem.isActive()).
-                forEach(marketTableItem -> preferences.putDouble(marketTableItem.getName(),marketTableItem.getMinVolume()));
-        preferences.put("pairsApiSymbols",
-                pairsObservableList.stream().
-                        filter(pairListItem -> pairListItem.isSelected()).
-                        map(pairListItem -> PairSymbolConverter.toApiSymbol(exchangeSpecs, pairListItem.getCurrencyPair())).
-                        collect(Collectors.joining(","))
-        );
+                forEach(marketTableItem -> {
+                    CryptonoseSettings.putDouble(new CryptonoseSettings.MarketVolumePreference(marketTableItem.getName()), marketTableItem.getMinVolume(), exchangeSpecs);
+                });
+        String apiSymbols = pairsObservableList.stream().
+                filter(pairListItem -> pairListItem.isSelected()).
+                map(pairListItem -> PairSymbolConverter.toApiSymbol(exchangeSpecs, pairListItem.getCurrencyPair())).
+                collect(Collectors.joining(","));
+        CryptonoseSettings.putString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, apiSymbols, exchangeSpecs);
     }
 
     public void selectVisibleClick() {

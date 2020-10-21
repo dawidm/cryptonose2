@@ -22,8 +22,8 @@ group 'pl.dmotyka'
 version '2.11.2'
 description 'Real-time alerts about significant price changes on cryptocurrency exchanges'
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = '14'
+targetCompatibility = '14'
 
 repositories {
     mavenCentral()
