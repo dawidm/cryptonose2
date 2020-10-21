@@ -319,7 +319,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             return;
         connectionStatus.set(newConnectionStatus);
         javafx.application.Platform.runLater(() -> {
-            connectionStatusLabel.setText(newConnectionStatus.getText());
+            connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
             indicatorBox.switchColor(newConnectionStatus.getColor());
         });
         if(notify)

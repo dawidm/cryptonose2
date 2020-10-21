@@ -16,18 +16,16 @@ package pl.dmotyka.cryptonose2.dataobj;
 /**
  * Created by dawid on 8/2/17.
  */
-public class CryptonoseGuiConnectionStatus {
+public enum CryptonoseGuiConnectionStatus {
+    CONNECTION_STATUS_CONNECTED("Connected", "limegreen"),
+    CONNECTION_STATUS_CONNECTING("Connecting", "yellow"),
+    CONNECTION_STATUS_DISCONNECTED("Disconnected", "red"),
+    CONNECTION_STATUS_NO_TRADES("No updates", "red");
 
     private final String text;
     private final String color;
 
-    //TODO refactor?
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_CONNECTED = new CryptonoseGuiConnectionStatus("Connected", "limegreen");
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_CONNECTING = new CryptonoseGuiConnectionStatus("Connecting", "yellow");
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_DISCONNECTED = new CryptonoseGuiConnectionStatus("Disconnected", "red");
-    public static final CryptonoseGuiConnectionStatus CONNECTION_STATUS_NO_TRADES = new CryptonoseGuiConnectionStatus("No updates", "red");
-
-    public CryptonoseGuiConnectionStatus(String text, String color) {
+    CryptonoseGuiConnectionStatus(String text, String color) {
         this.text = text;
         this.color = color;
     }
@@ -38,12 +36,5 @@ public class CryptonoseGuiConnectionStatus {
 
     public String getColor() {
         return color;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof CryptonoseGuiConnectionStatus && (text.equals(((CryptonoseGuiConnectionStatus)obj).text)))
-            return true;
-        return false;
     }
 }
