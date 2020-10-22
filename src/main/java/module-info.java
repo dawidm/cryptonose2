@@ -13,5 +13,6 @@ module cryptonose {
     requires jdk.crypto.ec;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires com.formdev.flatlaf;
     exports pl.dmotyka.cryptonose2.controllers;
 }

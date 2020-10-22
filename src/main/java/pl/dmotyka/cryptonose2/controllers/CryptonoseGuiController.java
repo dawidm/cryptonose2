@@ -53,6 +53,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import pl.dmotyka.cryptonose2.UILoader;
 import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
@@ -115,6 +116,7 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        FlatLightLaf.install();
         logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
