@@ -16,7 +16,6 @@ package pl.dmotyka.cryptonose2;
 import javax.swing.SwingUtilities;
 
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
 import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
@@ -67,13 +66,15 @@ public class CryptonoseGuiNotification {
     }
 
     private static void notifyControlsFx(String title, String text, Runnable action) {
-//        javafx.application.Platform.runLater(()-> {
+        throw new RuntimeException("Not implemented.");
+//        Removed because of bugs (cannot show notification when no active window)
+//        Platform.runLater(() -> {
 //            Notifications notifications = Notifications.
-//                    create().
-//                    darkStyle().
-//                    title(title).
-//                    text(text).
-//                    hideAfter(Duration.millis(HIDE_AFTER));
+//                create().
+//                darkStyle().
+//                title(title).
+//                text(text).
+//                hideAfter(Duration.millis(HIDE_AFTER));
 //            if(action!=null)
 //                notifications.onAction((actionEvent) -> action.run());
 //            notifications.show();
