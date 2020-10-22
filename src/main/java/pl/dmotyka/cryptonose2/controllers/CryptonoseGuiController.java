@@ -115,7 +115,6 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        UILoader.modifySwingScaling();
         logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
