@@ -77,7 +77,6 @@ public class CryptonoseGuiPriceAlertNodeController {
             pairNameLabel.getStyleClass().add(priceAlert.getExchangeSpecs().getName().toLowerCase()+"-color");
         }
         mainHBox.setOnMouseClicked((event) -> {
-            System.out.println(timeLabel.getTextFill());
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
