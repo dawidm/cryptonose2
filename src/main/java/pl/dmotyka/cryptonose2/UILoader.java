@@ -81,4 +81,12 @@ public class UILoader <T> {
         return stage;
     }
 
+    // because fractional values cause bad looking notifications on Windows
+    public static void modifySwingScaling() {
+        String factor = System.getProperty("sun.java2d.uiScale", "1.0");
+        double doubleFactor = Double.parseDouble(factor);
+        doubleFactor = Math.round(doubleFactor);
+        System.setProperty("sun.java2d.uiScale", String.format("%.2f", doubleFactor));
+    }
+
 }
