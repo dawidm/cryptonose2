@@ -67,7 +67,7 @@
                      </tooltip>
                   </CheckBox>
                   <MenuButton fx:id="addExchangeMenuButton" mnemonicParsing="false" text="Add exchange..." />
-                  <Button fx:id="settingsButton" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Settngs..." />
+                  <Button fx:id="settingsButton" alignment="CENTER_RIGHT" mnemonicParsing="false" text="Settings..." />
                </children>
             </HBox>
          </content>
