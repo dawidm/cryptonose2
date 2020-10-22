@@ -13,6 +13,8 @@
 
 package pl.dmotyka.cryptonose2;
 
+import javax.swing.SwingUtilities;
+
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
@@ -80,19 +82,20 @@ public class CryptonoseGuiNotification {
 
     private static void notifyDorkbox(String title, String text, Runnable action) {
         double fontSize;
-        Screen screen = Screen.getPrimary();
-        double scaleX = screen.getOutputScaleX();
         if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
             Font defaultFont = Font.getDefault();
             fontSize = defaultFont.getSize();
         } else {
             fontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
         }
-        Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(fontSize*1.2*scaleX));
-        Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(fontSize*scaleX));
-        Notify notify = Notify.create().darkStyle().hideAfter(HIDE_AFTER).text(text).title(title);
-        if(action!=null)
-            notify=notify.onAction((notify1 -> action.run()));
-        notify.show();
+        SwingUtilities.invokeLater(() -> {
+            Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(fontSize*1.2));
+            Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(fontSize));
+            Notify notify = Notify.create().darkStyle().hideAfter(HIDE_AFTER).text(text).title(title);
+            if(action!=null)
+                notify=notify.onAction((notify1 -> action.run()));
+            notify.show();
+        });
     }
+
 }
