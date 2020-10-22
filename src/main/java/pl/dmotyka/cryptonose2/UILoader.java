@@ -42,10 +42,10 @@ public class UILoader <T> {
 
     public static void applyStyles(Parent root) {
         if (FONT_SIZE == null && !CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
-            FONT_SIZE = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PT);
+            FONT_SIZE = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
         }
         if (FONT_SIZE != null)
-            root.setStyle(String.format("-fx-font-size: %dpt;", FONT_SIZE));
+            root.setStyle(String.format("-fx-font-size: %dpx;", FONT_SIZE));
         if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-dark.css").toExternalForm());
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-dark.css").toExternalForm());

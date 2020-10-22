@@ -23,7 +23,7 @@ public class CryptonoseSettings {
 
     public static final int DECIMAL_MAX_DIGITS = 9;
     public static final int FONT_MIN_SIZE = 6;
-    public static final int FONT_MAX_SIZE = 20;
+    public static final int FONT_MAX_SIZE = 24;
 
     private static final Preferences mainNode = Preferences.userNodeForPackage(CryptonoseGuiController.class);
 
@@ -134,7 +134,7 @@ public class CryptonoseSettings {
         public static final GeneralPreferenceSpecs<String> SOUND_RISING_FILE_PATH = new GeneralPreferenceSpecs<>("soundRisingPath", "");
         public static final GeneralPreferenceSpecs<String> SOUND_DROPPING_FILE_PATH = new GeneralPreferenceSpecs<>("soundDroppingPath", "");
         public static final GeneralPreferenceSpecs<Boolean> USE_DEF_FONT_SIZE = new GeneralPreferenceSpecs<>("defaultFontSize", true);
-        public static final GeneralPreferenceSpecs<Integer> FONT_SIZE_PT = new GeneralPreferenceSpecs<>("fontSizePt", 12);
+        public static final GeneralPreferenceSpecs<Integer> FONT_SIZE_PX = new GeneralPreferenceSpecs<>("fontSizePt", 12);
         public static final GeneralPreferenceSpecs<Boolean> DARK_MODE = new GeneralPreferenceSpecs<>("darkMode", true);
     }
 

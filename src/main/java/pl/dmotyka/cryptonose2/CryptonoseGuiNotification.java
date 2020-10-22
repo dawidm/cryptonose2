@@ -21,6 +21,7 @@ import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
 import pl.dmotyka.cryptonose2.controllers.DecimalFormatter;
 import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class CryptonoseGuiNotification {
@@ -78,11 +79,17 @@ public class CryptonoseGuiNotification {
     }
 
     private static void notifyDorkbox(String title, String text, Runnable action) {
+        double fontSize;
         Screen screen = Screen.getPrimary();
         double scaleX = screen.getOutputScaleX();
-        Font defaultFont = Font.getDefault();
-        Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(defaultFont.getSize()*1.2*scaleX));
-        Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(defaultFont.getSize()*scaleX));
+        if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
+            Font defaultFont = Font.getDefault();
+            fontSize = defaultFont.getSize();
+        } else {
+            fontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
+        }
+        Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(fontSize*1.2*scaleX));
+        Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(fontSize*scaleX));
         Notify notify = Notify.create().darkStyle().hideAfter(HIDE_AFTER).text(text).title(title);
         if(action!=null)
             notify=notify.onAction((notify1 -> action.run()));
