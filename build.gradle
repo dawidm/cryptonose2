@@ -50,14 +50,14 @@ javafx {
 mainClassName = "pl.dmotyka.cryptonose2.AppStarter"
 
 run {
-    jvmArgs = ['-Djava.util.logging.config.file=logging-debug.settings', '-Dversion='+project.version]
+    jvmArgs = ['-Dsun.java2d.uiScale=1.0', '-Djava.util.logging.config.file=logging-debug.settings', '-Dversion='+project.version]
 }
 
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'Cryptonose'
-        jvmArgs = ['-Dversion='+project.version]
+        jvmArgs = ['-Dsun.java2d.uiScale=1.0', '-Dversion='+project.version]
     }
     forceMerge('log4j-api')
 
