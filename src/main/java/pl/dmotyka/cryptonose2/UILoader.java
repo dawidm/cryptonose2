@@ -37,11 +37,21 @@ public class UILoader <T> {
         if (controller != null)
             fxmlLoader.setController(controller);
         fxmlLoader.load();
+        applyStyles(fxmlLoader.getRoot());
+    }
+
+    public static void applyStyles(Parent root) {
         if (FONT_SIZE == null && !CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
             FONT_SIZE = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PT);
         }
         if (FONT_SIZE != null)
-            ((Parent)fxmlLoader.getRoot()).setStyle(String.format("-fx-font-size: %dpt;", FONT_SIZE));
+            root.setStyle(String.format("-fx-font-size: %dpt;", FONT_SIZE));
+        if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-dark.css").toExternalForm());
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-dark.css").toExternalForm());
+        } else {
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-light.css").toExternalForm());
+        }
     }
 
     public Parent getRoot() {

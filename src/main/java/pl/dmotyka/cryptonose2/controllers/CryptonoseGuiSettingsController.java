@@ -25,7 +25,6 @@ import javax.sound.sampled.AudioFileFormat;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -114,11 +113,11 @@ public class CryptonoseGuiSettingsController implements Initializable {
                 browserPathEditText.setText(fileName + " %s");
             }
             else {
-                new Alert(Alert.AlertType.ERROR,"Selected file is not executable").show();
+                new CryptonoseAlert(CryptonoseAlert.AlertType.ERROR,"Selected file is not executable").show();
             }
         }
         catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR,"Error opening browser file").show();
+            new CryptonoseAlert(CryptonoseAlert.AlertType.ERROR,"Error opening browser file").show();
         }
     }
 
@@ -147,7 +146,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
             }
         }
         catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR,"Selected file is not readable").show();
+            new CryptonoseAlert(CryptonoseAlert.AlertType.ERROR,"Selected file is not readable").show();
         }
     }
 

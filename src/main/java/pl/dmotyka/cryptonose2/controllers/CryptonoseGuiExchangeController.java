@@ -346,7 +346,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case NO_PAIRS:
                 Platform.runLater(()->{
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Got 0 valid currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
+                    CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.CONFIRMATION, "Got 0 valid currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
                     alert.getDialogPane().setPrefWidth(500);
                     alert.setTitle("Pairs settings: " + exchangeSpecs.getName());
                     alert.showAndWait();

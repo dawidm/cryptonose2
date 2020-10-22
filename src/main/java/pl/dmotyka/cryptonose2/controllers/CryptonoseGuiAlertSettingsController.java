@@ -155,7 +155,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
                             Double.parseDouble(p2sufficientRelativeDroppingTextField.getText()))
             };
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Error, please check if provided values are correct", ButtonType.OK);
+            CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.INFORMATION, "Error, please check if provided values are correct", ButtonType.OK);
             alert.setTitle("Error");
             alert.showAndWait();
             return null;
@@ -181,7 +181,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void saveForAllExchanges(PriceAlertThresholds[] priceAlertThresholds) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This will replace settings for all available exchanges", ButtonType.OK, ButtonType.CANCEL);
+        CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.CONFIRMATION, "This will replace settings for all available exchanges", ButtonType.OK, ButtonType.CANCEL);
         alert.getDialogPane().setPrefWidth(500);
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
