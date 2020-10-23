@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2;
 import javax.swing.SwingUtilities;
 
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
 import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
@@ -28,6 +29,7 @@ import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 public class CryptonoseGuiNotification {
 
     public static final int HIDE_AFTER=7000;
+    public static final int DORKBOX_MAX_FONT_SIZE = 19;
 
     public enum NotificationLibrary {CONTROLSFX,DORKBOX};
 
@@ -82,6 +84,8 @@ public class CryptonoseGuiNotification {
     }
 
     private static void notifyDorkbox(String title, String text, Runnable action) {
+        Screen screen = Screen.getPrimary();
+        double scaleX = screen.getOutputScaleX();
         double fontSize;
         if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
             Font defaultFont = Font.getDefault();
@@ -90,8 +94,12 @@ public class CryptonoseGuiNotification {
             fontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
         }
         SwingUtilities.invokeLater(() -> {
-            Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(fontSize*1.2));
-            Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(fontSize));
+            // the text is scaled manually because hidpi scaling is disabled for swing
+            double newFontSize = (int)(fontSize*scaleX);
+            // max size is used because notifications have fixed size, thus limited space
+            newFontSize=(newFontSize>DORKBOX_MAX_FONT_SIZE)?DORKBOX_MAX_FONT_SIZE:fontSize;
+            Notify.TITLE_TEXT_FONT = String.format("Sans Serif BOLD %d", (int)(newFontSize*1.1));
+            Notify.MAIN_TEXT_FONT = String.format("Sans Serif %d", (int)(newFontSize));
             Notify notify = Notify.create().darkStyle().hideAfter(HIDE_AFTER).text(text).title(title);
             if(action!=null)
                 notify=notify.onAction((notify1 -> action.run()));
