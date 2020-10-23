@@ -15,3 +15,7 @@
     -fx-font-size: 110%;
     -fx-font-weight: bold;
 }
+
+.button {
+    -fx-min-width: 7em;
+}
