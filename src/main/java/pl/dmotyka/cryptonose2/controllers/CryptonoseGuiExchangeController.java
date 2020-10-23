@@ -149,6 +149,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if(empty)
                 setText(null);
             if(item!=null) {
+                getStyleClass().remove(getStyleClass().size()-1);
                 if (item.doubleValue() >= 0)
                     getStyleClass().add("price-rising");
                 else
