@@ -338,7 +338,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
-                lastTradeTimeMillis=0;
+                lastTradeTimeMillis=System.currentTimeMillis();
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
