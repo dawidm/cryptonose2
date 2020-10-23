@@ -98,6 +98,18 @@
             </VBox>
          </content>
       </TitledPane>
+      <TitledPane animated="false" collapsible="false">
+         <graphic>
+            <Label styleClass="h2" text="Notifications" />
+         </graphic>
+         <content>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0">
+               <children>
+                  <CheckBox fx:id="connStatusCheckbox" mnemonicParsing="false" text="Connection status notifications" />
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
       <HBox alignment="CENTER_RIGHT" spacing="9.0">
          <children>
             <Button mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />

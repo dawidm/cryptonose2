@@ -326,7 +326,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             else
                 indicatorBox.switchColor(newConnectionStatus.getText().toLowerCase()+"-indicator");
         });
-        if(notify)
+        if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS))
             CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
     }
 

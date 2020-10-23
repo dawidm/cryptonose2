@@ -72,6 +72,8 @@ public class CryptonoseGuiSettingsController implements Initializable {
     public CheckBox darkStyleCheckbox;
     @FXML
     public Spinner<Integer> fontSizeSpinner;
+    @FXML
+    public CheckBox connStatusCheckbox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,6 +92,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
         defaultDroppingSoundCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND));
         defFontCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE));
         darkStyleCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE));
+        connStatusCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS));
         Integer defFontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
         SpinnerValueFactory<Integer> valueFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(CryptonoseSettings.FONT_MIN_SIZE, CryptonoseSettings.FONT_MAX_SIZE, defFontSize);
@@ -101,7 +104,6 @@ public class CryptonoseGuiSettingsController implements Initializable {
         priceRisingSoundFileButton.disableProperty().bind(defaultRisingSoundCheckBox.selectedProperty());
         priceDroppingSoundFileEditText.disableProperty().bind(defaultDroppingSoundCheckBox.selectedProperty());
         priceDroppingSoundFileButton.disableProperty().bind(defaultDroppingSoundCheckBox.selectedProperty());
-
     }
 
     public void selectBrowserClick(ActionEvent actionEvent) {
@@ -167,6 +169,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
         CryptonoseSettings.putBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE, defFontCheckbox.isSelected());
         CryptonoseSettings.putInt(CryptonoseSettings.General.FONT_SIZE_PX, fontSizeSpinner.getValue());
         CryptonoseSettings.putBool(CryptonoseSettings.General.DARK_MODE, darkStyleCheckbox.isSelected());
+        CryptonoseSettings.putBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS, connStatusCheckbox.isSelected());
         closeStage(actionEvent);
     }
 
