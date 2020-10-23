@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -31,6 +32,7 @@ import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
  */
 public class CryptonoseGuiPriceAlertsTabController implements Initializable{
 
+    @FXML
     public VBox mainVBox;
 
     private int maxAlerts = 30;
@@ -42,6 +44,7 @@ public class CryptonoseGuiPriceAlertsTabController implements Initializable{
     public void addAlert(PriceAlert priceAlert, ChartCandle[] chartCandles) {
         javafx.application.Platform.runLater(() -> {
             if (mainVBox.getChildren().size() == 1) {
+                mainVBox.setStyle("-fx-background-image: none");
                 mainVBox.getChildren().clear();
                 try {
                     UILoader<Object> uiLoader = new UILoader("cryptonoseGuiPriceAlertPaneLabels.fxml");
