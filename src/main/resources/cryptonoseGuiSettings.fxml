@@ -76,7 +76,7 @@
       </TitledPane>
       <TitledPane animated="false" collapsible="false">
          <graphic>
-            <Label styleClass="h2" text="Font size" />
+            <Label styleClass="h2" text="Appearance" />
          </graphic>
          <content>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0">
@@ -92,7 +92,8 @@
                         <Spinner fx:id="fontSizeSpinner" editable="true" />
                      </children>
                   </HBox>
-                  <Label text="NOTICE: Please restart Cryptonose after changing font settings" />
+                  <CheckBox fx:id="darkStyleCheckbox" mnemonicParsing="false" selected="true" text="Use dark style" />
+                  <Label text="NOTICE: Please restart Cryptonose after changing appearance settings" />
                </children>
             </VBox>
          </content>

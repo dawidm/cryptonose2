@@ -69,6 +69,8 @@ public class CryptonoseGuiSettingsController implements Initializable {
     @FXML
     public CheckBox defFontCheckbox;
     @FXML
+    public CheckBox darkStyleCheckbox;
+    @FXML
     public Spinner<Integer> fontSizeSpinner;
 
     @Override
@@ -87,6 +89,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
         defaultRisingSoundCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND));
         defaultDroppingSoundCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND));
         defFontCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE));
+        darkStyleCheckbox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE));
         Integer defFontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
         SpinnerValueFactory<Integer> valueFactory =
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(CryptonoseSettings.FONT_MIN_SIZE, CryptonoseSettings.FONT_MAX_SIZE, defFontSize);
@@ -163,6 +166,7 @@ public class CryptonoseGuiSettingsController implements Initializable {
         CryptonoseSettings.putString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH, priceDroppingSoundFileEditText.getText());
         CryptonoseSettings.putBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE, defFontCheckbox.isSelected());
         CryptonoseSettings.putInt(CryptonoseSettings.General.FONT_SIZE_PX, fontSizeSpinner.getValue());
+        CryptonoseSettings.putBool(CryptonoseSettings.General.DARK_MODE, darkStyleCheckbox.isSelected());
         closeStage(actionEvent);
     }
 
