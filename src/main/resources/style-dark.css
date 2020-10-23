@@ -9,7 +9,7 @@
 }
 
 .scroll-bar {
-    -fx-background-color: -fx-base
+    -fx-background-color: -fx-base;
 }
 
 .scroll-bar > .increment-button > .increment-arrow,
@@ -27,4 +27,8 @@
 
 .list-cell > .check-box > .box {
     -fx-border-color: derive(-fx-text-fill, -20%);
+}
+
+.hyperlink {
+    -fx-text-fill: #7FDBFF;
 }
