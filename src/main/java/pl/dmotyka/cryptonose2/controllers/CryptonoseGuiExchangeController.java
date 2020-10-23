@@ -93,6 +93,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean LOG_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;
+    public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
     private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
     @FXML
@@ -128,7 +129,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private ExchangeSpecs exchangeSpecs;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
     private CryptonoseGenericEngine engine;
-    long lastTradeTimeMillis = 0;
+    long lastUpdateTimeMillis = 0;
     private ScheduledExecutorService scheduledExecutorService;
     private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
@@ -192,7 +193,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         initTable();
-        startEngine();
+        new Thread(this::startEngine).start();
     }
 
     public void close() {
@@ -206,6 +207,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
+        if(engine!=null)
+            engine.stop();
+        lastUpdateTimeMillis=0;
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
         if(!markets.equals("")) {
@@ -228,10 +232,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                 additionalPairs);
         engine.enableInitEngineWithLowerPeriodChartData();
+        engine.autoRefreshPairData(AUTO_REFRESH_INTERVAL_MINUTES);
         engine.setCheckChangesDelayMs(100);
         engine.setEngineMessageReceiver(this);
         engine.setEngineUpdateHeartbeatReceiver(this);
-        new Thread(()->engine.start()).start();
+        engine.start();
     }
 
     @Override
@@ -293,9 +298,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             uiLoader.stageShowAndWait("Pairs settings: " + exchangeSpecs.getName());
             pairsButton.setDisable(false);
             if(settingsChangedAtomic.get()) {
-                if(engine!=null)
-                    engine.stop();
-                startEngine();
+                new Thread(this::startEngine).start();
             }
         } catch(IOException e) {
             throw new Error(e);
@@ -338,7 +341,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
-                lastTradeTimeMillis=System.currentTimeMillis();
+                lastUpdateTimeMillis=System.currentTimeMillis();
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
@@ -359,12 +362,18 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     if(alert.getResult() == ButtonType.NO)
                         close();
                 });
+                break;
+            case AUTO_REFRESHING:
+                lastUpdateTimeMillis=System.currentTimeMillis();
+                pairPriceChangesMap.clear();
+                tablePairPriceChangesObservableList.clear();
+
         }
     }
 
     @Override
     public void receiveTransactionHeartbeat() {
-        lastTradeTimeMillis=System.currentTimeMillis();
+        lastUpdateTimeMillis =System.currentTimeMillis();
         numTradesPerSecondAtomicInteger.getAndIncrement();
     }
 
@@ -450,8 +459,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void startLastTransactionTimer() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            if (lastTradeTimeMillis!=0) {
-                long lastTradeSecondsAgo = (System.currentTimeMillis() - lastTradeTimeMillis) / 1000;
+            if (lastUpdateTimeMillis !=0) {
+                long lastTradeSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis) / 1000;
                 javafx.application.Platform.runLater(() -> lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago"));
                 CryptonoseGuiConnectionStatus statusNoTrades = CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES;
                 if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
@@ -469,12 +478,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void reconnectEngine() {
-        lastTradeTimeMillis = 0;
+        lastUpdateTimeMillis = 0;
         pairPriceChangesMap.clear();
         tablePairPriceChangesObservableList.clear();
         javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
-        engine.stop();
-        engine.start();
+        engine.refresh();
     }
 
     private void consoleLog(String text) {
@@ -498,7 +506,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public void enablePowerSave(boolean enable) {
         currenciesTableView.setVisible(!enable);
-        if(!enable)
+        if(!enable && engine!=null)
             updateTable(Arrays.asList(engine.requestAllPairsChanges()));
     }
 
