@@ -483,7 +483,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         pairPriceChangesMap.clear();
         tablePairPriceChangesObservableList.clear();
         javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
-        engine.refresh();
+        engine.reconnect();
     }
 
     private void consoleLog(String text) {
