@@ -324,7 +324,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         connectionStatus.set(newConnectionStatus);
         javafx.application.Platform.runLater(() -> {
             connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
-            CryptonoseGuiConnectionStatus status;
             if (newConnectionStatus==CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES)
                 indicatorBox.switchColor(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED.getText().toLowerCase()+"-indicator");
             else
