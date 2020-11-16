@@ -194,7 +194,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         initTable();
-        setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED, false);
+        indicatorBox.switchColor(connectionStatus.get().getText().toLowerCase()+"-indicator");
         new Thread(this::startEngine).start();
     }
 
