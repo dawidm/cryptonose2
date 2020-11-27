@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,7 @@ import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
+import pl.dmotyka.exchangeutils.chartutils.LiquidityFactor;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
@@ -134,6 +136,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
     private ScheduledFuture updatePreferencesScheduledFuture;
+    private LiquidityFactor liquidityFactorIndicator = new LiquidityFactor();
 
     private Map<String, TablePairPriceChanges> pairPriceChangesMap=new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList;
@@ -389,6 +392,23 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @Override
     public void receiveChanges(List<PriceChanges> priceChangesList) {
         List<PriceAlert> priceAlerts = cryptonoseGuiAlertChecker.checkAlerts(priceChangesList);
+        Iterator<PriceAlert> it = priceAlerts.iterator();
+        // check cn liquidity
+        if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, exchangeSpecs)) {
+            while (it.hasNext()) {
+                PriceAlert priceAlert = it.next();
+                ChartCandle[] candles = engine.getCandleData(new CurrencyPairTimePeriod(priceAlert.getPair(), priceAlert.getPeriodSeconds()));
+                if (candles.length >= RELATIVE_CHANGE_NUM_CANDLES) {
+                    double liqFactorVal = liquidityFactorIndicator.calcValue(candles, RELATIVE_CHANGE_NUM_CANDLES);
+                    if (liqFactorVal < CryptonoseSettings.getDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, exchangeSpecs)) {
+                        logger.fine(String.format("Cn liquidity factor is too low, filtering out alert: %s %d", priceAlert.getPair(), priceAlert.getPeriodSeconds()));
+                        it.remove();
+                    }
+                } else {
+                    logger.warning(String.format("not enough candles %s %d (this shouldn't be happening)", priceAlert.getPair(), priceAlert.getPeriodSeconds()));
+                }
+            }
+        }
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
         if(currenciesTableView.isVisible())
