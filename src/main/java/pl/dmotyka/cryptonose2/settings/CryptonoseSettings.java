@@ -43,6 +43,8 @@ public class CryptonoseSettings {
                 return TimePeriod.M5;
             if (periodSec == TimePeriod.M30.periodSec)
                 return TimePeriod.M30;
+            if (periodSec == TimePeriod.ANY.periodSec)
+                return TimePeriod.ANY;
             throw new IllegalArgumentException("Wrong time period");
         }
     }
