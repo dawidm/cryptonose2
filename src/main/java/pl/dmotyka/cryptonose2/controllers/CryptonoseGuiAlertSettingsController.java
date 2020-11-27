@@ -25,7 +25,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TitledPane;
@@ -103,6 +105,10 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     public TitledPane p2periodSettingsTitledPane;
     @FXML
     public Button saveButton;
+    @FXML
+    public Slider cnLiquiditySlider;
+    @FXML
+    public CheckBox cnLiquidityCheckBox;
 
     private long[] timePeriods;
     private ExchangeSpecs exchangeSpecs;
@@ -127,7 +133,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         p2sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
     }
 
-    private void fillTextFields() {
+    private void fillFields() {
             long p1timePeriod=timePeriods[0];
             PriceAlertThresholds priceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1timePeriod));
             p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
@@ -147,7 +153,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             p2requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
             p2sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
             p2sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
-
+            cnLiquidityCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, exchangeSpecs));
+            cnLiquiditySlider.setValue(CryptonoseSettings.getDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, exchangeSpecs));
     }
 
     private PriceAlertThresholds[] readTextFields() throws NumberFormatException {
@@ -183,7 +190,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         }
         this.exchangeSpecs = exchangeSpecs;
         this.timePeriods=timePeriods;
-        fillTextFields();
+        fillFields();
+        cnLiquiditySlider.disableProperty().bind(cnLiquidityCheckBox.selectedProperty().not());
     }
 
     public void closeStage() {
@@ -202,6 +210,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.EXCHANGE_SPECSS) {
                 CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
                 CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
+                CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), exchangeSpecs);
+                CryptonoseSettings.putDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, cnLiquiditySlider.getValue(), exchangeSpecs);
             }
             closeStage();
         }
@@ -212,6 +222,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         if (priceAlertThresholds != null) {
             CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
             CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
+            CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), exchangeSpecs);
+            CryptonoseSettings.putDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, cnLiquiditySlider.getValue(), exchangeSpecs);
             closeStage();
         }
     }

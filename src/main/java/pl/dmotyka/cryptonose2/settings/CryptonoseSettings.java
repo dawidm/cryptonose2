@@ -28,6 +28,7 @@ public class CryptonoseSettings {
     private static final Preferences mainNode = Preferences.userNodeForPackage(CryptonoseGuiController.class);
 
     public enum TimePeriod {
+        ANY(0),
         M5(300),
         M30(1800);
 
@@ -139,19 +140,21 @@ public class CryptonoseSettings {
         public static final GeneralPreferenceSpecs<Boolean> CONNECTION_STATUS_NOTIFICATIONS = new GeneralPreferenceSpecs<>("connectionStatusNotif", true);
     }
 
-    private static class Alert {
-        public static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredFallingValue", 3.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRisingValue", 4.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredFallingValue", 4.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M30);
+    public static class Alert {
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, TimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredFallingValue", 3.0, TimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRisingValue", 4.0, TimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredFallingValue", 4.0, TimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M30);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", false, TimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.5, TimePeriod.ANY);
     }
 
     public static class Pairs {
@@ -191,6 +194,7 @@ public class CryptonoseSettings {
                     getDouble(Alert.SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30, forExchange),
                     getDouble(Alert.SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30, forExchange)
             );
+            case ANY -> throw new IllegalArgumentException("wrong time period");
         };
 
     }
