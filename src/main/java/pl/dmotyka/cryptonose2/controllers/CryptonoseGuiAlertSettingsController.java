@@ -42,7 +42,19 @@ import pl.dmotyka.exchangeutils.tools.TimeConverter;
  */
 public class CryptonoseGuiAlertSettingsController implements Initializable {
 
+    private static final double MIN_ALERT_THRESHOLD = 0;
+    private static final double MAX_ALERT_THRESHOLD = 100;
+
     private static class DecimalInputChecker implements UnaryOperator<TextFormatter.Change> {
+
+        private final double minValue;
+        private final double maxValue;
+
+        public DecimalInputChecker(double minValue, double maxValue) {
+            this.minValue = minValue;
+            this.maxValue = maxValue;
+        }
+
         @Override
         public TextFormatter.Change apply(TextFormatter.Change change) {
             if (change.getControlNewText().isEmpty())
@@ -50,6 +62,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             ParsePosition parsePosition = new ParsePosition( 0 );
             Number n = new DecimalFormat("#.#").parse(change.getControlNewText(), parsePosition);
             if (n == null || parsePosition.getIndex() < change.getControlNewText().length())
+                return null;
+            if (n.doubleValue() < minValue || n.doubleValue() > maxValue)
                 return null;
             return change;
         }
@@ -99,18 +113,18 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void addFormatters() {
-        p1requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p1requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p1requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p1requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p1sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p1sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p2requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p2requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p2requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p2requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p2sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
-        p2sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker()));
+        p1requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p1requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p1requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p1requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p1sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p1sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p2requiredRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p2requiredDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p2requiredRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p2requiredRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p2sufficientRelativeRisingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
+        p2sufficientRelativeDroppingTextField.setTextFormatter(new TextFormatter<>(new DecimalInputChecker(MIN_ALERT_THRESHOLD, MAX_ALERT_THRESHOLD)));
     }
 
     private void fillTextFields() {
