@@ -367,11 +367,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                         close();
                 });
                 break;
-            case AUTO_REFRESHING:
+            case AUTO_REFRESHING_DONE:
                 lastUpdateTimeMillis=System.currentTimeMillis();
                 pairPriceChangesMap.clear();
                 tablePairPriceChangesObservableList.clear();
-
         }
     }
 
