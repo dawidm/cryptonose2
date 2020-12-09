@@ -64,6 +64,7 @@ import pl.dmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
 import pl.dmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
+import pl.dmotyka.exchangeutils.xtb.XtbExchangeSpecs;
 
 public class CryptonoseGuiController extends Application {
 
@@ -71,12 +72,13 @@ public class CryptonoseGuiController extends Application {
 
     public static final double MAIN_WINDOW_WIDTH_DEF_MULTIPLIER = 0.5;
     public static final double MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER = 0.7;
-    public static final ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{
+    public static ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{
             new PoloniexExchangeSpecs(),
             //new BittrexExchangeSpecs(),
             new BinanceExchangeSpecs(),
             //new XtbExchangeSpecs(),
             new BitfinexExchangeSpecs()};
+    public static final String ENABLE_XTB_PARAMETER = "--enable-xtb";
 
     @FXML
     public VBox mainVbox;
@@ -115,6 +117,10 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        if (getParameters().getRaw().contains(ENABLE_XTB_PARAMETER)) {
+            EXCHANGE_SPECSS = Arrays.copyOf(EXCHANGE_SPECSS, EXCHANGE_SPECSS.length+1);
+            EXCHANGE_SPECSS[EXCHANGE_SPECSS.length-1] = new XtbExchangeSpecs();
+        }
         logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
