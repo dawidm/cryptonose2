@@ -22,6 +22,7 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
@@ -66,7 +67,11 @@
                         <Tooltip text="Disable tables in exchange tabs to save power (lower CPU and battery usage)" />
                      </tooltip>
                   </CheckBox>
-                  <MenuButton fx:id="addExchangeMenuButton" mnemonicParsing="false" text="Add exchange..." />
+                  <MenuButton fx:id="addExchangeMenuButton" mnemonicParsing="false" text="Add exchange...">
+                     <effect>
+                        <DropShadow color="forestgreen" radius="20.0"/>
+                     </effect>
+                  </MenuButton>
                   <Button fx:id="settingsButton" mnemonicParsing="false" text="Settings..." />
                </children>
             </HBox>

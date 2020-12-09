@@ -130,9 +130,9 @@ public class CryptonoseGuiController extends Application {
         Node cryptonoseGuiFxNode = uiLoader.getRoot();
         primaryStage.setTitle("Cryptonose");
 
-        String activeExchanges= CryptonoseSettings.getString(CryptonoseSettings.GuiState.ACTIVE_EXCHANGES);
-        String[] loadedExchanges=activeExchanges.split(",");
-        List<ExchangeSpecs> loadedExchangesList =new ArrayList<>();
+        String activeExchanges = CryptonoseSettings.getString(CryptonoseSettings.GuiState.ACTIVE_EXCHANGES);
+        String[] loadedExchanges = activeExchanges.split(",");
+        List<ExchangeSpecs> loadedExchangesList = new ArrayList<>();
         for(String currentLoadedExchange : loadedExchanges) {
             try {
                 ExchangeSpecs exchangeSpecs = ExchangeSpecs.fromStringName(currentLoadedExchange);
@@ -225,6 +225,7 @@ public class CryptonoseGuiController extends Application {
             enablePowerSave(powerSaveCheckBox.isSelected());
         });
         addExchangeMenuButton.setOnShowing(event -> addExchangeClick());
+        addExchangeMenuButton.setOnMouseClicked(event -> removeExchangesButtonShadow());
         settingsButton.setOnMouseClicked(event -> settingsClick());
 
         primaryStage.show();
@@ -312,6 +313,10 @@ public class CryptonoseGuiController extends Application {
         });
     }
 
+    private void removeExchangesButtonShadow() {
+        addExchangeMenuButton.setEffect(null);
+    }
+
     public void loadExchange(ExchangeSpecs exchangeSpecs, boolean activate) {
         try {
             logger.info("loading "+ exchangeSpecs.getName());
@@ -339,7 +344,7 @@ public class CryptonoseGuiController extends Application {
             cryptonoseGuiExchangeController.notificationCheckBox.setSelected(notificationCheckBox.isSelected());
             cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
             activeExchangesControllersMap.put(exchangeSpecs, cryptonoseGuiExchangeController);
-
+            removeExchangesButtonShadow();
         } catch (IOException e) {
             logger.log(Level.SEVERE,"when loading exchange",e);
             throw new Error();
