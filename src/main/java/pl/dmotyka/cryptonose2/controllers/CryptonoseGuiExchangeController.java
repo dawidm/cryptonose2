@@ -23,11 +23,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -369,8 +371,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case AUTO_REFRESHING_DONE:
                 lastUpdateTimeMillis=System.currentTimeMillis();
-                pairPriceChangesMap.clear();
-                tablePairPriceChangesObservableList.clear();
+                Set<String> newPairs = Set.of(engine.getAllPairs());
+                Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
+                outdatedPairs.removeAll(newPairs);
+                for (String pair : outdatedPairs) {
+                    tablePairPriceChangesObservableList.remove(pairPriceChangesMap.get(pair));
+                    pairPriceChangesMap.remove(pair);
+                }
         }
     }
 
