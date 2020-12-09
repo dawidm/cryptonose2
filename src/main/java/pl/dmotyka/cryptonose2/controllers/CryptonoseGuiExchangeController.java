@@ -216,6 +216,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void startEngine() {
         if(engine!=null)
             engine.stop();
+        tablePairPriceChangesObservableList.clear();
+        pairPriceChangesMap.clear();
         lastUpdateTimeMillis=0;
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
