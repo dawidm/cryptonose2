@@ -48,7 +48,7 @@ public class CryptonoseGuiVersionWindowController implements Initializable {
 
     public void init(VersionInfo versionInfo, CryptonoseGuiController applicationController) {
         this.applicationController = applicationController;
-        titleLabel.setText(titleLabel.getText()+" "+versionInfo.getVersionString());
+        titleLabel.setText(titleLabel.getText()+versionInfo.getVersionString());
         releaseLinkLabel.setText(versionInfo.getDownloadUrl());
     }
 
