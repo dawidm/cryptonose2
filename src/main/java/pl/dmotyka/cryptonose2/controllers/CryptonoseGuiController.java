@@ -400,7 +400,6 @@ public class CryptonoseGuiController extends Application {
     public void settingsClick() {
         try {
             UILoader<CryptonoseGuiSettingsController> uiLoader = new UILoader<>("cryptonoseGuiSettings.fxml");
-            Parent root = uiLoader.getRoot();
             settingsButton.setDisable(true);
             uiLoader.stageShowAndWait("Cryptonose2 settings");
             settingsButton.setDisable(false);
