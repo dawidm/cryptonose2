@@ -27,6 +27,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_15
 }
 
+application {
+    mainModule = "cryptonose"
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
