@@ -67,6 +67,15 @@ Price alert is triggered by:
 * Price rise 3.5%, relative 3 will not trigger an alert - relative change is too low.
 * Price rise 1%, relative 9.3 will trigger the alert - relative change is bigger than _sufficient_ value.
 
+#### Cryptonose liquidity factor
+Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency paris that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
+
+(number_of_periods_where_price_changed) / (number_of_periods)
+
+Number of periods is 50, same as for calculating [relative change](#what-is-relative-price-change). 
+
+To sum up, low value of liquidity factor for given currency pair means that there were recently many periods when price didn't change.
+
 ## Notification
 
 ![cryptonose notification]({{ site.baseurl }}/images/notification.png "cryptonose desktop notification")
