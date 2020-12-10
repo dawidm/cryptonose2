@@ -37,7 +37,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -94,6 +93,8 @@ public class CryptonoseGuiController extends Application {
     public MenuButton addExchangeMenuButton;
     @FXML
     public Button settingsButton;
+    @FXML
+    public Button helpButton;
     @FXML
     public CheckBox powerSaveCheckBox;
     @FXML
@@ -227,6 +228,7 @@ public class CryptonoseGuiController extends Application {
         addExchangeMenuButton.setOnShowing(event -> addExchangeClick());
         addExchangeMenuButton.setOnMouseClicked(event -> removeExchangesButtonShadow());
         settingsButton.setOnMouseClicked(event -> settingsClick());
+        helpButton.setOnMouseClicked(event -> helpClick());
 
         primaryStage.show();
         initShortcuts();
@@ -403,6 +405,18 @@ public class CryptonoseGuiController extends Application {
             settingsButton.setDisable(true);
             uiLoader.stageShowAndWait("Cryptonose2 settings");
             settingsButton.setDisable(false);
+        } catch(IOException e) {
+            throw new Error(e);
+        }
+    }
+
+    public void helpClick() {
+        try {
+            UILoader<CryptonoseGuiHelpWindowController> uiLoader = new UILoader<>("cryptonoseGuiHelpWindow.fxml");
+            uiLoader.getController().init(this);
+            helpButton.setDisable(true);
+            uiLoader.stageShowAndWait("Help");
+            helpButton.setDisable(false);
         } catch(IOException e) {
             throw new Error(e);
         }

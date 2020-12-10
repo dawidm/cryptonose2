@@ -73,6 +73,7 @@
                      </effect>
                   </MenuButton>
                   <Button fx:id="settingsButton" mnemonicParsing="false" text="Settings..." />
+                  <Button fx:id="helpButton" mnemonicParsing="false" text="Help..." />
                </children>
             </HBox>
          </content>
