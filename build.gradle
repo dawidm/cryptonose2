@@ -39,12 +39,14 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'pl.dmotyka', name: 'dmutils', version:'1.0.0'
-    compile group: 'pl.dmotyka', name: 'exchangeutils', version:'1.9.2'
+    compile group: 'pl.dmotyka', name: 'exchangeutils', version:'1.10.0'
     compile group: 'pl.dmotyka', name: 'cryptonoseengine', version:'1.5.5'
     compile group: 'pl.dmotyka', name: 'minimal-fx-charts', version: '1.0.0'
     compile group: 'com.dorkbox', name: 'Notify', version:'3.7'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    compile group: 'org.pf4j', name: 'pf4j', version: '3.5.0'
+    compile group: 'org.ow2.asm', name: 'asm', version: '7.0'
 }
 
 javafx {

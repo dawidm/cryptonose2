@@ -207,7 +207,7 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         alert.getDialogPane().setPrefWidth(500);
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
-            for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.EXCHANGE_SPECSS) {
+            for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.exchangeSpecss) {
                 CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
                 CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
                 CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), exchangeSpecs);

@@ -58,12 +58,9 @@ import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
-import pl.dmotyka.exchangeutils.binance.BinanceExchangeSpecs;
-import pl.dmotyka.exchangeutils.bitfinex.BitfinexExchangeSpecs;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangesPluginsLoader;
 import pl.dmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
-import pl.dmotyka.exchangeutils.poloniex.PoloniexExchangeSpecs;
-import pl.dmotyka.exchangeutils.xtb.XtbExchangeSpecs;
 
 public class CryptonoseGuiController extends Application {
 
@@ -71,13 +68,7 @@ public class CryptonoseGuiController extends Application {
 
     public static final double MAIN_WINDOW_WIDTH_DEF_MULTIPLIER = 0.5;
     public static final double MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER = 0.7;
-    public static ExchangeSpecs[] EXCHANGE_SPECSS = new ExchangeSpecs[]{
-            new PoloniexExchangeSpecs(),
-            //new BittrexExchangeSpecs(),
-            new BinanceExchangeSpecs(),
-            //new XtbExchangeSpecs(),
-            new BitfinexExchangeSpecs()};
-    public static final String ENABLE_XTB_PARAMETER = "--enable-xtb";
+    public static ExchangeSpecs[] exchangeSpecss;
 
     @FXML
     public VBox mainVbox;
@@ -118,10 +109,7 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        if (getParameters().getRaw().contains(ENABLE_XTB_PARAMETER)) {
-            EXCHANGE_SPECSS = Arrays.copyOf(EXCHANGE_SPECSS, EXCHANGE_SPECSS.length+1);
-            EXCHANGE_SPECSS[EXCHANGE_SPECSS.length-1] = new XtbExchangeSpecs();
-        }
+        exchangeSpecss = new ExchangesPluginsLoader().getAllExchangeSpecs().toArray(ExchangeSpecs[]::new);
         logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
@@ -354,7 +342,7 @@ public class CryptonoseGuiController extends Application {
     }
 
     void checkIfAllExchangesLoaded() {
-        if (activeExchangesControllersMap.size() == EXCHANGE_SPECSS.length) {
+        if (activeExchangesControllersMap.size() == exchangeSpecss.length) {
             addExchangeMenuButton.setDisable(true);
         } else {
             addExchangeMenuButton.setDisable(false);
@@ -384,7 +372,7 @@ public class CryptonoseGuiController extends Application {
     }
 
     public void addExchangeClick() {
-        Set<ExchangeSpecs> allExchanges = new HashSet<>(Arrays.asList(EXCHANGE_SPECSS));
+        Set<ExchangeSpecs> allExchanges = new HashSet<>(Arrays.asList(exchangeSpecss));
         allExchanges.removeAll(activeExchangesControllersMap.keySet());
         addExchangeMenuButton.getItems().clear();
         ExchangeSpecs[] allExchangesSorted = Arrays.stream(allExchanges.toArray()).
