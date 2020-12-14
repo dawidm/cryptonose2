@@ -10,4 +10,5 @@ BittrexExchangeSpecs.settings
 package
 XtbExchangeSpecs.settings
 *.log
+plugins
 
