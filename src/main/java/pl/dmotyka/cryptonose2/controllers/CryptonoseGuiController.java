@@ -68,7 +68,6 @@ public class CryptonoseGuiController extends Application {
 
     public static final double MAIN_WINDOW_WIDTH_DEF_MULTIPLIER = 0.5;
     public static final double MAIN_WINDOW_HEIGHT_DEF_MULTIPLIER = 0.7;
-    public static ExchangeSpecs[] exchangeSpecss;
 
     @FXML
     public VBox mainVbox;
@@ -103,13 +102,17 @@ public class CryptonoseGuiController extends Application {
 
     private Stage primaryStage;
 
+    public static ExchangeSpecs[] exchangeSpecss;
+    private static ExchangesPluginsLoader exchangesPluginsLoader;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        exchangeSpecss = new ExchangesPluginsLoader().getAllExchangeSpecs().toArray(ExchangeSpecs[]::new);
+        exchangesPluginsLoader = new ExchangesPluginsLoader();
+        exchangeSpecss = exchangesPluginsLoader.getAllExchangeSpecs().toArray(ExchangeSpecs[]::new);
         logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
