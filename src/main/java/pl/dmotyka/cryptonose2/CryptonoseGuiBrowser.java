@@ -21,14 +21,13 @@ import java.util.logging.Logger;
 
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 public class CryptonoseGuiBrowser {
     
     private static final Logger logger = Logger.getLogger(CryptonoseGuiBrowser.class.getName());
     
     public static void runBrowser(String pair, ExchangeSpecs exchangeSpecs){
-        pair= PairSymbolConverter.apiSymbolToChartUrlSymbol(exchangeSpecs, pair);
+        pair= exchangeSpecs.getPairSymbolConverter().apiSymbolToChartUrlSymbol(pair);
         String urlToOpen = exchangeSpecs.getMarketUrl() + pair;
         if(isDefaultBrowserSupported() && CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_BROWSER)) {
             new Thread(() -> {

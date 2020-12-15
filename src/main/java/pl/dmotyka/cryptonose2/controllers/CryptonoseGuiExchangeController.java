@@ -80,6 +80,7 @@ import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.chartutils.LiquidityFactor;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
+import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 /**
@@ -131,6 +132,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
     private ExchangeSpecs exchangeSpecs;
+    private PairSymbolConverter pairSymbolConverter;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
     private CryptonoseGenericEngine engine;
     long lastUpdateTimeMillis = 0;
@@ -182,7 +184,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.priceAlertTabController = cryptonoseGuiPriceAlertsTabController;
         this.cryptonoseGuiController = cryptonoseGuiController;
         this.indicatorBox = indicatorBox;
-        this.exchangeSpecs=exchangeSpecs;
+        this.exchangeSpecs = exchangeSpecs;
+        pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         pairsButton.setOnMouseClicked(event -> pairsClick());
         alertSettingsButton.setOnMouseClicked(event -> alertSettingsClick());
         currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
@@ -427,7 +430,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         for (PriceChanges priceChanges : priceChangesList) {
             TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
             if(tablePairPriceChanges == null) {
-                tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair());
+                tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
                 pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
                 tablePairPriceChangesObservableList.add(tablePairPriceChanges);
             }

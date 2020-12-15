@@ -17,7 +17,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 /**
  * Created by dawid on 8/9/17.
@@ -35,9 +34,9 @@ public class TablePairPriceChanges {
     private SimpleDoubleProperty p2RelativeChange;
     private SimpleDoubleProperty lastPrice;
 
-    public TablePairPriceChanges(ExchangeSpecs exchangeSpecs, String pairName) {
+    public TablePairPriceChanges(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
         this.pairName = pairName;
-        this.formattedPairName=PairSymbolConverter.toFormattedString(exchangeSpecs, pairName);
+        this.formattedPairName=formattedPairName;
         p1PercentChange=new SimpleDoubleProperty(0.0);
         p1RelativeChange=new SimpleDoubleProperty(0.0);
         p2PercentChange=new SimpleDoubleProperty(0.0);

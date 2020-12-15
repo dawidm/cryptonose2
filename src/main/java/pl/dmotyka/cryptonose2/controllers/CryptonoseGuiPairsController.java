@@ -160,6 +160,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     private ObservableList<PairListItem> pairsObservableList;
     private Future loadPairsFuture;
     private SettingsChangedNotifier settingsChangedNotifier;
+    private PairSymbolConverter pairSymbolConverter;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -169,6 +170,7 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void init(ExchangeSpecs exchange, SettingsChangedNotifier settingsChangedNotifier) {
         this.exchangeSpecs=exchange;
+        pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         this.settingsChangedNotifier=settingsChangedNotifier;
         loadPairsFuture=Executors.newSingleThreadExecutor().submit(this::loadPairs);
     }
@@ -178,8 +180,8 @@ public class CryptonoseGuiPairsController implements Initializable {
             PairDataProvider pairDataProvider = exchangeSpecs.getPairDataProvider();
             List<CurrencyPair> currencyPairList= Arrays.stream(pairDataProvider.getPairsApiSymbols()).
                     map(pairSymbol -> new CurrencyPair(
-                            PairSymbolConverter.apiSymbolToBaseCurrencySymbol(exchangeSpecs,pairSymbol),
-                            PairSymbolConverter.apiSymbolToCounterCurrencySymbol(exchangeSpecs,pairSymbol))
+                            pairSymbolConverter.apiSymbolToBaseCurrencySymbol(pairSymbol),
+                            pairSymbolConverter.apiSymbolToCounterCurrencySymbol(pairSymbol))
                     ).collect(Collectors.toList());
             if(Thread.interrupted())
                 return;
@@ -269,7 +271,7 @@ public class CryptonoseGuiPairsController implements Initializable {
         String symbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs);
         Set<String> apiSymbolsSet = new HashSet<>(Arrays.asList(symbols.split(",")));
         for(PairListItem pairListItem : pairsObservableList) {
-            if(apiSymbolsSet.contains(PairSymbolConverter.toApiSymbol(exchangeSpecs,pairListItem.getCurrencyPair())))
+            if(apiSymbolsSet.contains(pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())))
                 pairListItem.setSelected(true);
         }
     }
@@ -288,7 +290,7 @@ public class CryptonoseGuiPairsController implements Initializable {
                 });
         String apiSymbols = pairsObservableList.stream().
                 filter(pairListItem -> pairListItem.isSelected()).
-                map(pairListItem -> PairSymbolConverter.toApiSymbol(exchangeSpecs, pairListItem.getCurrencyPair())).
+                map(pairListItem -> pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())).
                 collect(Collectors.joining(","));
         CryptonoseSettings.putString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, apiSymbols, exchangeSpecs);
     }

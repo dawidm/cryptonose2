@@ -14,7 +14,6 @@
 package pl.dmotyka.cryptonose2.dataobj;
 
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 /**
@@ -33,10 +32,10 @@ public class PriceAlert {
     private final long timestamp;
     private final ExchangeSpecs exchangeSpecs;
 
-    public PriceAlert(ExchangeSpecs exchangeSpecs, String pair, long periodSeconds, long timestamp, double priceChange, double relativePriceChange, double minPrice, double maxPrice, long changeTimeSeconds) {
+    public PriceAlert(ExchangeSpecs exchangeSpecs, String pair, String formattedPair, long periodSeconds, long timestamp, double priceChange, double relativePriceChange, double minPrice, double maxPrice, long changeTimeSeconds) {
         this.exchangeSpecs=exchangeSpecs;
         this.pair = pair;
-        this.formattedPair =PairSymbolConverter.toFormattedString(exchangeSpecs,pair);
+        this.formattedPair = formattedPair;
         this.periodSeconds = periodSeconds;
         this.timestamp = timestamp;
         this.priceChange = priceChange;

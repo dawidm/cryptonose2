@@ -22,6 +22,7 @@ import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 /**
  * Created by dawid on 7/24/17.
@@ -29,12 +30,14 @@ import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 public class CryptonoseGuiAlertChecker {
 
     private final ExchangeSpecs exchangeSpecs;
+    private final PairSymbolConverter pairSymbolConverter;
     private Map<String, PriceAlert> priceAlertsMap;
     private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap;
     private long maxTimePeriod;
 
     public CryptonoseGuiAlertChecker(ExchangeSpecs exchangeSpecs, Map<Long, PriceAlertThresholds> priceAlertThresholdsMap) {
-        this.exchangeSpecs=exchangeSpecs;
+        this.exchangeSpecs = exchangeSpecs;
+        pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         this.priceAlertThresholdsMap = priceAlertThresholdsMap;
         maxTimePeriod = priceAlertThresholdsMap.keySet().stream().max(Long::compareTo).get();
         priceAlertsMap = new HashMap<>();
@@ -56,6 +59,7 @@ public class CryptonoseGuiAlertChecker {
                     PriceAlert priceAlert = new PriceAlert(
                             exchangeSpecs,
                             currentPriceChanges.getCurrencyPair(),
+                            pairSymbolConverter.toFormattedString(currentPriceChanges.getCurrencyPair()),
                             currentPriceChanges.getTimePeriodSeconds(),
                             System.currentTimeMillis() / 1000,
                             currentPriceChanges.getPercentChange(),
