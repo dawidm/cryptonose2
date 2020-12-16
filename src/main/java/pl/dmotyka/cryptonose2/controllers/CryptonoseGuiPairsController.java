@@ -190,19 +190,14 @@ public class CryptonoseGuiPairsController implements Initializable {
                 double volume = CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market),exchangeSpecs);
                 return new MarketAndVolume(market, volume);
             }).toArray(MarketAndVolume[]::new);
-            String[] selectedSymbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs).split(",");
-            CurrencyPair[] selectedCurrencyPairs;
-            if (selectedSymbols.length == 1 && selectedSymbols[0].length()==0)
-                selectedCurrencyPairs = new CurrencyPair[0];
-            else
-                selectedCurrencyPairs = Arrays.stream(selectedSymbols).map(apiSymbol -> pairSymbolConverter.apiSymbolToXchangeCurrencyPair(apiSymbol)).toArray(CurrencyPair[]::new);
+            String[] selectedApiSymbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs).split(",");
 
             Platform.runLater(()->{
                 mainHBox.setVisible(true);
                 loadingGridPane.setVisible(false);
                 fillTable(currencyPairList);
                 fillList(currencyPairList);
-                fillPreferencesData(marketsVolumes, selectedCurrencyPairs);
+                fillPreferencesData(marketsVolumes, selectedApiSymbols);
                 saveButton.setDisable(false);
             });
 
@@ -269,7 +264,8 @@ public class CryptonoseGuiPairsController implements Initializable {
         currencyPairsListView.setItems(filteredPairsList);
     }
 
-    public void fillPreferencesData(MarketAndVolume[] marketAndVolumes, CurrencyPair[] selectedPairs) {
+    public void fillPreferencesData(MarketAndVolume[] marketAndVolumes, String[] selectedPairs) {
+        PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         for (MarketAndVolume marketAndVolume : marketAndVolumes) {
             Optional<MarketTableItem> optionalMarketTableItem = marketsObservableList.stream().filter(marketTableItem -> marketTableItem.getName().equals(marketAndVolume.getMarketSymbol())).findAny();
             if(optionalMarketTableItem.isPresent()) {
@@ -278,9 +274,9 @@ public class CryptonoseGuiPairsController implements Initializable {
                 marketTableItem.setMinVolume(marketAndVolume.getMarketVolume());
             }
         }
-        Set<CurrencyPair> currencyPairSet = Set.of(selectedPairs);
+        Set<String> selectedApiSymbolsSet = Set.of(selectedPairs);
         for(PairListItem pairListItem : pairsObservableList) {
-            if(currencyPairSet.contains(pairListItem.getCurrencyPair()))
+            if(selectedApiSymbolsSet.contains(pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())))
                 pairListItem.setSelected(true);
         }
     }
