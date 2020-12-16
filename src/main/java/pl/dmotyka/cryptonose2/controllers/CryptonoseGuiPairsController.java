@@ -52,6 +52,7 @@ import javafx.stage.Stage;
 
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
+import pl.dmotyka.cryptonose2.dataobj.MarketAndVolume;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairDataProvider;
@@ -160,7 +161,6 @@ public class CryptonoseGuiPairsController implements Initializable {
     private ObservableList<PairListItem> pairsObservableList;
     private Future loadPairsFuture;
     private SettingsChangedNotifier settingsChangedNotifier;
-    private PairSymbolConverter pairSymbolConverter;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -170,29 +170,42 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void init(ExchangeSpecs exchange, SettingsChangedNotifier settingsChangedNotifier) {
         this.exchangeSpecs=exchange;
-        pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         this.settingsChangedNotifier=settingsChangedNotifier;
         loadPairsFuture=Executors.newSingleThreadExecutor().submit(this::loadPairs);
     }
 
     public void loadPairs() {
         try {
+            final PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
             PairDataProvider pairDataProvider = exchangeSpecs.getPairDataProvider();
             List<CurrencyPair> currencyPairList= Arrays.stream(pairDataProvider.getPairsApiSymbols()).
-                    map(pairSymbol -> new CurrencyPair(
-                            pairSymbolConverter.apiSymbolToBaseCurrencySymbol(pairSymbol),
-                            pairSymbolConverter.apiSymbolToCounterCurrencySymbol(pairSymbol))
-                    ).collect(Collectors.toList());
+                    map(pairSymbol -> pairSymbolConverter.apiSymbolToXchangeCurrencyPair(pairSymbol)).
+                                                               collect(Collectors.toList());
+
             if(Thread.interrupted())
                 return;
+
+            String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
+            MarketAndVolume[] marketsVolumes = Arrays.stream(markets.split(",")).map(market -> {
+                double volume = CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market),exchangeSpecs);
+                return new MarketAndVolume(market, volume);
+            }).toArray(MarketAndVolume[]::new);
+            String[] selectedSymbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs).split(",");
+            CurrencyPair[] selectedCurrencyPairs;
+            if (selectedSymbols.length == 1 && selectedSymbols[0].length()==0)
+                selectedCurrencyPairs = new CurrencyPair[0];
+            else
+                selectedCurrencyPairs = Arrays.stream(selectedSymbols).map(apiSymbol -> pairSymbolConverter.apiSymbolToXchangeCurrencyPair(apiSymbol)).toArray(CurrencyPair[]::new);
+
             Platform.runLater(()->{
                 mainHBox.setVisible(true);
                 loadingGridPane.setVisible(false);
                 fillTable(currencyPairList);
                 fillList(currencyPairList);
-                loadPreferences();
+                fillPreferencesData(marketsVolumes, selectedCurrencyPairs);
                 saveButton.setDisable(false);
             });
+
         } catch (Exception e) {
             logger.log(Level.SEVERE,"when loading pairs from exchange",e);
         }
@@ -256,27 +269,24 @@ public class CryptonoseGuiPairsController implements Initializable {
         currencyPairsListView.setItems(filteredPairsList);
     }
 
-    public void loadPreferences() {
-        String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
-        if(!markets.equals("")) {
-            Arrays.stream(markets.split(",")).forEach(market -> {
-                Optional<MarketTableItem> optionalMarketTableItem = marketsObservableList.stream().filter(marketTableItem -> marketTableItem.getName().equals(market)).findAny();
-                if(optionalMarketTableItem.isPresent()) {
-                    MarketTableItem marketTableItem = optionalMarketTableItem.get();
-                    marketTableItem.setActive(true);
-                    marketTableItem.setMinVolume(CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market),exchangeSpecs));
-                }
-            });
-        };
-        String symbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs);
-        Set<String> apiSymbolsSet = new HashSet<>(Arrays.asList(symbols.split(",")));
+    public void fillPreferencesData(MarketAndVolume[] marketAndVolumes, CurrencyPair[] selectedPairs) {
+        for (MarketAndVolume marketAndVolume : marketAndVolumes) {
+            Optional<MarketTableItem> optionalMarketTableItem = marketsObservableList.stream().filter(marketTableItem -> marketTableItem.getName().equals(marketAndVolume.getMarketSymbol())).findAny();
+            if(optionalMarketTableItem.isPresent()) {
+                MarketTableItem marketTableItem = optionalMarketTableItem.get();
+                marketTableItem.setActive(true);
+                marketTableItem.setMinVolume(marketAndVolume.getMarketVolume());
+            }
+        }
+        Set<CurrencyPair> currencyPairSet = Set.of(selectedPairs);
         for(PairListItem pairListItem : pairsObservableList) {
-            if(apiSymbolsSet.contains(pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())))
+            if(currencyPairSet.contains(pairListItem.getCurrencyPair()))
                 pairListItem.setSelected(true);
         }
     }
 
     public void savePreferences() {
+        final PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         String markets = marketsObservableList.stream().
                 filter(marketTableItem -> marketTableItem.isActive()).
                 map(marketTableItem -> marketTableItem.getName()).
