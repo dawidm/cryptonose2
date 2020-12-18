@@ -11,10 +11,39 @@
  *
  */
 
-package pl.dmotyka.cryptonose2.coingecko;
+package pl.dmotyka.cryptonose2;
 
-public class GeckoMultipleSymbolsException extends Exception {
-    public GeckoMultipleSymbolsException(String message) {
-        super(message);
+import javafx.scene.Node;
+
+public abstract class PriceAlertPlugin {
+
+    private final String name;
+    private final String buttonTitle;
+    protected final String currencySymbol;
+    protected Node anchor;
+
+    public PriceAlertPlugin(String name, String buttonTitle, String currencySymbol) {
+        this.name = name;
+        this.buttonTitle = buttonTitle;
+        this.currencySymbol = currencySymbol;
+    }
+
+    public abstract void show();
+    public abstract boolean isShowing();
+
+    public void setAnchor(Node anchor) {
+        this.anchor = anchor;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getButtonTitle() {
+        return buttonTitle;
+    }
+
+    public String getCurrencySymbol() {
+        return currencySymbol;
     }
 }

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<!--
+  ~ Cryptonose2
+  ~
+  ~ Copyright © 2019-2020 Dawid Motyka
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  -->
+
+<StackPane stylesheets="@style-plugin-gecko.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane fx:id="errorContainer" styleClass="popup" visible="false" StackPane.alignment="CENTER">
+         <children>
+            <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <VBox fx:id="dataContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" styleClass="popup">
+         <children>
+            <Label fx:id="titleLabel" styleClass="h1" text=" information (CoinGecko)">
+               <VBox.margin>
+                  <Insets bottom="7.0" />
+               </VBox.margin>
+            </Label>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Name: " />
+                  <Label fx:id="nameLabel" text="loading..." />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Symbol: " />
+                  <Label fx:id="symbolLabel" text="loading..." />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Change (24h): " />
+                  <Label fx:id="dailyChangeLabel" text="loading..." />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Change (7d): " />
+                  <Label fx:id="weeklyChangeLabel" text="loading..." />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Volume (24h): " />
+                  <Label fx:id="volumeLabel" text="loading..." />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Market cap: " />
+                  <Label fx:id="marketCapLabel" text="loading..." />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="h2" text="Market cap rank: " />
+                  <Label fx:id="rankLabel" text="loading..." />
+               </children>
+            </HBox>
+            <Label styleClass="warningLabel" text="Warning: there may be more currencies with this symbol. In this case presented data may be for other currency than desired. The one with highest market cap is always chosen." wrapText="true">
+               <VBox.margin>
+                  <Insets top="7.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="Powered by CoinGecko (www.coingecko.com) ">
+               <VBox.margin>
+                  <Insets top="7.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

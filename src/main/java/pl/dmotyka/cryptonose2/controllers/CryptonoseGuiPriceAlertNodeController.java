@@ -18,12 +18,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
+import pl.dmotyka.cryptonose2.PriceAlertPlugin;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
@@ -48,6 +50,8 @@ public class CryptonoseGuiPriceAlertNodeController {
     public Label timeLabel;
     @FXML
     public StackPane chartPane;
+    @FXML
+    public HBox moreHBox;
 
     public void fillPane(PriceAlert priceAlert, ChartCandle[] chartCandles) {
         String arrowString;
@@ -80,6 +84,13 @@ public class CryptonoseGuiPriceAlertNodeController {
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+        String baseCurrency = priceAlert.getExchangeSpecs().getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(priceAlert.getPair()).base.getCurrencyCode();
+        PriceAlertPlugin plugin = new PriceAlertPluginGecko(baseCurrency);
+        Button b = new Button(plugin.getButtonTitle());
+        b.getStyleClass().add("button-small");
+        b.setOnMouseClicked(e -> plugin.show());
+        plugin.setAnchor(b);
+        moreHBox.getChildren().add(b);
     }
 
     private double[] chartCandlesToClosePrices(ChartCandle[] chartCandles) {
