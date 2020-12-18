@@ -16,9 +16,13 @@ package pl.dmotyka.cryptonose2.coingecko;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,35 +34,47 @@ public class GeckoApi {
 
     private static final long SYMBOL_TO_ID_UPDATE_INTERVAL_MS = 60 * 60 * 1000;
 
-    private static final String ERR = ".err";
-
-    private static Map<String,String> symbolToIdMap;
+    private static Map<String,Set<String>> symbolToIdMap;
     private static long symbolToIdLastUpdateMs = 0;
 
-    public static GeckoCurrencyInfo getInfo(String symbol) throws IOException, GeckoMultipleSymbolsException {
+    // get info by currency symbol (code)
+    // if in coingecko there are multiple currencies with this symbol, the one with highest market cap is chosen
+    public static GeckoCurrencyInfo getInfoBySymbol(String symbol) throws IOException, GeckoNoSuchSymbolException {
         symbol = symbol.toLowerCase();
-        ObjectMapper objectMapper = new ObjectMapper();
         var symbolIdMap = updateAndGetSymbolToIdMap();
         try {
-            String id = symbolIdMap.get(symbol);
-            if (id.equals(ERR))
-                throw new GeckoMultipleSymbolsException("coingecko has multiple assets with specified symbol");
-            JsonNode infoJsonNode = objectMapper.readValue(new URL(getInfoUrl(id)), JsonNode.class);
-            try {
-                double capUsd = infoJsonNode.get("market_data").get("market_cap").get("usd").asDouble();
-                int rank = infoJsonNode.get("market_cap_rank").asInt();
-                double dailyChange = infoJsonNode.get("market_data").get("price_change_percentage_24h").doubleValue();
-                double weeklyChange = infoJsonNode.get("market_data").get("price_change_percentage_7d").doubleValue();
-                return new GeckoCurrencyInfo(dailyChange, weeklyChange, capUsd, rank);
-            } catch (NullPointerException e) {
-                throw new IOException("unexpected data format");
+            Set<String> ids = symbolIdMap.get(symbol);
+            if (ids == null)
+                throw new GeckoNoSuchSymbolException("no such symbol " + symbol);
+            LinkedList<GeckoCurrencyInfo> infoList = new LinkedList<>();
+            for (String id : ids) {
+                infoList.add(getInfoById(id));
             }
+            infoList.sort(Comparator.comparingDouble(GeckoCurrencyInfo::getDayVolume));
+            return infoList.getLast();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Map<String, String> updateAndGetSymbolToIdMap() throws IOException{
+    private static GeckoCurrencyInfo getInfoById(String id) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode infoJsonNode = objectMapper.readValue(new URL(getInfoUrl(id)), JsonNode.class);
+        try {
+            String name = infoJsonNode.get("name").asText();
+            String symbol = infoJsonNode.get("symbol").asText();
+            double capUsd = infoJsonNode.get("market_data").get("market_cap").get("usd").asDouble();
+            int rank = infoJsonNode.get("market_cap_rank").asInt();
+            double dailyChange = infoJsonNode.get("market_data").get("price_change_percentage_24h").doubleValue();
+            double weeklyChange = infoJsonNode.get("market_data").get("price_change_percentage_7d").doubleValue();
+            double dayVolume = infoJsonNode.get("market_data").get("total_volume").get("usd").doubleValue();
+            return new GeckoCurrencyInfo(name, symbol, dailyChange, weeklyChange, capUsd, rank, dayVolume);
+        } catch (NullPointerException e) {
+            throw new IOException("unexpected data format");
+        }
+    }
+
+    public static Map<String, Set<String>> updateAndGetSymbolToIdMap() throws IOException{
         long msTime = System.nanoTime() / (1000 * 1000);
         if (symbolToIdMap == null || symbolToIdLastUpdateMs == 0 || msTime - symbolToIdLastUpdateMs > SYMBOL_TO_ID_UPDATE_INTERVAL_MS) {
             symbolToIdMap = getSymbolToIdMap();
@@ -67,18 +83,20 @@ public class GeckoApi {
         return symbolToIdMap;
     }
 
-    public static Map<String, String> getSymbolToIdMap() throws IOException {
-        Map<String,String> map = new HashMap<>();
+    public static Map<String, Set<String>> getSymbolToIdMap() throws IOException {
+        Map<String,Set<String>> map = new HashMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode listJsonNode = objectMapper.readValue(new URL(LIST_URL), JsonNode.class);
         try {
             for (JsonNode jsonNode : listJsonNode) {
-                String symbol = jsonNode.get("symbol").asText();
-                Objects.requireNonNull(symbol);
+                String symbol = Objects.requireNonNull(jsonNode.get("symbol").asText());
+                String id = Objects.requireNonNull(jsonNode.get("id").asText());
                 if (map.containsKey(symbol)) {
-                    map.put(symbol, ERR);
+                    map.get(symbol).add(id);
                 } else {
-                    map.put(symbol, Objects.requireNonNull(jsonNode.get("id").asText()));
+                    Set<String> newSet = new HashSet<>();
+                    newSet.add(id);
+                    map.put(symbol, newSet);
                 }
             }
         } catch (NullPointerException e) {

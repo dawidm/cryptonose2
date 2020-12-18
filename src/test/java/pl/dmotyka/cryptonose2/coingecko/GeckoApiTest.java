@@ -15,18 +15,19 @@ package pl.dmotyka.cryptonose2.coingecko;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 public class GeckoApiTest extends TestCase {
 
-    public void testGetInfo() throws IOException, GeckoMultipleSymbolsException {
-        GeckoCurrencyInfo info = GeckoApi.getInfo("BTC");
+    public void testGetInfo() throws IOException, GeckoNoSuchSymbolException {
+        GeckoCurrencyInfo info = GeckoApi.getInfoBySymbol("BTC");
         assertNotNull(info);
     }
 
     public void testGetSymbolToIdMap() throws IOException {
-        Map<String, String> map = GeckoApi.getSymbolToIdMap();
+        Map<String, Set<String>> map = GeckoApi.getSymbolToIdMap();
         assertNotNull(map);
         assertTrue(map.size() > 0);
     }

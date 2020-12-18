@@ -15,16 +15,30 @@ package pl.dmotyka.cryptonose2.coingecko;
 
 public class GeckoCurrencyInfo {
 
+    private final String name;
+    private final String symbol;
     private final double dayChange;
     private final double weekChange;
     private final double marketCapUSD;
     private final int geckoMarketCapRank;
+    private final double dayVolume;
 
-    public GeckoCurrencyInfo(double dayChange, double weekChange, double marketCapUSD, int geckoMarketCapRank) {
+    public GeckoCurrencyInfo(String name, String symbol, double dayChange, double weekChange, double marketCapUSD, int geckoMarketCapRank, double dayVolume) {
+        this.name = name;
+        this.symbol = symbol;
         this.dayChange = dayChange;
         this.weekChange = weekChange;
         this.marketCapUSD = marketCapUSD;
         this.geckoMarketCapRank = geckoMarketCapRank;
+        this.dayVolume = dayVolume;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 
     public double getDayChange() {
@@ -41,5 +55,9 @@ public class GeckoCurrencyInfo {
 
     public int getGeckoMarketCapRank() {
         return geckoMarketCapRank;
+    }
+
+    public double getDayVolume() {
+        return dayVolume;
     }
 }
