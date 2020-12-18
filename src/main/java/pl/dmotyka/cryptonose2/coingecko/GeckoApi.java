@@ -28,12 +28,17 @@ public class GeckoApi {
     private static final String INFO_URL = "https://api.coingecko.com/api/v3/coins/%s?localization=false";
     private static final String LIST_URL = "https://api.coingecko.com/api/v3/coins/list";
 
+    private static final long SYMBOL_TO_ID_UPDATE_INTERVAL_MS = 60 * 60 * 1000;
+
     private static final String ERR = ".err";
+
+    private static Map<String,String> symbolToIdMap;
+    private static long symbolToIdLastUpdateMs = 0;
 
     public static GeckoCurrencyInfo getInfo(String symbol) throws IOException, GeckoMultipleSymbolsException {
         symbol = symbol.toLowerCase();
         ObjectMapper objectMapper = new ObjectMapper();
-        var symbolIdMap = getSymbolToIdMap();
+        var symbolIdMap = updateAndGetSymbolToIdMap();
         try {
             String id = symbolIdMap.get(symbol);
             if (id.equals(ERR))
@@ -51,6 +56,15 @@ public class GeckoApi {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Map<String, String> updateAndGetSymbolToIdMap() throws IOException{
+        long msTime = System.nanoTime() / (1000 * 1000);
+        if (symbolToIdMap == null || symbolToIdLastUpdateMs == 0 || msTime - symbolToIdLastUpdateMs > SYMBOL_TO_ID_UPDATE_INTERVAL_MS) {
+            symbolToIdMap = getSymbolToIdMap();
+            symbolToIdLastUpdateMs = msTime;
+        }
+        return symbolToIdMap;
     }
 
     public static Map<String, String> getSymbolToIdMap() throws IOException {
