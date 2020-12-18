@@ -22,8 +22,9 @@ public class GeckoCurrencyInfo {
     private final double marketCapUSD;
     private final int geckoMarketCapRank;
     private final double dayVolume;
+    private final String description;
 
-    public GeckoCurrencyInfo(String name, String symbol, double dayChange, double weekChange, double marketCapUSD, int geckoMarketCapRank, double dayVolume) {
+    public GeckoCurrencyInfo(String name, String symbol, double dayChange, double weekChange, double marketCapUSD, int geckoMarketCapRank, double dayVolume, String description) {
         this.name = name;
         this.symbol = symbol;
         this.dayChange = dayChange;
@@ -31,6 +32,7 @@ public class GeckoCurrencyInfo {
         this.marketCapUSD = marketCapUSD;
         this.geckoMarketCapRank = geckoMarketCapRank;
         this.dayVolume = dayVolume;
+        this.description = description;
     }
 
     public String getName() {
@@ -59,5 +61,9 @@ public class GeckoCurrencyInfo {
 
     public double getDayVolume() {
         return dayVolume;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -68,7 +68,8 @@ public class GeckoApi {
             double dailyChange = infoJsonNode.get("market_data").get("price_change_percentage_24h").doubleValue();
             double weeklyChange = infoJsonNode.get("market_data").get("price_change_percentage_7d").doubleValue();
             double dayVolume = infoJsonNode.get("market_data").get("total_volume").get("usd").doubleValue();
-            return new GeckoCurrencyInfo(name, symbol, dailyChange, weeklyChange, capUsd, rank, dayVolume);
+            String description = infoJsonNode.get("description").get("en").textValue();
+            return new GeckoCurrencyInfo(name, symbol, dailyChange, weeklyChange, capUsd, rank, dayVolume, description);
         } catch (NullPointerException e) {
             throw new IOException("unexpected data format");
         }

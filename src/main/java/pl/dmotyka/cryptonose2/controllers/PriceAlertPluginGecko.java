@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
@@ -61,6 +62,8 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     public Label rankLabel;
     @FXML
     public Label volumeLabel;
+    @FXML
+    public TextArea descriptionTextArea;
 
     private static final String NAME = "CoinGecko";
     private static final String TITLE = "...";
@@ -102,6 +105,7 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
                         marketCapLabel.setText(String.format("$%,d", (int)info.getMarketCapUSD()));
                         rankLabel.setText(""+info.getGeckoMarketCapRank());
                         volumeLabel.setText(String.format("$%,d",(int)info.getDayVolume()));
+                        descriptionTextArea.setText(info.getDescription().replaceAll("<.*>",""));
                     });
                 } catch (GeckoNoSuchSymbolException | IOException e) {
                     logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);

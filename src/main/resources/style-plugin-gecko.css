@@ -1,3 +1,9 @@
 .warningLabel {
     -fx-pref-width: 30em;
 }
+
+.descriptionArea {
+    -fx-pref-height: 10em;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
