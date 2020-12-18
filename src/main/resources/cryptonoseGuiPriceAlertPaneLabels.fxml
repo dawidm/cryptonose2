@@ -17,41 +17,46 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<HBox styleClass="alertNode" fx:id="mainHBox" alignment="CENTER_LEFT" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="style-fonts.css,style-alerts-tab-node.css" >
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" spacing="5.0" styleClass="alertNode" stylesheets="style-alerts-tab-node.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER_LEFT" prefWidth="130.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="changeLabel" alignment="CENTER" text="Price change" />
+            <Label fx:id="changeLabel" alignment="CENTER" styleClass="priceAlertsLabel" text="Price change" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="changeLabel1" alignment="CENTER" text="Chart (2h)" />
+            <Label fx:id="changeLabel1" alignment="CENTER" styleClass="priceAlertsLabel" text="Chart (2h)" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel" alignment="CENTER" text="Pair" />
+            <Label fx:id="pairNameLabel" alignment="CENTER" styleClass="priceAlertsLabel" text="Pair" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel1" alignment="CENTER" text="Final price" />
+            <Label fx:id="pairNameLabel1" alignment="CENTER" styleClass="priceAlertsLabel" text="Final price" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel2" alignment="CENTER" text="Period" />
+            <Label fx:id="pairNameLabel2" alignment="CENTER" styleClass="priceAlertsLabel" text="Period" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel3" alignment="CENTER" text="Exchange" />
+            <Label fx:id="pairNameLabel3" alignment="CENTER" styleClass="priceAlertsLabel" text="Exchange" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel31" alignment="CENTER" text="Time" />
+            <Label fx:id="pairNameLabel31" alignment="CENTER" styleClass="priceAlertsLabel" text="Time" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefWidth="75.0">
+         <children>
+            <Label fx:id="pairNameLabel311" alignment="CENTER" styleClass="priceAlertsLabel" text="More" />
          </children>
       </VBox>
    </children>

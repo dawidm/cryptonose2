@@ -1,0 +1,7 @@
+.popup {
+    -fx-background-color: -fx-base;
+    -fx-border-color: derive(-fx-base, -30%);
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-padding: 0.3em;
+}

@@ -20,7 +20,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="style-fonts.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiHelpWindowController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiHelpWindowController">
     <children>
         <Label fx:id="titleLabel" styleClass="h1" text="Cryptonose ">
             <VBox.margin>

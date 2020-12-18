@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController" stylesheets="style-fonts.css">
+<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController">
    <children>
       <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="7.0" VBox.vgrow="NEVER">
          <children>

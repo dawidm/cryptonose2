@@ -19,7 +19,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiVersionWindowController" stylesheets="style-fonts.css">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiVersionWindowController">
     <children>
         <Label styleClass="h1" fx:id="titleLabel" text="Cryptonose ">
             <VBox.margin>

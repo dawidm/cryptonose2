@@ -19,13 +19,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<HBox styleClass="alertNode" fx:id="mainHBox" alignment="CENTER_LEFT" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController" stylesheets="style-fonts.css,style-alerts-tab-node.css">
+<HBox fx:id="mainHBox" alignment="CENTER_LEFT" spacing="5.0" styleClass="alertNode" stylesheets="style-alerts-tab-node.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
    <children>
       <VBox alignment="CENTER_LEFT" prefWidth="130.0" HBox.hgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <Label styleClass="priceAlertsLabel" fx:id="changeLabel" alignment="CENTER" text="0.0% (0.0)" HBox.hgrow="NEVER" />
+                  <Label fx:id="changeLabel" alignment="CENTER" styleClass="priceAlertsLabel" text="0.0% (0.0)" HBox.hgrow="NEVER" />
                </children>
             </HBox>
          </children>
@@ -34,14 +34,14 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                  <StackPane styleClass="miniChart" fx:id="chartPane" HBox.hgrow="NEVER"/>
+                  <StackPane fx:id="chartPane" styleClass="miniChart" HBox.hgrow="NEVER" />
                </children>
             </HBox>
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label styleClass="priceAlertsLabel" fx:id="pairNameLabel" alignment="CENTER" text="?" />
+            <Label fx:id="pairNameLabel" alignment="CENTER" styleClass="priceAlertsLabel" text="?" />
          </children>
       </VBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
@@ -62,6 +62,11 @@
       <VBox alignment="CENTER_LEFT" prefWidth="100.0">
          <children>
             <Label fx:id="timeLabel" text="?" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" prefWidth="75.0">
+         <children>
+            <HBox fx:id="moreHBox" prefWidth="200.0" />
          </children>
       </VBox>
    </children>

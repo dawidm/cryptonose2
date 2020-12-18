@@ -25,7 +25,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<HBox fx:id="mainHBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController" stylesheets="style-fonts.css,style-alerts-settings.css">
+<HBox fx:id="mainHBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController" stylesheets="style-alerts-settings.css">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>

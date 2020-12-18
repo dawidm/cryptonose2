@@ -46,10 +46,12 @@ public class UILoader <T> {
         }
         if (FONT_SIZE != null)
             root.setStyle(String.format("-fx-font-size: %dpx;", FONT_SIZE));
+        root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style.css").toExternalForm());
         if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-dark.css").toExternalForm());
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-dark.css").toExternalForm());
         } else {
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-light.css").toExternalForm());
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-light.css").toExternalForm());
         }
     }

@@ -1,7 +1,11 @@
+* {
+    base-color: #373e43;
+}
+
 .root {
     -fx-accent: #1e74c6;
     -fx-focus-color: -fx-accent;
-    -fx-base: #373e43;
+    -fx-base: base-color;
     -fx-control-inner-background: derive(-fx-base, 15%);
     -fx-control-inner-background-alt: -fx-control-inner-background ;
     -fx-selection-bar: -fx-base;
@@ -31,4 +35,13 @@
 
 .hyperlink {
     -fx-text-fill: #7FDBFF;
+}
+
+.popup {
+    -fx-base: base-color;
+    -fx-background-color: base-color;
+    -fx-border-color: derive(-fx-base, -30%);
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-padding: 0.3em;
 }

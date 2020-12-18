@@ -19,3 +19,7 @@
 .button {
     -fx-min-width: 7em;
 }
+
+.button-small {
+    -fx-min-width: 1em;
+}
