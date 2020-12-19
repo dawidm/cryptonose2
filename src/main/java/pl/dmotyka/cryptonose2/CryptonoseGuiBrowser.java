@@ -29,10 +29,14 @@ public class CryptonoseGuiBrowser {
     public static void runBrowser(String pair, ExchangeSpecs exchangeSpecs){
         pair= exchangeSpecs.getPairSymbolConverter().apiSymbolToChartUrlSymbol(pair);
         String urlToOpen = exchangeSpecs.getMarketUrl() + pair;
+        runBrowser(urlToOpen);
+    }
+
+    public static void runBrowser(String url) {
         if(isDefaultBrowserSupported() && CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_BROWSER)) {
             new Thread(() -> {
                 try {
-                    Desktop.getDesktop().browse(new URI(urlToOpen));
+                    Desktop.getDesktop().browse(new URI(url));
                 } catch (Exception e) {
                     logger.log(Level.WARNING,"when running browser",e);
                 }
@@ -41,7 +45,7 @@ public class CryptonoseGuiBrowser {
             String browserPath = CryptonoseSettings.getString(CryptonoseSettings.General.BROWSER_PATH);
             if (browserPath.length() > 0) {
                 try {
-                    Runtime.getRuntime().exec(String.format(browserPath, urlToOpen));
+                    Runtime.getRuntime().exec(String.format(browserPath, url));
                 } catch (IOException e) {
                     logger.log(Level.WARNING, "IOException when opening browser", e);
                 }
