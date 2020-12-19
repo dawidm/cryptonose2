@@ -17,22 +17,26 @@ public class GeckoCurrencyInfo {
 
     private final String name;
     private final String symbol;
+    private final String id;
     private final double dayChange;
     private final double weekChange;
     private final double marketCapUSD;
     private final int geckoMarketCapRank;
     private final double dayVolume;
     private final String description;
+    private final String homepage;
 
-    public GeckoCurrencyInfo(String name, String symbol, double dayChange, double weekChange, double marketCapUSD, int geckoMarketCapRank, double dayVolume, String description) {
+    public GeckoCurrencyInfo(String name, String symbol, String id, double dayChange, double weekChange, double marketCapUSD, int geckoMarketCapRank, double dayVolume, String description, String homepage) {
         this.name = name;
         this.symbol = symbol;
+        this.id = id;
         this.dayChange = dayChange;
         this.weekChange = weekChange;
         this.marketCapUSD = marketCapUSD;
         this.geckoMarketCapRank = geckoMarketCapRank;
         this.dayVolume = dayVolume;
         this.description = description;
+        this.homepage = homepage;
     }
 
     public String getName() {
@@ -41,6 +45,10 @@ public class GeckoCurrencyInfo {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public double getDayChange() {
@@ -65,5 +73,9 @@ public class GeckoCurrencyInfo {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getHomepage() {
+        return homepage;
     }
 }

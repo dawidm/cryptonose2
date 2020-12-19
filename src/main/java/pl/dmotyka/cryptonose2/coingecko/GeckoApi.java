@@ -31,6 +31,7 @@ public class GeckoApi {
 
     private static final String INFO_URL = "https://api.coingecko.com/api/v3/coins/%s?localization=false";
     private static final String LIST_URL = "https://api.coingecko.com/api/v3/coins/list";
+    private static final String MARKET_PAGE_URL = "https://www.coingecko.com/en/coins/%s";
 
     private static final long SYMBOL_TO_ID_UPDATE_INTERVAL_MS = 60 * 60 * 1000;
 
@@ -69,7 +70,8 @@ public class GeckoApi {
             double weeklyChange = infoJsonNode.get("market_data").get("price_change_percentage_7d").doubleValue();
             double dayVolume = infoJsonNode.get("market_data").get("total_volume").get("usd").doubleValue();
             String description = infoJsonNode.get("description").get("en").textValue();
-            return new GeckoCurrencyInfo(name, symbol, dailyChange, weeklyChange, capUsd, rank, dayVolume, description);
+            String homepage = infoJsonNode.get("links").get("homepage").textValue();
+            return new GeckoCurrencyInfo(name, symbol, id, dailyChange, weeklyChange, capUsd, rank, dayVolume, description, homepage);
         } catch (NullPointerException e) {
             throw new IOException("unexpected data format");
         }
