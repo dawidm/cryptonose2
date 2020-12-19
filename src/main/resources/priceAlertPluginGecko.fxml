@@ -13,7 +13,6 @@
   ~
   -->
 
-
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -109,7 +108,7 @@
                      </styleClass>
                   </Label>
                   <Label text="Powered by CoinGecko " />
-                  <Label fx:id="marketHyperlinkLabel" styleClass="hyperlinkLabel" text="https://gecko.page/coin/link" />
+                  <Label fx:id="marketHyperlinkLabel" styleClass="hyperlinkLabel" text="loading..." />
                </children>
             </VBox>
          </children>
