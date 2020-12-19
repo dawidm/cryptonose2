@@ -108,6 +108,11 @@ public class GeckoApi {
         return map;
     }
 
+    // id - gecko market id
+    public static String getMarketUrl(String id) {
+        return String.format(MARKET_PAGE_URL,id);
+    }
+
     private static String getInfoUrl(String symbol) {
         return String.format(INFO_URL, symbol);
     }
