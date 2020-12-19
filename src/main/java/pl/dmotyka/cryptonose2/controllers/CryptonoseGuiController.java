@@ -404,7 +404,6 @@ public class CryptonoseGuiController extends Application {
     public void helpClick() {
         try {
             UILoader<CryptonoseGuiHelpWindowController> uiLoader = new UILoader<>("cryptonoseGuiHelpWindow.fxml");
-            uiLoader.getController().init(this);
             helpButton.setDisable(true);
             uiLoader.stageShowAndWait("Help");
             helpButton.setDisable(false);
