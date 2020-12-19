@@ -13,82 +13,106 @@
   ~
   -->
 
+
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<StackPane stylesheets="@style-plugin-gecko.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefWidth="100.0" styleClass="popup" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="errorContainer" styleClass="popup" visible="false" StackPane.alignment="CENTER">
+      <Label fx:id="titleLabel" text=" information">
+         <VBox.margin>
+            <Insets bottom="7.0" />
+         </VBox.margin>
+         <styleClass>
+            <String fx:value="h1" />
+            <String fx:value="popupWidth" />
+         </styleClass>
+      </Label>
+      <StackPane stylesheets="@style-plugin-gecko.css">
          <children>
-            <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane fx:id="errorContainer" styleClass="popup" visible="false" StackPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <VBox fx:id="dataContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0">
+               <children>
+                  <HBox>
+                     <children>
+                        <Label styleClass="h2" text="Name: " />
+                        <Label fx:id="nameLabel" text="loading..." />
+                        <Label fx:id="hyperlinkLabel" styleClass="hyperlinkLabel">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <HBox.margin>
+                              <Insets left="3.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label styleClass="h2" text="Change (24h): " />
+                        <Label fx:id="dailyChangeLabel" text="loading..." />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label styleClass="h2" text="Change (7d): " />
+                        <Label fx:id="weeklyChangeLabel" text="loading..." />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label styleClass="h2" text="Volume (24h): " />
+                        <Label fx:id="volumeLabel" text="loading..." />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label styleClass="h2" text="Market cap: " />
+                        <Label fx:id="marketCapLabel" text="loading..." />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label styleClass="h2" text="Market cap rank: " />
+                        <Label fx:id="rankLabel" text="loading..." />
+                     </children>
+                  </HBox>
+                  <TextArea fx:id="descriptionTextArea" editable="false" focusTraversable="false" text="loading..." wrapText="true">
+                     <VBox.margin>
+                        <Insets top="3.0" />
+                     </VBox.margin>
+                     <styleClass>
+                        <String fx:value="descriptionArea" />
+                        <String fx:value="popupWidth" />
+                     </styleClass>
+                  </TextArea>
+                  <Label text="Warning: there may be more currencies with this symbol. In this case presented data may be for other currency than desired. The one with highest market cap is always chosen." wrapText="true">
+                     <VBox.margin>
+                        <Insets top="7.0" />
+                     </VBox.margin>
+                     <styleClass>
+                        <String fx:value="warningLabel" />
+                        <String fx:value="popupWidth" />
+                     </styleClass>
+                  </Label>
+                  <Label text="Powered by CoinGecko " />
+                  <Label fx:id="marketHyperlinkLabel" styleClass="hyperlinkLabel" text="https://gecko.page/coin/link" />
+               </children>
+            </VBox>
          </children>
-      </AnchorPane>
-      <VBox fx:id="dataContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" styleClass="popup">
-         <children>
-            <Label fx:id="titleLabel" styleClass="h1" text=" information (CoinGecko)">
-               <VBox.margin>
-                  <Insets bottom="7.0" />
-               </VBox.margin>
-            </Label>
-            <HBox>
-               <children>
-                  <Label styleClass="h2" text="Name: " />
-                  <Label fx:id="nameLabel" text="loading..." />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label styleClass="h2" text="Change (24h): " />
-                  <Label fx:id="dailyChangeLabel" text="loading..." />
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label styleClass="h2" text="Change (7d): " />
-                  <Label fx:id="weeklyChangeLabel" text="loading..." />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label styleClass="h2" text="Volume (24h): " />
-                  <Label fx:id="volumeLabel" text="loading..." />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label styleClass="h2" text="Market cap: " />
-                  <Label fx:id="marketCapLabel" text="loading..." />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <Label styleClass="h2" text="Market cap rank: " />
-                  <Label fx:id="rankLabel" text="loading..." />
-               </children>
-            </HBox>
-            <TextArea fx:id="descriptionTextArea" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" styleClass="descriptionArea" text="loading..." wrapText="true">
-               <VBox.margin>
-                  <Insets top="3.0" />
-               </VBox.margin>
-            </TextArea>
-            <Label styleClass="warningLabel" text="Warning: there may be more currencies with this symbol. In this case presented data may be for other currency than desired. The one with highest market cap is always chosen." wrapText="true">
-               <VBox.margin>
-                  <Insets top="7.0" />
-               </VBox.margin>
-            </Label>
-            <Label text="Powered by CoinGecko (www.coingecko.com) ">
-               <VBox.margin>
-                  <Insets top="7.0" />
-               </VBox.margin>
-            </Label>
-         </children>
-      </VBox>
+      </StackPane>
    </children>
-</StackPane>
+</VBox>

@@ -1,5 +1,6 @@
 * {
     base-color: #373e43;
+    hyperlink-color: #7FDBFF;
 }
 
 .root {
@@ -34,7 +35,11 @@
 }
 
 .hyperlink {
-    -fx-text-fill: #7FDBFF;
+    -fx-text-fill: hyperlink-color;
+}
+
+.hyperlinkLabel {
+    -fx-text-fill: hyperlink-color;
 }
 
 .popup {

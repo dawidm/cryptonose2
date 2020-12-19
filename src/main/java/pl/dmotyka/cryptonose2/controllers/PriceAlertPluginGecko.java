@@ -30,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 
+import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.PriceAlertPlugin;
 import pl.dmotyka.cryptonose2.UILoader;
 import pl.dmotyka.cryptonose2.coingecko.GeckoApi;
@@ -49,6 +50,8 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     @FXML
     public Label nameLabel;
     @FXML
+    public Label hyperlinkLabel;
+    @FXML
     public Label titleLabel;
     @FXML
     public Label dailyChangeLabel;
@@ -62,6 +65,8 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     public Label volumeLabel;
     @FXML
     public TextArea descriptionTextArea;
+    @FXML
+    public Label marketHyperlinkLabel;
 
     private static final String NAME = "CoinGecko";
     private static final String TITLE = "...";
@@ -97,12 +102,16 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
                     GeckoCurrencyInfo info = GeckoApi.getInfoBySymbol(currencySymbol);
                     Platform.runLater(() -> {
                         nameLabel.setText(info.getName());
+                        hyperlinkLabel.setText(info.getHomepage());
+                        hyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(info.getHomepage()));
                         dailyChangeLabel.setText(String.format("%.2f%%", info.getDayChange()));
                         weeklyChangeLabel.setText(String.format("%.2f%%", info.getWeekChange()));
                         marketCapLabel.setText(String.format("$%,d", (int)info.getMarketCapUSD()));
                         rankLabel.setText(""+info.getGeckoMarketCapRank());
                         volumeLabel.setText(String.format("$%,d",(int)info.getDayVolume()));
                         descriptionTextArea.setText(info.getDescription().replaceAll("<.*>",""));
+                        marketHyperlinkLabel.setText(GeckoApi.getMarketUrl(info.getId()));
+                        marketHyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(marketHyperlinkLabel.getText()));
                     });
                 } catch (GeckoNoSuchSymbolException | IOException e) {
                     logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);

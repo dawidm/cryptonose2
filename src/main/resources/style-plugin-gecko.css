@@ -1,4 +1,8 @@
-.warningLabel {
+.popup {
+    -fx-pref-width: 30em;
+}
+
+.popupWidth {
     -fx-pref-width: 30em;
 }
 
