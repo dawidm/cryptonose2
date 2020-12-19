@@ -20,7 +20,8 @@ public enum CryptonoseGuiConnectionStatus {
     CONNECTION_STATUS_CONNECTED("Connected", "limegreen"),
     CONNECTION_STATUS_CONNECTING("Connecting", "yellow"),
     CONNECTION_STATUS_DISCONNECTED("Disconnected", "red"),
-    CONNECTION_STATUS_NO_TRADES("No updates", "red");
+    CONNECTION_STATUS_NO_TRADES("No updates", "red"),
+    CONNECTION_STATUS_NO_TRADES_RECONNECT("No updates", "red");
 
     private final String text;
     private final String color;
