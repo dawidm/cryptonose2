@@ -35,7 +35,7 @@
       </Label>
       <StackPane stylesheets="@style-plugin-gecko.css">
          <children>
-            <AnchorPane fx:id="errorContainer" styleClass="popup" visible="false" StackPane.alignment="CENTER">
+            <AnchorPane fx:id="errorContainer" visible="false" StackPane.alignment="CENTER">
                <children>
                   <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
