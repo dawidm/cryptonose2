@@ -59,7 +59,6 @@ import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import pl.dmotyka.exchangeutils.exchangespecs.ExchangesPluginsLoader;
 import pl.dmotyka.exchangeutils.exchangespecs.NoSuchExchangeException;
 
 public class CryptonoseGuiController extends Application {
@@ -103,7 +102,6 @@ public class CryptonoseGuiController extends Application {
     private Stage primaryStage;
 
     public static ExchangeSpecs[] exchangeSpecss;
-    private static ExchangesPluginsLoader exchangesPluginsLoader;
 
     public static void main(String[] args) {
         launch(args);
@@ -111,8 +109,7 @@ public class CryptonoseGuiController extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        exchangesPluginsLoader = new ExchangesPluginsLoader();
-        exchangeSpecss = exchangesPluginsLoader.getAllExchangeSpecs().toArray(ExchangeSpecs[]::new);
+        exchangeSpecss = ExchangeSpecs.getAll();
         logger.fine("Javafx output scale X: " + Screen.getScreens().get(0).getOutputScaleX());
         Locale.setDefault(Locale.US);
         checkVersion();
