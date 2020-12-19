@@ -265,7 +265,7 @@ public class CryptonoseGuiController extends Application {
         try {
             UILoader<CryptonoseGuiVersionWindowController> uiLoader = new UILoader<>("cryptonoseGuiVersionWindow.fxml");
             CryptonoseGuiVersionWindowController cryptonoseGuiVersionWindowController = uiLoader.getController();
-            cryptonoseGuiVersionWindowController.init(versionInfo, this);
+            cryptonoseGuiVersionWindowController.init(versionInfo);
             uiLoader.stageShowAndWait("New version");
         } catch (IOException e) {
             throw new Error(e);

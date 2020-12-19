@@ -16,7 +16,6 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,6 +23,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
 
 public class CryptonoseGuiVersionWindowController implements Initializable {
@@ -37,17 +37,14 @@ public class CryptonoseGuiVersionWindowController implements Initializable {
     @FXML
     public Button closeButton;
 
-    private Application applicationController;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        downloadsLinkLabel.setOnMouseClicked(e -> applicationController.getHostServices().showDocument(downloadsLinkLabel.getText()));
-        releaseLinkLabel.setOnMouseClicked(e -> applicationController.getHostServices().showDocument(releaseLinkLabel.getText()));
+        downloadsLinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(downloadsLinkLabel.getText()));
+        releaseLinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(releaseLinkLabel.getText()));
         closeButton.setOnMouseClicked(e -> ((Stage)((Button)e.getSource()).getScene().getWindow()).close());
     }
 
-    public void init(VersionInfo versionInfo, CryptonoseGuiController applicationController) {
-        this.applicationController = applicationController;
+    public void init(VersionInfo versionInfo) {
         titleLabel.setText(titleLabel.getText()+versionInfo.getVersionString());
         releaseLinkLabel.setText(versionInfo.getDownloadUrl());
     }
