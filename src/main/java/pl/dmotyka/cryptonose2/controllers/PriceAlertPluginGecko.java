@@ -49,8 +49,6 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     @FXML
     public Label nameLabel;
     @FXML
-    public Label symbolLabel;
-    @FXML
     public Label titleLabel;
     @FXML
     public Label dailyChangeLabel;
@@ -99,7 +97,6 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
                     GeckoCurrencyInfo info = GeckoApi.getInfoBySymbol(currencySymbol);
                     Platform.runLater(() -> {
                         nameLabel.setText(info.getName());
-                        symbolLabel.setText(info.getSymbol().toUpperCase());
                         dailyChangeLabel.setText(String.format("%.2f%%", info.getDayChange()));
                         weeklyChangeLabel.setText(String.format("%.2f%%", info.getWeekChange()));
                         marketCapLabel.setText(String.format("$%,d", (int)info.getMarketCapUSD()));

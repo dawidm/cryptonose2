@@ -42,12 +42,6 @@
             </HBox>
             <HBox>
                <children>
-                  <Label styleClass="h2" text="Symbol: " />
-                  <Label fx:id="symbolLabel" text="loading..." />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
                   <Label styleClass="h2" text="Change (24h): " />
                   <Label fx:id="dailyChangeLabel" text="loading..." />
                </children>
