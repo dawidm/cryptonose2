@@ -108,7 +108,10 @@
                      </styleClass>
                   </Label>
                   <Label text="Powered by CoinGecko " />
-                  <Label fx:id="marketHyperlinkLabel" styleClass="hyperlinkLabel" text="loading..." />
+                  <Label fx:id="marketHyperlinkLabel" styleClass="hyperlinkLabel" text="loading...">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Label>
                </children>
             </VBox>
          </children>
