@@ -19,7 +19,7 @@
 
 .scroll-bar > .increment-button > .increment-arrow,
 .scroll-bar > .decrement-button > .decrement-arrow {
-    -fx-background-color: -fx-text-fill;
+    -fx-background-color: #ffffff;
 }
 
 .text-field {
