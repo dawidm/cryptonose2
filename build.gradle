@@ -1,5 +1,5 @@
 /*
- * Cryptonose2
+ * Cryptonose
  *
  * Copyright © 2019-2020 Dawid Motyka
  *
@@ -45,7 +45,7 @@ dependencies {
     compile group: 'com.dorkbox', name: 'Notify', version:'3.7'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
-    runtime fileTree(dir: 'plugins', include: '*.jar')
+    //runtime fileTree(dir: 'plugins', include: '*.jar')
 }
 
 javafx {

@@ -1,5 +1,5 @@
 /*
- * Cryptonose2
+ * Cryptonose
  *
  * Copyright © 2019-2020 Dawid Motyka
  *
