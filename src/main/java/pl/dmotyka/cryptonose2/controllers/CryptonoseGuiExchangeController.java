@@ -91,7 +91,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
     public static final long[] TIME_PERIODS = {300,1800};
-    public static final long NO_TRADES_SET_DISCONNECTED_SECONDS = 300;
+    public static final long NO_TRADES_WARNING_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
     public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
@@ -336,7 +336,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         javafx.application.Platform.runLater(() -> {
             connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
             if (newConnectionStatus==CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES)
-                indicatorBox.switchColor(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED.getText().toLowerCase()+"-indicator");
+                indicatorBox.switchColor(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING.getText().toLowerCase()+"-indicator");
             else
                 indicatorBox.switchColor(newConnectionStatus.getText().toLowerCase()+"-indicator");
         });
@@ -499,9 +499,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
                     setConnectionStatus(statusNoTrades, true);
                     reconnectEngine();
-                } else if (lastTradeSecondsAgo > NO_TRADES_SET_DISCONNECTED_SECONDS) {
+                } else if (lastTradeSecondsAgo > NO_TRADES_WARNING_SECONDS) {
                     if (!connectionStatus.get().equals(statusNoTrades))
-                        consoleLog(String.format("No trades for %d seconds.", NO_TRADES_SET_DISCONNECTED_SECONDS));
+                        consoleLog(String.format("No trades for %d seconds.", NO_TRADES_WARNING_SECONDS));
                     setConnectionStatus(statusNoTrades, false);
                 }
                 else if (connectionStatus.get().equals(statusNoTrades))
