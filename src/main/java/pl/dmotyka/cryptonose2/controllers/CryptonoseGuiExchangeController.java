@@ -99,6 +99,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final boolean LOG_VISIBLE = false;
     private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;
     public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
+    public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
     private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
     @FXML
@@ -137,9 +138,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private CryptonoseGenericEngine engine;
     long lastUpdateTimeMillis = 0;
     private ScheduledExecutorService scheduledExecutorService;
+    private ScheduledFuture<?> updatePreferencesScheduledFuture;
+    private ScheduledFuture<?> reconnectScheduledFuture;
     private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
-    private ScheduledFuture updatePreferencesScheduledFuture;
     private LiquidityFactor liquidityFactorIndicator = new LiquidityFactor();
 
     private Map<String, TablePairPriceChanges> pairPriceChangesMap=new HashMap<>();
@@ -147,6 +149,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private long lastTableSortMillis =0;
     private AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
     private AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
+    private boolean noPairsAlertShown = false;
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
 
@@ -253,7 +256,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        scheduledExecutorService = Executors.newScheduledThreadPool(3);
+        scheduledExecutorService = Executors.newScheduledThreadPool(4);
         startLastTransactionTimer();
         pairPriceChangesMap = new HashMap<>();
         tablePairPriceChangesObservableList = FXCollections.observableArrayList();
@@ -361,16 +364,26 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case NO_PAIRS:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_PAIRS, false);
-                Platform.runLater(()->{
-                    CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.CONFIRMATION, "Got 0 valid currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
-                    alert.getDialogPane().setPrefWidth(500);
-                    alert.setTitle("Pairs settings: " + exchangeSpecs.getName());
-                    alert.showAndWait();
-                    if (alert.getResult() == ButtonType.YES)
-                        pairsClick();
-                    if(alert.getResult() == ButtonType.NO)
-                        close();
-                });
+                if (!noPairsAlertShown) {
+                    noPairsAlertShown = true;
+                    Platform.runLater(()-> {
+                        CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.CONFIRMATION, "Got 0 valid currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
+                        alert.getDialogPane().setPrefWidth(500);
+                        alert.setTitle("Pairs settings: " + exchangeSpecs.getName());
+                        alert.showAndWait();
+                        if (alert.getResult() == ButtonType.YES)
+                            pairsClick();
+                        if (alert.getResult() == ButtonType.NO)
+                            close();
+                    });
+                }
+                if (reconnectScheduledFuture == null || reconnectScheduledFuture.isDone()) {
+                    consoleLog(String.format("Reconnecting in %d minutes", NO_PAIRS_RECONNECT_MINUTES));
+                    reconnectScheduledFuture = scheduledExecutorService.schedule(() -> {
+                        if (connectionStatus.get() == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_PAIRS)
+                            reconnectEngine();
+                    }, NO_PAIRS_RECONNECT_MINUTES, TimeUnit.MINUTES);
+                }
                 break;
             case AUTO_REFRESHING_DONE:
                 lastUpdateTimeMillis=System.currentTimeMillis();
