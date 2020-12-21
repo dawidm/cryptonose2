@@ -505,17 +505,15 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if (lastUpdateTimeMillis !=0) {
                 long lastTradeSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis) / 1000;
                 javafx.application.Platform.runLater(() -> lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago"));
-                CryptonoseGuiConnectionStatus statusNoTrades = CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES;
                 if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
-                    setConnectionStatus(statusNoTrades, true);
+                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT, true);
                     reconnectEngine();
                 } else if (lastTradeSecondsAgo > NO_TRADES_WARNING_SECONDS) {
-                    if (!connectionStatus.get().equals(statusNoTrades))
+                    if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
                         consoleLog(String.format("No trades for %d seconds.", NO_TRADES_WARNING_SECONDS));
-                    setConnectionStatus(statusNoTrades, false);
-                }
-                else if (connectionStatus.get().equals(statusNoTrades))
+                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES, false);
+                } else if (connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, false);
             }
         },1,1, TimeUnit.SECONDS);
