@@ -18,14 +18,14 @@
     -fx-text-fill: #2ECC40
 }
 
-.connecting-indicator {
+.status-connecting {
     -fx-background-color: #FFDC00
 }
 
-.connected-indicator {
+.status-connected {
     -fx-background-color: #2ECC40
 }
 
-.disconnected-indicator {
+.status-disconnected {
     -fx-background-color: #FF4136
 }

@@ -17,25 +17,26 @@ package pl.dmotyka.cryptonose2.dataobj;
  * Created by dawid on 8/2/17.
  */
 public enum CryptonoseGuiConnectionStatus {
-    CONNECTION_STATUS_CONNECTED("Connected", "limegreen"),
-    CONNECTION_STATUS_CONNECTING("Connecting", "yellow"),
-    CONNECTION_STATUS_DISCONNECTED("Disconnected", "red"),
-    CONNECTION_STATUS_NO_TRADES("No updates", "red"),
-    CONNECTION_STATUS_NO_TRADES_RECONNECT("No updates", "red");
+    CONNECTION_STATUS_CONNECTED("Connected", "status-connected"),
+    CONNECTION_STATUS_CONNECTING("Connecting", "status-connecting"),
+    CONNECTION_STATUS_DISCONNECTED("Disconnected", "status-disconnected"),
+    CONNECTION_STATUS_NO_TRADES("No updates", "status-connecting"),
+    CONNECTION_STATUS_NO_TRADES_RECONNECT("No updates", "status-connecting"),
+    CONNECTION_STATUS_NO_PAIRS("No pairs", "status-disconnected");
 
     private final String text;
-    private final String color;
+    private final String cssClass;
 
-    CryptonoseGuiConnectionStatus(String text, String color) {
+    CryptonoseGuiConnectionStatus(String text, String cssClass) {
         this.text = text;
-        this.color = color;
+        this.cssClass = cssClass;
     }
 
     public String getText() {
         return text;
     }
 
-    public String getColor() {
-        return color;
+    public String getCssClass() {
+        return cssClass;
     }
 }

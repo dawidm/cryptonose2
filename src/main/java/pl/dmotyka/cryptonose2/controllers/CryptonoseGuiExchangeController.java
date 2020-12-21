@@ -202,7 +202,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         initTable();
-        indicatorBox.switchColor(connectionStatus.get().getText().toLowerCase()+"-indicator");
+        indicatorBox.switchColor(connectionStatus.get().getCssClass());
         new Thread(this::startEngine).start();
     }
 
@@ -335,10 +335,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         connectionStatus.set(newConnectionStatus);
         javafx.application.Platform.runLater(() -> {
             connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
-            if (newConnectionStatus==CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES)
-                indicatorBox.switchColor(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING.getText().toLowerCase()+"-indicator");
-            else
-                indicatorBox.switchColor(newConnectionStatus.getText().toLowerCase()+"-indicator");
+            indicatorBox.switchColor(newConnectionStatus.getCssClass());
         });
         if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS))
             CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
@@ -363,6 +360,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED, true);
                 break;
             case NO_PAIRS:
+                setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_PAIRS, false);
                 Platform.runLater(()->{
                     CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.CONFIRMATION, "Got 0 valid currency pairs for " + exchangeSpecs.getName() + ". Show currency pairs settings?", ButtonType.YES, ButtonType.NO);
                     alert.getDialogPane().setPrefWidth(500);

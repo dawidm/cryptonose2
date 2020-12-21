@@ -53,7 +53,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.UILoader;
-import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
@@ -315,7 +314,7 @@ public class CryptonoseGuiController extends Application {
             UILoader<CryptonoseGuiExchangeController> uiLoader = new UILoader<>("cryptonoseGuiExchange.fxml");
             Node cryptonoseGuiNode = uiLoader.getRoot();
             Tab tab = new Tab(exchangeSpecs.getName());
-            ColorIndicatorBox indicatorBox = new ColorIndicatorBox(1, CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED.getColor());
+            ColorIndicatorBox indicatorBox = new ColorIndicatorBox(1);
             tab.setGraphic(indicatorBox);
             tab.setContent(cryptonoseGuiNode);
             mainTabPane.getTabs().add(tab);

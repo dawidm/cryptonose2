@@ -21,10 +21,10 @@ public class ColorIndicatorBox extends Pane {
 
     private final double emSize;
 
-    public ColorIndicatorBox(double emSize, String defaultColorCssString) {
+    public ColorIndicatorBox(double emSize) {
         super();
         this.emSize = emSize;
-        this.setStyle(formatStyle(defaultColorCssString));
+        this.setStyle(formatStyle());
     }
 
     public void switchColor(String cssStyleClass) {
@@ -32,8 +32,8 @@ public class ColorIndicatorBox extends Pane {
         this.getStyleClass().add(cssStyleClass);
     }
 
-    private String formatStyle(String cssColorString) {
-        return String.format(STYLE_STRING, emSize, emSize, cssColorString);
+    private String formatStyle() {
+        return String.format(STYLE_STRING, emSize, emSize);
     }
 
 }
