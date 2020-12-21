@@ -20,7 +20,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiHelpWindowController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiHelpWindowController">
     <children>
         <Label fx:id="titleLabel" styleClass="h1" text="Cryptonose ">
             <VBox.margin>
@@ -32,17 +32,17 @@
             <Insets />
          </opaqueInsets>
          <VBox.margin>
-            <Insets bottom="5.0" />
+            <Insets />
          </VBox.margin>
       </Label>
-      <HBox spacing="7.0">
+      <HBox>
          <children>
             <VBox alignment="CENTER_LEFT">
                <children>
-                  <Label text="Contact:" />
+                  <Label text="Contact: " />
                </children>
             </VBox>
-            <TextField editable="false" focusTraversable="false" style="-fx-text-box-border: transtarent; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-color: transparent;" text="cryptonose2@gmail.com" HBox.hgrow="ALWAYS" />
+            <TextField editable="false" focusTraversable="false" style="-fx-text-box-border: transtarent; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-background-color: transparent; -fx-padding: 0;" text="cryptonose2@gmail.com" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
         <HBox>
@@ -52,7 +52,7 @@
                         <Label text="Cryptonose homepage:" />
                     </children>
                 </VBox>
-                <Hyperlink fx:id="downloadsLinkLabel" focusTraversable="false" text="https://dawidm.github.io/cryptonose2/" />
+                <Hyperlink fx:id="downloadsLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://dawidm.github.io/cryptonose2/" />
             </children>
         </HBox>
         <HBox>
@@ -62,7 +62,7 @@
                         <Label text="Help page:" />
                     </children>
                 </VBox>
-                <Hyperlink fx:id="releaseLinkLabel" focusTraversable="false" text="https://dawidm.github.io/cryptonose2/manual/" />
+                <Hyperlink fx:id="releaseLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://dawidm.github.io/cryptonose2/manual/" />
             </children>
         </HBox>
       <HBox alignment="TOP_RIGHT" VBox.vgrow="NEVER">
