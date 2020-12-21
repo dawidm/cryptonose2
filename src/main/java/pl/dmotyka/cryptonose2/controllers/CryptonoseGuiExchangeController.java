@@ -373,15 +373,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                         alert.showAndWait();
                         if (alert.getResult() == ButtonType.YES)
                             pairsClick();
-                        if (alert.getResult() == ButtonType.NO)
-                            close();
                     });
                 }
                 if (reconnectScheduledFuture == null || reconnectScheduledFuture.isDone()) {
                     consoleLog(String.format("Reconnecting in %d minutes", NO_PAIRS_RECONNECT_MINUTES));
                     reconnectScheduledFuture = scheduledExecutorService.schedule(() -> {
                         if (connectionStatus.get() == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_PAIRS)
-                            reconnectEngine();
+                            new Thread(this::reconnectEngine).start();
                     }, NO_PAIRS_RECONNECT_MINUTES, TimeUnit.MINUTES);
                 }
                 break;
@@ -508,7 +506,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT, true);
-                    reconnectEngine();
+                    new Thread(this::reconnectEngine);
                 } else if (lastTradeSecondsAgo > NO_TRADES_WARNING_SECONDS) {
                     if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
                         consoleLog(String.format("No trades for %d seconds.", NO_TRADES_WARNING_SECONDS));
