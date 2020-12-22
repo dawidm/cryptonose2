@@ -99,7 +99,7 @@ jlink {
 }
 
 task packZipLinux(type: Exec) {
-    commandLine 'bash', './pack_zip.sh', 'cryptonose-' + version + '-' + org.gradle.internal.os.OperatingSystem.current().name + '.zip'
+    commandLine 'bash', './pack_zip.sh', 'cryptonose-' + version + '-' + org.gradle.internal.os.OperatingSystem.current().name + '-x86_64' + '.zip'
 }
 
 task packZip {
