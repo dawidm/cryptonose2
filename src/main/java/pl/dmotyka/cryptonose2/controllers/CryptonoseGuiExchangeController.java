@@ -36,6 +36,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
@@ -91,8 +92,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
     public static final long[] TIME_PERIODS = {300,1800};
-    public static final long NO_TRADES_WARNING_SECONDS = 300;
-    public static final long NO_TRADES_RECONNECT_SECONDS = 900;
+    public static final long NO_TRADES_WARNING_SECONDS = 10;
+    public static final long NO_TRADES_RECONNECT_SECONDS = 30;
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
     public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
@@ -136,7 +137,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private PairSymbolConverter pairSymbolConverter;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
     private CryptonoseGenericEngine engine;
-    long lastUpdateTimeMillis = 0;
+    private final AtomicLong lastUpdateTimeMillis = new AtomicLong(0);
     private ScheduledExecutorService scheduledExecutorService;
     private ScheduledFuture<?> updatePreferencesScheduledFuture;
     private ScheduledFuture<?> reconnectScheduledFuture;
@@ -224,7 +225,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             engine.stop();
         tablePairPriceChangesObservableList.clear();
         pairPriceChangesMap.clear();
-        lastUpdateTimeMillis=0;
+        lastUpdateTimeMillis.set(0);
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
         if(!markets.equals("")) {
@@ -352,7 +353,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
-                lastUpdateTimeMillis=System.currentTimeMillis();
+                lastUpdateTimeMillis.set(System.currentTimeMillis());
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
@@ -385,7 +386,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 }
                 break;
             case AUTO_REFRESHING_DONE:
-                lastUpdateTimeMillis=System.currentTimeMillis();
+                lastUpdateTimeMillis.set(System.currentTimeMillis());
                 Set<String> newPairs = Set.of(engine.getAllPairs());
                 Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
                 outdatedPairs.removeAll(newPairs);
@@ -398,7 +399,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void receiveTransactionHeartbeat() {
-        lastUpdateTimeMillis =System.currentTimeMillis();
+        lastUpdateTimeMillis.set(System.currentTimeMillis());
         numTradesPerSecondAtomicInteger.getAndIncrement();
     }
 
@@ -501,8 +502,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void startLastTransactionTimer() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            if (lastUpdateTimeMillis !=0) {
-                long lastTradeSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis) / 1000;
+            if (lastUpdateTimeMillis.get() !=0) {
+                long lastTradeSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
                 javafx.application.Platform.runLater(() -> lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago"));
                 if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
@@ -519,7 +520,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void reconnectEngine() {
-        lastUpdateTimeMillis = 0;
+        lastUpdateTimeMillis.set(0);
         pairPriceChangesMap.clear();
         tablePairPriceChangesObservableList.clear();
         javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
