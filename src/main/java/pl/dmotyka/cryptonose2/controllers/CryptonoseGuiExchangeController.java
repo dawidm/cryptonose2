@@ -207,7 +207,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         initTable();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());
-        new Thread(this::startEngine).start();
+        startEngine();
     }
 
     public void close() {
@@ -221,9 +221,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
-        if(engine!=null)
-            engine.stop();
-        tablePairPriceChangesObservableList.clear();
+        Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
         pairPriceChangesMap.clear();
         lastUpdateTimeMillis.set(0);
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
@@ -241,18 +239,22 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             additionalPairs = new String[0];
         else
             additionalPairs=pairs.split(",");
-        engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
-                this,
-                TIME_PERIODS,
-                RELATIVE_CHANGE_NUM_CANDLES,
-                pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
-                additionalPairs);
-        engine.enableInitEngineWithLowerPeriodChartData();
-        engine.autoRefreshPairData(AUTO_REFRESH_INTERVAL_MINUTES);
-        engine.setCheckChangesDelayMs(100);
-        engine.setEngineMessageReceiver(this);
-        engine.setEngineUpdateHeartbeatReceiver(this);
-        engine.start();
+        new Thread(() -> {
+            if (engine!=null)
+                engine.stop();
+            engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
+                    this,
+                    TIME_PERIODS,
+                    RELATIVE_CHANGE_NUM_CANDLES,
+                    pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
+                    additionalPairs);
+            engine.enableInitEngineWithLowerPeriodChartData();
+            engine.autoRefreshPairData(AUTO_REFRESH_INTERVAL_MINUTES);
+            engine.setCheckChangesDelayMs(100);
+            engine.setEngineMessageReceiver(this);
+            engine.setEngineUpdateHeartbeatReceiver(this);
+            engine.start();
+        }).start();
     }
 
     @Override
@@ -314,7 +316,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             uiLoader.stageShowAndWait("Pairs settings: " + exchangeSpecs.getName());
             pairsButton.setDisable(false);
             if(settingsChangedAtomic.get()) {
-                new Thread(this::startEngine).start();
+                startEngine();
             }
         } catch(IOException e) {
             throw new Error(e);
@@ -381,7 +383,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     consoleLog(String.format("Reconnecting in %d minutes", NO_PAIRS_RECONNECT_MINUTES));
                     reconnectScheduledFuture = scheduledExecutorService.schedule(() -> {
                         if (connectionStatus.get() == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_PAIRS)
-                            new Thread(this::reconnectEngine).start();
+                            reconnectEngine();
                     }, NO_PAIRS_RECONNECT_MINUTES, TimeUnit.MINUTES);
                 }
                 break;
@@ -508,7 +510,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT, true);
-                    new Thread(this::reconnectEngine).start();
+                    reconnectEngine();
                 } else if (lastTradeSecondsAgo > NO_TRADES_WARNING_SECONDS) {
                     if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
                         consoleLog(String.format("No trades for %d seconds.", NO_TRADES_WARNING_SECONDS));
@@ -521,10 +523,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void reconnectEngine() {
         lastUpdateTimeMillis.set(0);
+        Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
         pairPriceChangesMap.clear();
-        tablePairPriceChangesObservableList.clear();
         javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
-        engine.reconnect();
+        new Thread(() -> engine.reconnect()).start();
     }
 
     private void consoleLog(String text) {
