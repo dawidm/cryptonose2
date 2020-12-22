@@ -356,8 +356,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
-            case RECONNECTING:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING, false);
+                break;
+            case RECONNECTING:
                 break;
             case DISCONNECTED:
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED, true);
