@@ -92,8 +92,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
     public static final long[] TIME_PERIODS = {300,1800};
-    public static final long NO_TRADES_WARNING_SECONDS = 10;
-    public static final long NO_TRADES_RECONNECT_SECONDS = 30;
+    public static final long NO_TRADES_WARNING_SECONDS = 300;
+    public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
     public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
