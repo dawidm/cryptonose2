@@ -507,7 +507,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT, true);
-                    new Thread(this::reconnectEngine);
+                    new Thread(this::reconnectEngine).start();
                 } else if (lastTradeSecondsAgo > NO_TRADES_WARNING_SECONDS) {
                     if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
                         consoleLog(String.format("No trades for %d seconds.", NO_TRADES_WARNING_SECONDS));
