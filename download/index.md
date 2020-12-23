@@ -1,6 +1,6 @@
 {% include menu.md %}
 
-# Get Cryptonose 2.14
+# Get Cryptonose 2.15
 
 ## Windows installer
 
