@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -13,7 +13,9 @@
 
 package pl.dmotyka.cryptonose2;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -52,21 +54,29 @@ public class CryptonoseGuiSoundAlerts {
     }
 
     public void soundAlert(int type) {
-        URL audioURL = null;
-        if(type==ALERT_RISING) {
-            String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH);
-            if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND) || audioPath == null || audioPath.isBlank()) {
-                audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE));
+        try {
+            URL audioURL;
+            if (type == ALERT_RISING) {
+                String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH);
+                if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND) || audioPath == null || audioPath.isBlank()) {
+                    audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE));
+                } else {
+                    audioURL = new File(audioPath).toURI().toURL();
+                }
+            } else {
+                String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH);
+                if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND) || audioPath == null || audioPath.isBlank()) {
+                    audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE));
+                } else {
+                    audioURL = new File(audioPath).toURI().toURL();
+                }
             }
-        } else {
-            String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH);
-            if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND) || audioPath == null || audioPath.isBlank()) {
-                audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE));
-            }
+            logger.fine("Audio file: " + audioURL.getFile());
+            URL finalAudioURL = audioURL;
+            new Thread(() -> playFile(finalAudioURL)).start();
+        } catch (MalformedURLException e) {
+            logger.severe("cannot play custom audio file (malformed audio file path)");
         }
-        logger.fine("Audio file: " + audioURL.getFile());
-        URL finalAudioURL = audioURL;
-        new Thread(()->playFile(finalAudioURL)).start();
     }
 
     private synchronized void playFile(URL audioURL) {
