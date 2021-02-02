@@ -65,9 +65,9 @@
             <Label fx:id="timeLabel" text="?" />
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefWidth="75.0" spacing="3.0">
+      <VBox alignment="CENTER_LEFT" prefWidth="75.0">
          <children>
-            <HBox fx:id="moreHBox" prefWidth="200.0" />
+            <HBox fx:id="moreHBox" spacing="2.0" />
          </children>
       </VBox>
    </children>

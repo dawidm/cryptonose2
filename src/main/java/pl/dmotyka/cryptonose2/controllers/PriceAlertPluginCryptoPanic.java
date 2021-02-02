@@ -53,7 +53,7 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
     public Label cpHyperlink;
 
     private static final String NAME = "CryptoPanic";
-    private static final String TITLE = "...";
+    private static final String TITLE = "CP";
 
     private static final String CP_HYPERLINK = "https://cryptopanic.com/news/%s";
 
