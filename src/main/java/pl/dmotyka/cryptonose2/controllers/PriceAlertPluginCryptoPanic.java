@@ -54,6 +54,7 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
 
     private static final String NAME = "CryptoPanic";
     private static final String TITLE = "CP";
+    private static final String DESCRIPTION = "CryptoPanic coin news";
     public static final String BUTTON_CSS_CLASS = "text-cryptopanic";
 
     private static final String CP_HYPERLINK = "https://cryptopanic.com/news/%s";
@@ -63,7 +64,7 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
     private final AtomicBoolean isShowingAtomicBoolean = new AtomicBoolean(false);
 
     public PriceAlertPluginCryptoPanic(String currencySymbol) {
-        super(NAME, TITLE, BUTTON_CSS_CLASS, currencySymbol);
+        super(NAME, TITLE, DESCRIPTION, BUTTON_CSS_CLASS, currencySymbol);
     }
 
     @Override

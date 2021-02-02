@@ -20,6 +20,7 @@ import java.util.Arrays;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -89,6 +90,7 @@ public class CryptonoseGuiPriceAlertNodeController {
         Button geckoButton = new Button(geckoPlugin.getButtonTitle());
         geckoButton.getStyleClass().add("button-small");
         geckoButton.getStyleClass().add(geckoPlugin.getButtonCssClass());
+        geckoButton.setTooltip(new Tooltip(geckoPlugin.getDescription()));
         geckoButton.setOnMouseClicked(e -> geckoPlugin.show());
         geckoPlugin.setAnchor(geckoButton);
         moreHBox.getChildren().add(geckoButton);
@@ -96,6 +98,7 @@ public class CryptonoseGuiPriceAlertNodeController {
         Button cpButton = new Button(cpPlugin.getButtonTitle());
         cpButton.getStyleClass().add("button-small");
         cpButton.getStyleClass().add(cpPlugin.getButtonCssClass());
+        cpButton.setTooltip(new Tooltip(cpPlugin.getDescription()));
         cpButton.setOnMouseClicked(e -> cpPlugin.show());
         cpPlugin.setAnchor(cpButton);
         moreHBox.getChildren().add(cpButton);

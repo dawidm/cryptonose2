@@ -19,13 +19,15 @@ public abstract class PriceAlertPlugin {
 
     private final String name;
     private final String buttonTitle;
+    private final String description;
     private final String buttonCssClass;
     protected final String currencySymbol;
     protected Node anchor;
 
-    public PriceAlertPlugin(String name, String buttonTitle, String buttonCssClass, String currencySymbol) {
+    public PriceAlertPlugin(String name, String buttonTitle, String description, String buttonCssClass, String currencySymbol) {
         this.name = name;
         this.buttonTitle = buttonTitle;
+        this.description = description;
         this.buttonCssClass = buttonCssClass;
         this.currencySymbol = currencySymbol;
     }
@@ -43,6 +45,10 @@ public abstract class PriceAlertPlugin {
 
     public String getButtonTitle() {
         return buttonTitle;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getButtonCssClass() {
