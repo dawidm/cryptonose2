@@ -39,12 +39,18 @@
                   <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" styleClass="pop" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-            <VBox fx:id="dataContainer" spacing="5.0">
+            <VBox fx:id="dataContainer" spacing="2.0">
                <children>
                   <VBox fx:id="newsVBox" spacing="7.0">
                      <children>
-                        <Label styleClass="popupWidth" text="Loading..." />
+                        <Label styleClass="popupWidth" text="Loading...">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></Label>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="3.0" top="3.0" />
+                     </VBox.margin>
                   </VBox>
                   <Label styleClass="popupWidth" text="Powered by CryptoPanic">
                      <padding>
