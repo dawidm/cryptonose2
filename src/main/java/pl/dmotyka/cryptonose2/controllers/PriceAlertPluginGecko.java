@@ -111,7 +111,10 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
                         marketCapLabel.setText(String.format("$%,d", (int)info.getMarketCapUSD()));
                         rankLabel.setText(""+info.getGeckoMarketCapRank());
                         volumeLabel.setText(String.format("$%,d",(int)info.getDayVolume()));
-                        descriptionTextArea.setText(info.getDescription().replaceAll("<.*>",""));
+                        String description = info.getDescription().replaceAll("<.*>","");
+                        if (description.strip().length() == 0)
+                            description = ("Description it not available.");
+                        descriptionTextArea.setText(description);
                         marketHyperlinkLabel.setText(GeckoApi.getMarketUrl(info.getId()));
                         marketHyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(marketHyperlinkLabel.getText()));
                     });
