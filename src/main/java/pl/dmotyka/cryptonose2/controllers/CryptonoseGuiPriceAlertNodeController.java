@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -85,12 +85,18 @@ public class CryptonoseGuiPriceAlertNodeController {
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
         String baseCurrency = priceAlert.getExchangeSpecs().getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(priceAlert.getPair()).base.getCurrencyCode();
-        PriceAlertPlugin plugin = new PriceAlertPluginGecko(baseCurrency);
-        Button b = new Button(plugin.getButtonTitle());
-        b.getStyleClass().add("button-small");
-        b.setOnMouseClicked(e -> plugin.show());
-        plugin.setAnchor(b);
-        moreHBox.getChildren().add(b);
+        PriceAlertPlugin geckoPlugin = new PriceAlertPluginGecko(baseCurrency);
+        Button geckoButton = new Button(geckoPlugin.getButtonTitle());
+        geckoButton.getStyleClass().add("button-small");
+        geckoButton.setOnMouseClicked(e -> geckoPlugin.show());
+        geckoPlugin.setAnchor(geckoButton);
+        moreHBox.getChildren().add(geckoButton);
+        PriceAlertPlugin cpPlugin = new PriceAlertPluginCryptoPanic(baseCurrency);
+        Button cpButton = new Button(geckoPlugin.getButtonTitle());
+        cpButton.getStyleClass().add("button-small");
+        cpButton.setOnMouseClicked(e -> cpPlugin.show());
+        cpPlugin.setAnchor(cpButton);
+        moreHBox.getChildren().add(cpButton);
     }
 
     private double[] chartCandlesToClosePrices(ChartCandle[] chartCandles) {
