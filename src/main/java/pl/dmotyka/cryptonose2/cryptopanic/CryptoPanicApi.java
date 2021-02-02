@@ -45,13 +45,13 @@ public class CryptoPanicApi {
                     String title = newsNode.get("title").asText().replace("\\r?\\n", " ");
                     String url = newsNode.get("url").asText();
                     String dateString = newsNode.get("published_at").asText();
-                    Instant date = Instant.parse(dateString);
+                    Instant published = Instant.parse(dateString);
                     JsonNode reactions = newsNode.get("votes");
                     int numReactions = 0;
                     for (JsonNode reactionType : reactions) {
                         numReactions += reactionType.intValue();
                     }
-                    currentNews = new CryptoPanicNews(title, numReactions, date, url);
+                    currentNews = new CryptoPanicNews(title, numReactions, published, url);
                 } catch (NullPointerException | DateTimeParseException e) {
                     throw new IOException("unexpected JSON format");
                 }
