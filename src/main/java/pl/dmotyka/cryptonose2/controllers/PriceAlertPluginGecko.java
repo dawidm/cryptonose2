@@ -70,10 +70,11 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
 
     private static final String NAME = "CoinGecko";
     private static final String TITLE = "CG";
+    public static final String BUTTON_CSS_CLASS = "text-coingecko";
     private final AtomicBoolean isShowingAtomicBoolean = new AtomicBoolean(false);
 
     public PriceAlertPluginGecko(String currencySymbol) {
-        super(NAME, TITLE, currencySymbol);
+        super(NAME, TITLE, BUTTON_CSS_CLASS, currencySymbol);
     }
 
     @Override

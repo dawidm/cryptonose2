@@ -88,12 +88,14 @@ public class CryptonoseGuiPriceAlertNodeController {
         PriceAlertPlugin geckoPlugin = new PriceAlertPluginGecko(baseCurrency);
         Button geckoButton = new Button(geckoPlugin.getButtonTitle());
         geckoButton.getStyleClass().add("button-small");
+        geckoButton.getStyleClass().add(geckoPlugin.getButtonCssClass());
         geckoButton.setOnMouseClicked(e -> geckoPlugin.show());
         geckoPlugin.setAnchor(geckoButton);
         moreHBox.getChildren().add(geckoButton);
         PriceAlertPlugin cpPlugin = new PriceAlertPluginCryptoPanic(baseCurrency);
         Button cpButton = new Button(cpPlugin.getButtonTitle());
         cpButton.getStyleClass().add("button-small");
+        cpButton.getStyleClass().add(cpPlugin.getButtonCssClass());
         cpButton.setOnMouseClicked(e -> cpPlugin.show());
         cpPlugin.setAnchor(cpButton);
         moreHBox.getChildren().add(cpButton);

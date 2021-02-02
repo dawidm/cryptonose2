@@ -29,3 +29,11 @@
 .status-disconnected {
     -fx-background-color: #FF4136
 }
+
+.text-cryptopanic {
+    -fx-text-fill: #FF851B
+}
+
+.text-coingecko {
+    -fx-text-fill: #2ECC40
+}
