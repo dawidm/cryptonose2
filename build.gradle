@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -39,8 +39,8 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'pl.dmotyka', name: 'dmutils', version:'1.1.0'
-    compile group: 'pl.dmotyka', name: 'exchangeutils', version:'1.13.2'
-    compile group: 'pl.dmotyka', name: 'cryptonoseengine', version:'1.5.9'
+    compile group: 'pl.dmotyka', name: 'exchangeutils', version:'1.13.3'
+    compile group: 'pl.dmotyka', name: 'cryptonoseengine', version:'1.5.10'
     compile group: 'pl.dmotyka', name: 'minimal-fx-charts', version: '1.0.0'
     compile group: 'com.dorkbox', name: 'Notify', version:'3.7'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
