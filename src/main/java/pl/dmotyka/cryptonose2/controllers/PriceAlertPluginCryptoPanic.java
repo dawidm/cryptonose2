@@ -95,13 +95,9 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
                     CryptoPanicNews[] news = CryptoPanicApi.getNewsForSymbol(currencySymbol, NEWS_LIMIT);
                     Platform.runLater(() -> newsVBox.getChildren().clear());
                     for (CryptoPanicNews currentNews : news) {
-                        UILoader<PriceAlertPluginCryptoPanicNewsNode> newsNodeUILoader = new UILoader<>("priceAlertPluginCryptoPanicNews.fxml");
-                        newsNodeUILoader.getController().init(currentNews);
-                        Platform.runLater(()-> {
-                            newsVBox.getChildren().add(newsNodeUILoader.getRoot());
-                        });
+                        addNewsToPopup(currentNews);
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);
                     Platform.runLater(() -> {
                         errorContainer.setVisible(true);
@@ -109,7 +105,19 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
                 }
             }).start();
         } catch (IOException e) {
-            throw new IllegalStateException("Cannot load fxml");
+            throw new RuntimeException("Cannot load fxml");
+        }
+    }
+
+    private void addNewsToPopup(CryptoPanicNews news) {
+        try {
+            UILoader<PriceAlertPluginCryptoPanicNewsNode> newsNodeUILoader = new UILoader<>("priceAlertPluginCryptoPanicNews.fxml");
+            newsNodeUILoader.getController().init(news);
+            Platform.runLater(()-> {
+                newsVBox.getChildren().add(newsNodeUILoader.getRoot());
+            });
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot load fxml");
         }
     }
 
