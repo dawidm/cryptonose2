@@ -1,9 +1,6 @@
 .popup {
     -fx-pref-width: 30em;
-}
-
-.popupWidth {
-    -fx-pref-width: 30em;
+    -fx-max-width: 30em;
 }
 
 .descriptionArea {

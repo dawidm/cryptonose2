@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose
   ~
-  ~ Copyright © 2019-2020 Dawid Motyka
+  ~ Copyright © 2019-2021 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -15,14 +15,15 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<VBox prefWidth="100.0" styleClass="popup" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+<VBox prefWidth="100.0" styleClass="popup" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="titleLabel" text=" information">
          <VBox.margin>
@@ -40,7 +41,7 @@
                   <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
-            <VBox fx:id="dataContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0">
+            <VBox fx:id="dataContainer" spacing="5.0">
                <children>
                   <HBox>
                      <children>
@@ -89,14 +90,10 @@
                         <Label fx:id="rankLabel" text="loading..." />
                      </children>
                   </HBox>
-                  <TextArea fx:id="descriptionTextArea" editable="false" focusTraversable="false" text="loading..." wrapText="true">
+                  <TextArea fx:id="descriptionTextArea" editable="false" focusTraversable="false" styleClass="descriptionArea" text="loading..." wrapText="true">
                      <VBox.margin>
                         <Insets top="3.0" />
                      </VBox.margin>
-                     <styleClass>
-                        <String fx:value="descriptionArea" />
-                        <String fx:value="popupWidth" />
-                     </styleClass>
                   </TextArea>
                   <Label text="Warning: there may be more currencies with this symbol. In this case presented data may be for other currency than desired. The one with highest market cap is always chosen." wrapText="true">
                      <VBox.margin>
