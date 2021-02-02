@@ -42,7 +42,7 @@ public class CryptoPanicApi {
             for (JsonNode newsNode : resultsListNode) {
                 CryptoPanicNews currentNews;
                 try {
-                    String title = newsNode.get("title").asText();
+                    String title = newsNode.get("title").asText().replace("\\r?\\n", " ");
                     String url = newsNode.get("url").asText();
                     String dateString = newsNode.get("published_at").asText();
                     Instant date = Instant.parse(dateString);
