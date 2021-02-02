@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefWidth="100.0" styleClass="popup" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="popup" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="titleLabel" text=" information">
          <VBox.margin>
@@ -90,19 +90,19 @@
                         <Label fx:id="rankLabel" text="loading..." />
                      </children>
                   </HBox>
-                  <TextArea fx:id="descriptionTextArea" editable="false" focusTraversable="false" styleClass="descriptionArea" text="loading..." wrapText="true">
+                  <TextArea fx:id="descriptionTextArea" editable="false" focusTraversable="false" text="loading..." wrapText="true">
                      <VBox.margin>
                         <Insets top="3.0" />
                      </VBox.margin>
+                     <styleClass>
+                        <String fx:value="descriptionArea" />
+                        <String fx:value="popupWidth" />
+                     </styleClass>
                   </TextArea>
-                  <Label text="Warning: there may be more currencies with this symbol. In this case presented data may be for other currency than desired. The one with highest market cap is always chosen." wrapText="true">
+                  <Label styleClass="popupWidth" text="Warning: there may be more currencies with this symbol. In this case presented data may be for other currency than desired. The one with highest market cap is always chosen." wrapText="true">
                      <VBox.margin>
                         <Insets top="7.0" />
                      </VBox.margin>
-                     <styleClass>
-                        <String fx:value="warningLabel" />
-                        <String fx:value="popupWidth" />
-                     </styleClass>
                   </Label>
                   <Label text="Powered by CoinGecko " />
                   <Label fx:id="marketHyperlinkLabel" styleClass="hyperlinkLabel" text="loading...">

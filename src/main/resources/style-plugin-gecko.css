@@ -3,6 +3,10 @@
     -fx-max-width: 30em;
 }
 
+.popupWidth {
+    -fx-pref-width: 30em;
+}
+
 .descriptionArea {
     -fx-pref-height: 10em;
     -fx-focus-color: transparent;
