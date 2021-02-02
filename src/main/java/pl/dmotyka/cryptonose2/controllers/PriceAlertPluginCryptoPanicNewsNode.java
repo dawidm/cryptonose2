@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.cryptopanic.CryptoPanicNews;
@@ -43,8 +44,12 @@ public class PriceAlertPluginCryptoPanicNewsNode implements Initializable {
 
     public void init(CryptoPanicNews news) {
         String title;
-        if (news.getTitle().length() > 100)
-            title = news.getTitle().substring(0,100) + "...";
+        if (news.getTitle().length() > 100) {
+            Tooltip tooltip = new Tooltip(news.getTitle());
+            tooltip.setWrapText(true);
+            titleHyperlink.setTooltip(tooltip);
+            title = news.getTitle().substring(0, 100) + "...";
+        }
         else
             title = news.getTitle();
         titleHyperlink.setText(title);
