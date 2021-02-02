@@ -20,6 +20,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import org.apache.commons.text.StringEscapeUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +44,7 @@ public class CryptoPanicApi {
                 CryptoPanicNews currentNews;
                 try {
                     String title = newsNode.get("title").asText().replace("\\r?\\n", " ");
+                    title = StringEscapeUtils.unescapeHtml4(title);
                     String url = newsNode.get("url").asText();
                     String dateString = newsNode.get("published_at").asText();
                     Instant published = Instant.parse(dateString);

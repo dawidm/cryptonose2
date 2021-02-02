@@ -14,5 +14,6 @@ module cryptonose {
     requires jdk.crypto.ec;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires org.apache.commons.text;
     exports pl.dmotyka.cryptonose2.controllers;
 }
