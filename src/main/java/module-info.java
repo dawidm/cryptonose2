@@ -16,4 +16,5 @@ module cryptonose {
     requires com.fasterxml.jackson.databind;
     requires org.apache.commons.text;
     exports pl.dmotyka.cryptonose2.controllers;
+    exports pl.dmotyka.cryptonose2.cryptopanic;
 }
