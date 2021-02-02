@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Cryptonose
+  ~
+  ~ Copyright © 2019-2021 Dawid Motyka
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  -->
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox styleClass="popup" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="titleLabel" text=" news">
+         <VBox.margin>
+            <Insets bottom="7.0" />
+         </VBox.margin>
+         <styleClass>
+            <String fx:value="h1" />
+            <String fx:value="popupWidth" />
+         </styleClass>
+      </Label>
+      <StackPane stylesheets="@style-plugin-cp.css">
+         <children>
+            <AnchorPane fx:id="errorContainer" visible="false" StackPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="errorLabel" alignment="CENTER" contentDisplay="TOP" styleClass="pop" text="Error getting data" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <VBox fx:id="dataContainer" spacing="5.0">
+               <children>
+                  <VBox fx:id="newsVBox" spacing="7.0">
+                     <children>
+                        <Label styleClass="popupWidth" text="Loading..." />
+                     </children>
+                  </VBox>
+                  <Label styleClass="popupWidth" text="Powered by CryptoPanic">
+                     <padding>
+                        <Insets top="7.0" />
+                     </padding></Label>
+                  <Label fx:id="cpHyperlink" styleClass="hyperlinkLabel" text="loading...">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Label>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</VBox>

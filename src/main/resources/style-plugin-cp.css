@@ -1,0 +1,12 @@
+.popup {
+    -fx-pref-width: 30em;
+    -fx-max-width: 30em;
+}
+
+.link {
+    -fx-padding: 0;
+}
+
+.popupWidth {
+    -fx-pref-width: 30em;
+}
