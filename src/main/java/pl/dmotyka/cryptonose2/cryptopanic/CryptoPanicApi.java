@@ -15,12 +15,11 @@ package pl.dmotyka.cryptonose2.cryptopanic;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.xml.datatype.DatatypeConfigurationException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,14 +45,14 @@ public class CryptoPanicApi {
                     String title = newsNode.get("title").asText();
                     String url = newsNode.get("url").asText();
                     String dateString = newsNode.get("published_at").asText();
-                    Date date = javax.xml.datatype.DatatypeFactory.newInstance().newXMLGregorianCalendar(dateString).toGregorianCalendar().getTime();
+                    Instant date = Instant.parse(dateString);
                     JsonNode reactions = newsNode.get("votes");
                     int numReactions = 0;
                     for (JsonNode reactionType : reactions) {
                         numReactions += reactionType.intValue();
                     }
                     currentNews = new CryptoPanicNews(title, numReactions, date, url);
-                } catch (NullPointerException e) {
+                } catch (NullPointerException | DateTimeParseException e) {
                     throw new IOException("unexpected JSON format");
                 }
                 newsList.add(currentNews);
@@ -61,7 +60,7 @@ public class CryptoPanicApi {
                     return newsList.toArray(CryptoPanicNews[]::new);
             }
             return newsList.toArray(CryptoPanicNews[]::new);
-        } catch (IOException | DatatypeConfigurationException e) {
+        } catch (IOException e) {
             logger.warning("cannot get CryptoPanic data for: " + symbol + " " + e.getMessage());
             throw new IOException("cannot get data: " + e.getMessage());
         }

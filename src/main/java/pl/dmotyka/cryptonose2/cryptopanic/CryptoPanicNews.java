@@ -13,19 +13,19 @@
 
 package pl.dmotyka.cryptonose2.cryptopanic;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class CryptoPanicNews {
 
     private final String title;
     private final int numReactions;
-    private final Date date;
+    private final Instant published;
     private final String link;
 
-    public CryptoPanicNews(String title, int numReactions, Date date, String link) {
+    public CryptoPanicNews(String title, int numReactions, Instant published, String link) {
         this.title = title;
         this.numReactions = numReactions;
-        this.date = date;
+        this.published = published;
         this.link = link;
     }
 
@@ -37,8 +37,8 @@ public class CryptoPanicNews {
         return numReactions;
     }
 
-    public Date getDate() {
-        return date;
+    public Instant getPublished() {
+        return published;
     }
 
     public String getLink() {

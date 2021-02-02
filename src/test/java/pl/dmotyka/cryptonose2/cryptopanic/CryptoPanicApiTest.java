@@ -14,6 +14,7 @@
 package pl.dmotyka.cryptonose2.cryptopanic;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import org.junit.Test;
 
@@ -27,8 +28,9 @@ public class CryptoPanicApiTest {
         CryptoPanicNews[] news = CryptoPanicApi.getNewsForSymbol("BTC", limit);
         assertEquals(limit, news.length);
         assertNotNull(news[0].getTitle());
-        assertNotNull(news[0].getDate());
+        assertNotNull(news[0].getPublished());
         assertNotNull(news[0].getLink());
+        assertTrue(news[0].getPublished().isBefore(Instant.now()));
     }
 
 }
