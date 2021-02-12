@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose
   ~
-  ~ Copyright © 2019-2020 Dawid Motyka
+  ~ Copyright © 2019-2021 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -23,13 +23,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController">
+
+<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController">
    <children>
       <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="7.0" VBox.vgrow="NEVER">
          <children>
-            <Label styleClass="h2" text="Connection status"/>
+            <Label styleClass="h2" text="Connection status" />
             <Label fx:id="connectionStatusLabel" text="disconnected" />
-            <Label styleClass="h2" layoutX="10.0" layoutY="10.0" text="Last update"/>
+            <Label layoutX="10.0" layoutY="10.0" styleClass="h2" text="Last update" />
             <Label fx:id="lastTradeLabel" layoutX="282.0" layoutY="10.0" text="no updates yet" />
             <Region HBox.hgrow="ALWAYS" />
          </children>
@@ -39,12 +40,12 @@
       </HBox>
       <HBox fx:id="tableDisabledHbox" alignment="CENTER" fillHeight="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" VBox.vgrow="ALWAYS">
          <children>
-            <Label text="Table disabled in power saving mode" textAlignment="CENTER"/>
+            <Label text="Table disabled in power saving mode" textAlignment="CENTER" />
          </children>
       </HBox>
-      <TableView fx:id="currenciesTableView" focusTraversable="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="currenciesTableView" focusTraversable="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" styleClass="prices-table" VBox.vgrow="ALWAYS">
          <placeholder>
-            <Label text="Connecting..."/>
+            <Label text="Connecting..." />
          </placeholder>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -52,7 +53,7 @@
       </TableView>
       <TitledPane fx:id="logTitledPane" animated="false" collapsible="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="200.0" VBox.vgrow="ALWAYS">
          <graphic>
-            <Label styleClass="h2" text="Log"/>
+            <Label styleClass="h2" text="Log" />
          </graphic>
          <content>
             <TextArea fx:id="consoleTextArea" editable="false" wrapText="true" />
@@ -62,7 +63,7 @@
          <content>
             <HBox alignment="CENTER_LEFT" fillHeight="false" nodeOrientation="LEFT_TO_RIGHT" spacing="7.0">
                <children>
-                  <Label styleClass="h2" text="On alert: "/>
+                  <Label styleClass="h2" text="On alert: " />
                   <CheckBox fx:id="soundCheckBox" mnemonicParsing="false" selected="true" text="Sound" />
                   <CheckBox fx:id="runBrowserCheckBox" mnemonicParsing="false" text="Browser" />
                   <CheckBox fx:id="notificationCheckBox" mnemonicParsing="false" selected="true" text="Notification" />
@@ -74,7 +75,7 @@
             </HBox>
          </content>
          <graphic>
-            <Label styleClass="h2" text="Exchange options"/>
+            <Label styleClass="h2" text="Exchange options" />
          </graphic>
       </TitledPane>
    </children>

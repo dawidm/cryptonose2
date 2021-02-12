@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -46,6 +46,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -154,11 +155,17 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
 
+        boolean firstUpdate = true;
+
         @Override
         protected void updateItem(Number item, boolean empty) {
             super.updateItem(item, empty);
             if(empty)
                 setText(null);
+            if (firstUpdate) {
+                getStyleClass().add("price-rising");
+                firstUpdate = false;
+            }
             if(item!=null) {
                 getStyleClass().remove(getStyleClass().size()-1);
                 if (item.doubleValue() >= 0)
@@ -273,29 +280,49 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void initTable() {
         TableColumn<TablePairPriceChanges,String> pairNameCol = new TableColumn("Pair name");
         pairNameCol.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getFormattedPairName()));
-        pairNameCol.setPrefWidth(150);
+        pairNameCol.setMaxWidth(Integer.MAX_VALUE * 0.2);
         TableColumn<TablePairPriceChanges,Number> lastPriceCol = new TableColumn("Last price");
         lastPriceCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().lastPriceProperty());
         lastPriceCol.setCellFactory(col -> new PriceTableCell());
-        lastPriceCol.setPrefWidth(150);
+        lastPriceCol.setMaxWidth(Integer.MAX_VALUE * 0.2);
         TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[0]) +" % change");
         p1ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1PercentChangeProperty());
         p1ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p1ChangeCol.setPrefWidth(100);
+        p1ChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
         TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[0])+" relative");
         p1RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1RelativeChangeProperty());
         p1RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p1RelativeChangeCol.setPrefWidth(100);
+        p1RelativeChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
         TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[1])+" % change");
         p2ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2PercentChangeProperty());
         p2ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p2ChangeCol.setPrefWidth(100);
+        p2ChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
         TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[1])+" relative");
         p2RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2RelativeChangeProperty());
         p2RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p2RelativeChangeCol.setPrefWidth(100);
+        p2RelativeChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
+        TableColumn<TablePairPriceChanges, Void> buttonsCol = new TableColumn("More");
+        buttonsCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
+        buttonsCol.setCellFactory(col -> {
+            TableCell<TablePairPriceChanges, Void> tableCell = new TableCell<>() {
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        this.setText(null);
+                        TablePairPriceChanges changes = (TablePairPriceChanges) currenciesTableView.getItems().get(getIndex());
+                        String baseCurrency = exchangeSpecs.getPairSymbolConverter().apiSymbolToBaseCurrencySymbol(changes.getPairName());
+                        HBox hbox = new HBox();
+                        hbox.setAlignment(Pos.CENTER);
+                        PriceAlertPluginsButtons.install(hbox, baseCurrency);
+                        this.setGraphic(hbox);
+                    }
+                }
+            };
+            return tableCell;
+        });
         currenciesTableView.setItems(tablePairPriceChangesObservableList);
-        currenciesTableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol);
+        currenciesTableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
         showLogCheckBox.setSelected(LOG_VISIBLE);
         currenciesTableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {

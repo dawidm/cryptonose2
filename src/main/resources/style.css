@@ -23,3 +23,7 @@
 .button-small {
     -fx-min-width: 1em;
 }
+
+.prices-table .table-column {
+    -fx-alignment: center-left;
+}

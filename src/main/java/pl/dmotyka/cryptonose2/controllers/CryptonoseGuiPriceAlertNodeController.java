@@ -18,15 +18,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonose2.PriceAlertPlugin;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
@@ -86,22 +83,7 @@ public class CryptonoseGuiPriceAlertNodeController {
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
         String baseCurrency = priceAlert.getExchangeSpecs().getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(priceAlert.getPair()).base.getCurrencyCode();
-        PriceAlertPlugin geckoPlugin = new PriceAlertPluginGecko(baseCurrency);
-        Button geckoButton = new Button(geckoPlugin.getButtonTitle());
-        geckoButton.getStyleClass().add("button-small");
-        geckoButton.getStyleClass().add(geckoPlugin.getButtonCssClass());
-        geckoButton.setTooltip(new Tooltip(geckoPlugin.getDescription()));
-        geckoButton.setOnMouseClicked(e -> geckoPlugin.show());
-        geckoPlugin.setAnchor(geckoButton);
-        moreHBox.getChildren().add(geckoButton);
-        PriceAlertPlugin cpPlugin = new PriceAlertPluginCryptoPanic(baseCurrency);
-        Button cpButton = new Button(cpPlugin.getButtonTitle());
-        cpButton.getStyleClass().add("button-small");
-        cpButton.getStyleClass().add(cpPlugin.getButtonCssClass());
-        cpButton.setTooltip(new Tooltip(cpPlugin.getDescription()));
-        cpButton.setOnMouseClicked(e -> cpPlugin.show());
-        cpPlugin.setAnchor(cpButton);
-        moreHBox.getChildren().add(cpButton);
+        PriceAlertPluginsButtons.install(moreHBox, baseCurrency);
     }
 
     private double[] chartCandlesToClosePrices(ChartCandle[] chartCandles) {
