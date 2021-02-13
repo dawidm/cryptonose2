@@ -23,13 +23,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -41,21 +39,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
@@ -82,7 +74,6 @@ import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.chartutils.LiquidityFactor;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
-import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 /**
@@ -99,7 +90,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     private static final boolean LOG_VISIBLE = false;
-    private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;
     public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
     public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
     private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
@@ -135,7 +125,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
     private ExchangeSpecs exchangeSpecs;
-    private PairSymbolConverter pairSymbolConverter;
     private CryptonoseGuiAlertChecker cryptonoseGuiAlertChecker;
     private CryptonoseGenericEngine engine;
     private final AtomicLong lastUpdateTimeMillis = new AtomicLong(0);
@@ -146,9 +135,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
     private LiquidityFactor liquidityFactorIndicator = new LiquidityFactor();
 
-    private Map<String, TablePairPriceChanges> pairPriceChangesMap=new HashMap<>();
-    private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList;
-    private long lastTableSortMillis =0;
+    PriceChangesTable priceChangesTable;
     private AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
     private AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
     private boolean noPairsAlertShown = false;
@@ -196,7 +183,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.cryptonoseGuiController = cryptonoseGuiController;
         this.indicatorBox = indicatorBox;
         this.exchangeSpecs = exchangeSpecs;
-        pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         pairsButton.setOnMouseClicked(event -> pairsClick());
         alertSettingsButton.setOnMouseClicked(event -> alertSettingsClick());
         currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
@@ -212,7 +198,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts();
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
-        initTable();
+        priceChangesTable = new PriceChangesTable(currenciesTableView, exchangeSpecs, TIME_PERIODS);
+        priceChangesTable.init();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());
         startEngine();
     }
@@ -228,8 +215,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
-        Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
-        pairPriceChangesMap.clear();
+        priceChangesTable.clearTable();
         lastUpdateTimeMillis.set(0);
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
@@ -268,70 +254,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public void initialize(URL location, ResourceBundle resources) {
         scheduledExecutorService = Executors.newScheduledThreadPool(4);
         startLastTransactionTimer();
-        pairPriceChangesMap = new HashMap<>();
-        tablePairPriceChangesObservableList = FXCollections.observableArrayList();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
         logTitledPane.visibleProperty().bind(showLogCheckBox.selectedProperty());
         soundCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
         runBrowserCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
         notificationCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
-    }
-
-    private void initTable() {
-        TableColumn<TablePairPriceChanges,String> pairNameCol = new TableColumn("Pair name");
-        pairNameCol.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getFormattedPairName()));
-        pairNameCol.setMaxWidth(Integer.MAX_VALUE * 0.2);
-        TableColumn<TablePairPriceChanges,Number> lastPriceCol = new TableColumn("Last price");
-        lastPriceCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().lastPriceProperty());
-        lastPriceCol.setCellFactory(col -> new PriceTableCell());
-        lastPriceCol.setMaxWidth(Integer.MAX_VALUE * 0.2);
-        TableColumn<TablePairPriceChanges,Number> p1ChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[0]) +" % change");
-        p1ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1PercentChangeProperty());
-        p1ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p1ChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
-        TableColumn<TablePairPriceChanges,Number> p1RelativeChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[0])+" relative");
-        p1RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p1RelativeChangeProperty());
-        p1RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p1RelativeChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
-        TableColumn<TablePairPriceChanges,Number> p2ChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[1])+" % change");
-        p2ChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2PercentChangeProperty());
-        p2ChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p2ChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
-        TableColumn<TablePairPriceChanges,Number> p2RelativeChangeCol = new TableColumn(TimeConverter.secondsToFullMinutesHoursDays(TIME_PERIODS[1])+" relative");
-        p2RelativeChangeCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().p2RelativeChangeProperty());
-        p2RelativeChangeCol.setCellFactory(col -> new PriceChangesTableCell());
-        p2RelativeChangeCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
-        TableColumn<TablePairPriceChanges, Void> buttonsCol = new TableColumn("More");
-        buttonsCol.setMaxWidth(Integer.MAX_VALUE * 0.12);
-        buttonsCol.setCellFactory(col -> {
-            TableCell<TablePairPriceChanges, Void> tableCell = new TableCell<>() {
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (!empty) {
-                        this.setText(null);
-                        TablePairPriceChanges changes = (TablePairPriceChanges) currenciesTableView.getItems().get(getIndex());
-                        String baseCurrency = exchangeSpecs.getPairSymbolConverter().apiSymbolToBaseCurrencySymbol(changes.getPairName());
-                        HBox hbox = new HBox();
-                        hbox.setAlignment(Pos.CENTER);
-                        PriceAlertPluginsButtons.install(hbox, baseCurrency);
-                        this.setGraphic(hbox);
-                    }
-                }
-            };
-            return tableCell;
-        });
-        currenciesTableView.setItems(tablePairPriceChangesObservableList);
-        currenciesTableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
-        showLogCheckBox.setSelected(LOG_VISIBLE);
-        currenciesTableView.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-                Node node = ((Node) event.getTarget()).getParent();
-                if (node instanceof TableRow || node.getParent() instanceof TableRow) {
-                    CryptonoseGuiBrowser.runBrowser(((TablePairPriceChanges)currenciesTableView.getSelectionModel().getSelectedItem()).getPairName(),exchangeSpecs);
-                }
-            }
-        });
     }
 
     public void pairsClick() {
@@ -416,13 +343,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case AUTO_REFRESHING_DONE:
                 lastUpdateTimeMillis.set(System.currentTimeMillis());
-                Set<String> newPairs = Set.of(engine.getAllPairs());
-                Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
-                outdatedPairs.removeAll(newPairs);
-                for (String pair : outdatedPairs) {
-                    tablePairPriceChangesObservableList.remove(pairPriceChangesMap.get(pair));
-                    pairPriceChangesMap.remove(pair);
-                }
+                priceChangesTable.removeOutdatedPairs(engine.getAllPairs());
         }
     }
 
@@ -463,24 +384,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
         if(currenciesTableView.isVisible())
-            updateTable(priceChangesList);
-    }
-
-    private synchronized void updateTable(List<PriceChanges> priceChangesList) {
-        for (PriceChanges priceChanges : priceChangesList) {
-            TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
-            if(tablePairPriceChanges == null) {
-                tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
-                pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
-                tablePairPriceChangesObservableList.add(tablePairPriceChanges);
-            }
-            int period = (priceChanges.getTimePeriodSeconds() == TIME_PERIODS[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
-            tablePairPriceChanges.setPriceChanges(priceChanges,period);
-        }
-        if(System.currentTimeMillis()- lastTableSortMillis > TABLE_SORT_FREQUENCY_MILLIS) {
-            currenciesTableView.sort();
-            lastTableSortMillis=System.currentTimeMillis();
-        }
+            priceChangesTable.updateTable(priceChangesList);
     }
 
     private void handlePriceAlert(PriceAlert priceAlert) {
@@ -551,8 +455,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void reconnectEngine() {
         lastUpdateTimeMillis.set(0);
-        Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
-        pairPriceChangesMap.clear();
+        priceChangesTable.clearTable();
         javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
         new Thread(() -> engine.reconnect()).start();
     }
@@ -579,7 +482,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public void enablePowerSave(boolean enable) {
         currenciesTableView.setVisible(!enable);
         if(!enable && engine!=null)
-            updateTable(Arrays.asList(engine.requestAllPairsChanges()));
+            priceChangesTable.updateTable(Arrays.asList(engine.requestAllPairsChanges()));
     }
 
     public boolean getIsSoundEnabled() {
