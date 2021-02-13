@@ -36,6 +36,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -48,6 +49,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -99,6 +101,8 @@ public class CryptonoseGuiController extends Application {
     public TitledPane findTitledPane;
     @FXML
     public TableView<TablePairPriceChanges> findTableView;
+    @FXML
+    public TextField findTextField;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
 
@@ -225,9 +229,13 @@ public class CryptonoseGuiController extends Application {
         settingsButton.setOnMouseClicked(event -> settingsClick());
         helpButton.setOnMouseClicked(event -> helpClick());
 
+        findTitledPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue)
+                findTextField.requestFocus();
+        });
         findTitledPane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
             if (isExpanded)
-                showFindTable();
+                Platform.runLater(this::showFindPane);
         });
 
         primaryStage.show();
@@ -313,12 +321,11 @@ public class CryptonoseGuiController extends Application {
                 return;
             }
             if(event.getCode()==KeyCode.F) {
+                event.consume();
                 if (findTitledPane.isExpanded()) {
                     findTitledPane.setExpanded(false);
-                    //hideFindTable();
                 } else {
                     findTitledPane.setExpanded(true);
-                    showFindTable();
                 }
             }
         });
@@ -370,14 +377,56 @@ public class CryptonoseGuiController extends Application {
         }
     }
 
-    private void showFindTable() {
+    private void showFindPane() {
         ObservableList<TablePairPriceChanges> allPairsObservableList = FXCollections.emptyObservableList();
         for (CryptonoseGuiExchangeController controller : activeExchangesControllersMap.values()) {
             allPairsObservableList = FXCollections.concat(allPairsObservableList, controller.getReadonlyTableItems());
         }
-        findTableView.getItems().clear();
         findTableView.getColumns().clear();
-        PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, allPairsObservableList, CryptonoseSettings.TIME_PERIODS);
+        FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
+        findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
+        findTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE)
+                findTitledPane.setExpanded(false);
+            if (event.getCode() == KeyCode.DOWN) {
+                if (!findTableView.getItems().isEmpty()) {
+                    findTableView.getSelectionModel().select(0);
+                    findTableView.scrollTo(0);
+                    findTableView.requestFocus();
+                }
+            }
+            if (event.getCode() == KeyCode.ENTER) {
+                if (!findTableView.getItems().isEmpty()) {
+                    findTableView.getSelectionModel().select(0);
+                    findTableView.scrollTo(0);
+                    findTableView.requestFocus();
+                    findTableView.getOnKeyPressed().handle(event);
+                }
+            }
+        });
+        findTableView.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE)
+                findTitledPane.setExpanded(false);
+            if (event.getCode() == KeyCode.BACK_SPACE) {
+                findTextField.requestFocus();
+                findTextField.getOnKeyPressed().handle(event);
+            }
+            if (event.getCode() == KeyCode.UP) {
+                if (findTableView.getSelectionModel().getSelectedIndex() == 0 || findTableView.getItems().isEmpty())
+                    findTextField.requestFocus();
+            }
+        });
+        findTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && !findTableView.isFocused())
+                findTitledPane.setExpanded(false);
+        });
+        findTableView.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue && !findTextField.isFocused())
+                findTitledPane.setExpanded(false);
+        });
+        findTextField.requestFocus();
+        findTextField.setText("");
+        PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, filteredPairsList, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableShowExchange();
         priceChangesTable.init();
     }

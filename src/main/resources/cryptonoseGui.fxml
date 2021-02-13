@@ -62,7 +62,7 @@
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TextField promptText="Find..." />
+                        <TextField fx:id="findTextField" promptText="Find..." />
                         <TableView fx:id="findTableView" prefHeight="200.0" prefWidth="200.0">
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -74,7 +74,7 @@
             </AnchorPane>
         </content>
          <graphic>
-            <Label styleClass="h2" text="Find..." />
+            <Label styleClass="h2" text="Find (press F)..." />
          </graphic>
       </TitledPane>
       <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" />

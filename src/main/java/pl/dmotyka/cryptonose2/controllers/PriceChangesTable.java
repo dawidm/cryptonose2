@@ -29,6 +29,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
@@ -169,6 +170,14 @@ public class PriceChangesTable {
                     TablePairPriceChanges tableChanges = tableView.getSelectionModel().getSelectedItem();
                     CryptonoseGuiBrowser.runBrowser(tableChanges.getPairName(), tableChanges.getExchangeSpecs());
                 }
+            }
+        });
+        var oldHandler = tableView.getOnKeyPressed();
+        tableView.setOnKeyPressed(event -> {
+            oldHandler.handle(event);
+            if (event.getCode() == KeyCode.ENTER) {
+                TablePairPriceChanges tableChanges = tableView.getSelectionModel().getSelectedItem();
+                CryptonoseGuiBrowser.runBrowser(tableChanges.getPairName(), tableChanges.getExchangeSpecs());
             }
         });
     }
