@@ -83,7 +83,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
-    public static final long[] TIME_PERIODS = {300,1800};
     public static final long NO_TRADES_WARNING_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
@@ -198,7 +197,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts();
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
-        priceChangesTable = new PriceChangesTable(currenciesTableView, exchangeSpecs, TIME_PERIODS);
+        priceChangesTable = new PriceChangesTable(currenciesTableView, exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.init();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());
         startEngine();
@@ -237,7 +236,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 engine.stop();
             engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
                     this,
-                    TIME_PERIODS,
+                    CryptonoseSettings.TIME_PERIODS,
                     RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                     additionalPairs);
@@ -280,7 +279,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public void alertSettingsClick() {
         try {
             UILoader<CryptonoseGuiAlertSettingsController> uiLoader = new UILoader<>("cryptonoseGuiAlertSettings.fxml");
-            uiLoader.getController().init(exchangeSpecs,TIME_PERIODS);
+            uiLoader.getController().init(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
             alertSettingsButton.setDisable(true);
             uiLoader.stageShowAndWait("Alerts conditions: " + exchangeSpecs.getName());
             alertSettingsButton.setDisable(false);
@@ -426,7 +425,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void initPriceAlertThresholds() {
         logger.info("updating alerts values for " + exchangeSpecs);
-        for(long currentTimePeriod : TIME_PERIODS) {
+        for(long currentTimePeriod : CryptonoseSettings.TIME_PERIODS) {
             priceAlertThresholdsMap.put(currentTimePeriod,
                     CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(currentTimePeriod))
             );
@@ -493,5 +492,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
     public boolean getIsNotifEnabled() {
         return notificationCheckBox.isSelected();
+    }
+
+    public ObservableList<TablePairPriceChanges> getReadonlyTableItems() {
+        return priceChangesTable.getReadonlyTableItems();
     }
 }

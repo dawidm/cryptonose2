@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -45,6 +47,8 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -91,6 +95,10 @@ public class CryptonoseGuiController extends Application {
     public Label newVersionShowLabel;
     @FXML
     public Label newVersionHideLabel;
+    @FXML
+    public TitledPane findTitledPane;
+    @FXML
+    public TableView<TablePairPriceChanges> findTableView;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
 
@@ -298,6 +306,17 @@ public class CryptonoseGuiController extends Application {
                 powerSaveCheckBox.setSelected(!powerSaveCheckBox.isSelected());
                 enablePowerSave(powerSaveCheckBox.isSelected());
                 return;
+            }
+            if(event.getCode()==KeyCode.F) {
+                findTitledPane.setExpanded(!findTitledPane.isExpanded());
+                ObservableList<TablePairPriceChanges> allPairsObservableList = FXCollections.emptyObservableList();
+                for (CryptonoseGuiExchangeController controller : activeExchangesControllersMap.values()) {
+                    allPairsObservableList = FXCollections.concat(allPairsObservableList, controller.getReadonlyTableItems());
+                }
+                findTableView.getItems().clear();
+                findTableView.getColumns().clear();
+                PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, allPairsObservableList, CryptonoseSettings.TIME_PERIODS);
+                priceChangesTable.init();
             }
         });
     }

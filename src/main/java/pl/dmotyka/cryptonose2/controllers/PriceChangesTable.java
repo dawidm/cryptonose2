@@ -47,6 +47,7 @@ public class PriceChangesTable {
 
     private PairSymbolConverter pairSymbolConverter;
 
+    private boolean updatable = true;
     private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
     private long lastTableSortMillis = 0;
@@ -93,7 +94,15 @@ public class PriceChangesTable {
         this.tableView = tableView;
         this.exchangeSpecs = exchangeSpecs;
         this.timePeriods = timePeriods;
-        pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
+        if (exchangeSpecs != null)
+            pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
+    }
+
+    public static PriceChangesTable nonUpdateableTable(TableView<TablePairPriceChanges> tableView, ObservableList<TablePairPriceChanges> items,  long[] timePeriods) {
+        PriceChangesTable table = new PriceChangesTable(tableView, null, timePeriods);
+        table.tablePairPriceChangesObservableList = items;
+        table.updatable = false;
+        return table;
     }
 
     // add columns and cell factories (including price alert plugins), add listener for double click
@@ -131,7 +140,7 @@ public class PriceChangesTable {
                     if (!empty) {
                         this.setText(null);
                         TablePairPriceChanges changes = tableView.getItems().get(getIndex());
-                        String baseCurrency = exchangeSpecs.getPairSymbolConverter().apiSymbolToBaseCurrencySymbol(changes.getPairName()).toUpperCase();
+                        String baseCurrency = changes.getExchangeSpecs().getPairSymbolConverter().apiSymbolToBaseCurrencySymbol(changes.getPairName()).toUpperCase();
                         HBox hbox = new HBox();
                         hbox.setAlignment(Pos.CENTER);
                         PriceAlertPluginsButtons.install(hbox, baseCurrency);
@@ -150,13 +159,16 @@ public class PriceChangesTable {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
                 if (node instanceof TableRow || node.getParent() instanceof TableRow) {
-                    CryptonoseGuiBrowser.runBrowser(((TablePairPriceChanges)tableView.getSelectionModel().getSelectedItem()).getPairName(),exchangeSpecs);
+                    TablePairPriceChanges tableChanges = tableView.getSelectionModel().getSelectedItem();
+                    CryptonoseGuiBrowser.runBrowser(tableChanges.getPairName(), tableChanges.getExchangeSpecs());
                 }
             }
         });
     }
 
     public synchronized void updateTable(List<PriceChanges> priceChangesList) {
+        if (updatable == false)
+            throw new IllegalStateException("shouldnt be called when table not updateable");
         for (PriceChanges priceChanges : priceChangesList) {
             TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
             if(tablePairPriceChanges == null) {
@@ -176,6 +188,8 @@ public class PriceChangesTable {
     // update pairs list, removing these that are not in provided list
     // pairs - list of api symbols of pairs
     public void removeOutdatedPairs(String[] pairs) {
+        if (updatable == false)
+            throw new IllegalStateException("shouldnt be called when table not updateable");
         Set<String> newPairs = Set.of(pairs);
         Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
         outdatedPairs.removeAll(newPairs);
@@ -187,6 +201,8 @@ public class PriceChangesTable {
 
     // clears a table
     public void clearTable() {
+        if (updatable == false)
+            throw new IllegalStateException("shouldnt be called when table not updateable");
         Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
         pairPriceChangesMap.clear();
     }
