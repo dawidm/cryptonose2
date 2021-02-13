@@ -225,6 +225,11 @@ public class CryptonoseGuiController extends Application {
         settingsButton.setOnMouseClicked(event -> settingsClick());
         helpButton.setOnMouseClicked(event -> helpClick());
 
+        findTitledPane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
+            if (isExpanded)
+                showFindTable();
+        });
+
         primaryStage.show();
         initShortcuts();
     }
@@ -308,15 +313,13 @@ public class CryptonoseGuiController extends Application {
                 return;
             }
             if(event.getCode()==KeyCode.F) {
-                findTitledPane.setExpanded(!findTitledPane.isExpanded());
-                ObservableList<TablePairPriceChanges> allPairsObservableList = FXCollections.emptyObservableList();
-                for (CryptonoseGuiExchangeController controller : activeExchangesControllersMap.values()) {
-                    allPairsObservableList = FXCollections.concat(allPairsObservableList, controller.getReadonlyTableItems());
+                if (findTitledPane.isExpanded()) {
+                    findTitledPane.setExpanded(false);
+                    //hideFindTable();
+                } else {
+                    findTitledPane.setExpanded(true);
+                    showFindTable();
                 }
-                findTableView.getItems().clear();
-                findTableView.getColumns().clear();
-                PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, allPairsObservableList, CryptonoseSettings.TIME_PERIODS);
-                priceChangesTable.init();
             }
         });
     }
@@ -365,6 +368,18 @@ public class CryptonoseGuiController extends Application {
         } else {
             addExchangeMenuButton.setDisable(false);
         }
+    }
+
+    private void showFindTable() {
+        ObservableList<TablePairPriceChanges> allPairsObservableList = FXCollections.emptyObservableList();
+        for (CryptonoseGuiExchangeController controller : activeExchangesControllersMap.values()) {
+            allPairsObservableList = FXCollections.concat(allPairsObservableList, controller.getReadonlyTableItems());
+        }
+        findTableView.getItems().clear();
+        findTableView.getColumns().clear();
+        PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, allPairsObservableList, CryptonoseSettings.TIME_PERIODS);
+        priceChangesTable.enableShowExchange();
+        priceChangesTable.init();
     }
 
     private void saveSceneSizePosition() {

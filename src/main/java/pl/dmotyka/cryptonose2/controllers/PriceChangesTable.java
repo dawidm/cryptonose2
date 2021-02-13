@@ -48,6 +48,7 @@ public class PriceChangesTable {
     private PairSymbolConverter pairSymbolConverter;
 
     private boolean updatable = true;
+    private boolean enableShowExchange = false;
     private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
     private long lastTableSortMillis = 0;
@@ -153,8 +154,14 @@ public class PriceChangesTable {
             };
             return tableCell;
         });
+        if (enableShowExchange) {
+            TableColumn<TablePairPriceChanges,String> exchangeCol = new TableColumn("Exchange");
+            exchangeCol.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getExchangeSpecs().getName()));
+            exchangeCol.setMaxWidth(Integer.MAX_VALUE * 0.2);
+            tableView.getColumns().addAll(pairNameCol,exchangeCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
+        } else
+            tableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
         tableView.setItems(tablePairPriceChangesObservableList);
-        tableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
         tableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
@@ -209,6 +216,10 @@ public class PriceChangesTable {
 
     public ObservableList<TablePairPriceChanges> getReadonlyTableItems() {
         return FXCollections.unmodifiableObservableList(tablePairPriceChangesObservableList);
+    }
+
+    public void enableShowExchange() {
+        enableShowExchange = true;
     }
 
 }
