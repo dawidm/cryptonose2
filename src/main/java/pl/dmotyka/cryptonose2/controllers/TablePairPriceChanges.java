@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -26,15 +26,17 @@ public class TablePairPriceChanges {
     public static final int PERIOD1 = 1;
     public static final int PERIOD2 = 2;
 
+    private final ExchangeSpecs exchangeSpecs;
     private final String pairName;
     private final String formattedPairName;
-    private SimpleDoubleProperty p1PercentChange;
-    private SimpleDoubleProperty p2PercentChange;
-    private SimpleDoubleProperty p1RelativeChange;
-    private SimpleDoubleProperty p2RelativeChange;
-    private SimpleDoubleProperty lastPrice;
+    private final SimpleDoubleProperty p1PercentChange;
+    private final SimpleDoubleProperty p2PercentChange;
+    private final SimpleDoubleProperty p1RelativeChange;
+    private final SimpleDoubleProperty p2RelativeChange;
+    private final SimpleDoubleProperty lastPrice;
 
     public TablePairPriceChanges(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
+        this.exchangeSpecs = exchangeSpecs;
         this.pairName = pairName;
         this.formattedPairName=formattedPairName;
         p1PercentChange=new SimpleDoubleProperty(0.0);
@@ -86,4 +88,7 @@ public class TablePairPriceChanges {
         lastPrice.set(priceChanges.getLastPrice());
     }
 
+    public ExchangeSpecs getExchangeSpecs() {
+        return exchangeSpecs;
+    }
 }
