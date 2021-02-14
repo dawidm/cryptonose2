@@ -47,7 +47,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
@@ -138,44 +137,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
     private AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
     private boolean noPairsAlertShown = false;
-
-    class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
-
-        boolean firstUpdate = true;
-
-        @Override
-        protected void updateItem(Number item, boolean empty) {
-            super.updateItem(item, empty);
-            if(empty)
-                setText(null);
-            if (firstUpdate) {
-                getStyleClass().add("price-rising");
-                firstUpdate = false;
-            }
-            if(item!=null) {
-                getStyleClass().remove(getStyleClass().size()-1);
-                if (item.doubleValue() >= 0)
-                    getStyleClass().add("price-rising");
-                else
-                    getStyleClass().add("price-falling");
-                setText(String.format("%.2f", item));
-            } else {
-                setText(null);
-            }
-        }
-    }
-    class PriceTableCell extends TableCell<TablePairPriceChanges,Number> {
-        @Override
-        protected void updateItem(Number item, boolean empty) {
-            super.updateItem(item, empty);
-            if(empty)
-                setText(null);
-            if(item==null)
-                setText(null);
-            else
-                setText(DecimalFormatter.formatDecimalPrice(item.doubleValue()));
-        }
-    }
 
     public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, ColorIndicatorBox indicatorBox) {
         this.priceAlertTabController = cryptonoseGuiPriceAlertsTabController;
