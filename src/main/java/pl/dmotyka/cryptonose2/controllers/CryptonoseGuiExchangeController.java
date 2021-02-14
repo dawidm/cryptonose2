@@ -87,7 +87,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
     public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
-    private static final boolean LOG_VISIBLE = false;
     public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
     public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
     private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
