@@ -21,7 +21,7 @@ import pl.dmotyka.cryptonose2.PriceAlertPlugin;
 
 public class PriceAlertPluginsButtons {
 
-    public void install(HBox hbox, String baseCurrency) {
+    public void install(HBox hbox, String baseCurrency, boolean focusTraversable) {
         hbox.setSpacing(2);
         PriceAlertPlugin geckoPlugin = new PriceAlertPluginGecko(baseCurrency);
         Button geckoButton = new Button(geckoPlugin.getButtonTitle());
@@ -29,6 +29,7 @@ public class PriceAlertPluginsButtons {
         geckoButton.getStyleClass().add(geckoPlugin.getButtonCssClass());
         geckoButton.setTooltip(new Tooltip(geckoPlugin.getDescription()));
         geckoButton.setOnMouseClicked(e -> geckoPlugin.show());
+        geckoButton.setFocusTraversable(focusTraversable);
         geckoPlugin.setAnchor(geckoButton);
         hbox.getChildren().add(geckoButton);
         PriceAlertPlugin cpPlugin = new PriceAlertPluginCryptoPanic(baseCurrency);
@@ -37,6 +38,7 @@ public class PriceAlertPluginsButtons {
         cpButton.getStyleClass().add(cpPlugin.getButtonCssClass());
         cpButton.setTooltip(new Tooltip(cpPlugin.getDescription()));
         cpButton.setOnMouseClicked(e -> cpPlugin.show());
+        cpButton.setFocusTraversable(focusTraversable);
         cpPlugin.setAnchor(cpButton);
         hbox.getChildren().add(cpButton);
     }

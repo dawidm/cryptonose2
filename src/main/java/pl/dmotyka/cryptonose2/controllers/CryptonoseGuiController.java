@@ -428,6 +428,7 @@ public class CryptonoseGuiController extends Application {
         findTextField.setText("");
         PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, filteredPairsList, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableShowExchange();
+        priceChangesTable.disablePluginButtonsFocusTraversable();
         priceChangesTable.init();
     }
 

@@ -50,6 +50,7 @@ public class PriceChangesTable {
 
     private boolean updatable = true;
     private boolean enableShowExchange = false;
+    private boolean buttonsFocusTraversable = true;
     private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
     private long lastTableSortMillis = 0;
@@ -146,7 +147,7 @@ public class PriceChangesTable {
                         HBox hbox = new HBox();
                         hbox.setAlignment(Pos.CENTER);
                         PriceAlertPluginsButtons buttons = new PriceAlertPluginsButtons();
-                        buttons.install(hbox, baseCurrency);
+                        buttons.install(hbox, baseCurrency, buttonsFocusTraversable);
                         this.setGraphic(hbox);
                     } else {
                         this.setText(null);
@@ -231,6 +232,10 @@ public class PriceChangesTable {
 
     public void enableShowExchange() {
         enableShowExchange = true;
+    }
+
+    public void disablePluginButtonsFocusTraversable() {
+        buttonsFocusTraversable = false;
     }
 
 }
