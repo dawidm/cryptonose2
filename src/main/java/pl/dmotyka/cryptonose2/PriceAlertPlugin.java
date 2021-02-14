@@ -13,6 +13,7 @@
 
 package pl.dmotyka.cryptonose2;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.Node;
 
 public abstract class PriceAlertPlugin {
@@ -33,7 +34,7 @@ public abstract class PriceAlertPlugin {
     }
 
     public abstract void show();
-    public abstract boolean isShowing();
+    public abstract BooleanProperty showingProperty();
 
     public void setAnchor(Node anchor) {
         this.anchor = anchor;

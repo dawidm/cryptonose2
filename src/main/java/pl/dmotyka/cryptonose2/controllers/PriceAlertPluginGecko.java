@@ -16,11 +16,12 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -72,7 +73,7 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     private static final String TITLE = "CG";
     private static final String DESCRIPTION = "CoinGecko coin data";
     public static final String BUTTON_CSS_CLASS = "text-coingecko";
-    private final AtomicBoolean isShowingAtomicBoolean = new AtomicBoolean(false);
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty(false);
 
     public PriceAlertPluginGecko(String currencySymbol) {
         super(NAME, TITLE, DESCRIPTION, BUTTON_CSS_CLASS, currencySymbol);
@@ -93,9 +94,7 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
             popup.setAutoHide(true);
             popup.setAutoFix(true);
             popup.getContent().add(uiLoader.getRoot());
-            popup.showingProperty().addListener((observable, oldValue, newValue) -> {
-                isShowingAtomicBoolean.set(newValue);
-            });
+            showingProperty.bind(popup.showingProperty());
             titleLabel.setText(currencySymbol + titleLabel.getText());
             Point2D location = anchor.localToScreen(0,0);
             popup.show(anchor, location.getX(), location.getY());
@@ -131,7 +130,7 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     }
 
     @Override
-    public boolean isShowing() {
-        return false;
+    public BooleanProperty showingProperty() {
+        return showingProperty;
     }
 }

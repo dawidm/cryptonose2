@@ -16,11 +16,12 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
@@ -61,7 +62,7 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
 
     public static final int NEWS_LIMIT = 7;
 
-    private final AtomicBoolean isShowingAtomicBoolean = new AtomicBoolean(false);
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty(false);
 
     public PriceAlertPluginCryptoPanic(String currencySymbol) {
         super(NAME, TITLE, DESCRIPTION, BUTTON_CSS_CLASS, currencySymbol);
@@ -82,9 +83,7 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
             popup.setAutoHide(true);
             popup.setAutoFix(true);
             popup.getContent().add(uiLoader.getRoot());
-            popup.showingProperty().addListener((observable, oldValue, newValue) -> {
-                isShowingAtomicBoolean.set(newValue);
-            });
+            showingProperty.bind(popup.showingProperty());
             titleLabel.setText(currencySymbol + titleLabel.getText());
             Point2D location = anchor.localToScreen(0,0);
             String cpLink = formatCpHyperlink(currencySymbol);
@@ -124,8 +123,8 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
     }
 
     @Override
-    public boolean isShowing() {
-        return false;
+    public BooleanProperty showingProperty() {
+        return showingProperty;
     }
 
     private static String formatCpHyperlink(String symbol) {
