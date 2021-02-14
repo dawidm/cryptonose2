@@ -229,10 +229,6 @@ public class CryptonoseGuiController extends Application {
         settingsButton.setOnMouseClicked(event -> settingsClick());
         helpButton.setOnMouseClicked(event -> helpClick());
 
-        findTitledPane.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue)
-                findTextField.requestFocus();
-        });
         findTitledPane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
             if (isExpanded)
                 Platform.runLater(this::showFindPane);
@@ -418,11 +414,11 @@ public class CryptonoseGuiController extends Application {
             }
         });
         findTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && !findTableView.isFocused())
+            if (!newValue && oldValue && !findTableView.isFocused() && !findTitledPane.isFocused())
                 findTitledPane.setExpanded(false);
         });
         findTableView.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && !findTextField.isFocused())
+            if (!newValue && oldValue && !findTextField.isFocused() && !findTitledPane.isFocused())
                 findTitledPane.setExpanded(false);
         });
         findTextField.requestFocus();
