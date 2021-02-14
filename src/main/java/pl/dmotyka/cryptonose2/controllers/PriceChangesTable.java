@@ -175,7 +175,8 @@ public class PriceChangesTable {
         });
         var oldHandler = tableView.getOnKeyPressed();
         tableView.setOnKeyPressed(event -> {
-            oldHandler.handle(event);
+            if (oldHandler != null)
+                oldHandler.handle(event);
             if (event.getCode() == KeyCode.ENTER) {
                 TablePairPriceChanges tableChanges = tableView.getSelectionModel().getSelectedItem();
                 CryptonoseGuiBrowser.runBrowser(tableChanges.getPairName(), tableChanges.getExchangeSpecs());
