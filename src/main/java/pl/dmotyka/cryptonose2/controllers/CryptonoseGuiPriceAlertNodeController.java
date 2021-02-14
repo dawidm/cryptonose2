@@ -83,7 +83,8 @@ public class CryptonoseGuiPriceAlertNodeController {
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
         String baseCurrency = priceAlert.getExchangeSpecs().getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(priceAlert.getPair()).base.getCurrencyCode();
-        PriceAlertPluginsButtons.install(moreHBox, baseCurrency);
+        PriceAlertPluginsButtons buttons = new PriceAlertPluginsButtons();
+        buttons.install(moreHBox, baseCurrency);
     }
 
     private double[] chartCandlesToClosePrices(ChartCandle[] chartCandles) {

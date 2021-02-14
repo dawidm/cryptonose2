@@ -145,7 +145,8 @@ public class PriceChangesTable {
                         String baseCurrency = changes.getExchangeSpecs().getPairSymbolConverter().apiSymbolToBaseCurrencySymbol(changes.getPairName()).toUpperCase();
                         HBox hbox = new HBox();
                         hbox.setAlignment(Pos.CENTER);
-                        PriceAlertPluginsButtons.install(hbox, baseCurrency);
+                        PriceAlertPluginsButtons buttons = new PriceAlertPluginsButtons();
+                        buttons.install(hbox, baseCurrency);
                         this.setGraphic(hbox);
                     } else {
                         this.setText(null);

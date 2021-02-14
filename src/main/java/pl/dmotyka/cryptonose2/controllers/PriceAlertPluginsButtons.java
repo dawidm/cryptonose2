@@ -21,7 +21,7 @@ import pl.dmotyka.cryptonose2.PriceAlertPlugin;
 
 public class PriceAlertPluginsButtons {
 
-    public static void install(HBox hbox, String baseCurrency) {
+    public void install(HBox hbox, String baseCurrency) {
         hbox.setSpacing(2);
         PriceAlertPlugin geckoPlugin = new PriceAlertPluginGecko(baseCurrency);
         Button geckoButton = new Button(geckoPlugin.getButtonTitle());
