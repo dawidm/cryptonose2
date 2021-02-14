@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -35,6 +35,7 @@ public class GeckoApi {
 
     private static final long SYMBOL_TO_ID_UPDATE_INTERVAL_MS = 60 * 60 * 1000;
 
+    // symbols are lower-case
     private static Map<String,Set<String>> symbolToIdMap;
     private static long symbolToIdLastUpdateMs = 0;
 
@@ -92,7 +93,7 @@ public class GeckoApi {
         JsonNode listJsonNode = objectMapper.readValue(new URL(LIST_URL), JsonNode.class);
         try {
             for (JsonNode jsonNode : listJsonNode) {
-                String symbol = Objects.requireNonNull(jsonNode.get("symbol").asText());
+                String symbol = Objects.requireNonNull(jsonNode.get("symbol").asText()).toLowerCase();
                 String id = Objects.requireNonNull(jsonNode.get("id").asText());
                 if (map.containsKey(symbol)) {
                     map.get(symbol).add(id);
