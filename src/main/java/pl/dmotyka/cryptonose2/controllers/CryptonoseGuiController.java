@@ -382,6 +382,7 @@ public class CryptonoseGuiController extends Application {
         for (CryptonoseGuiExchangeController controller : activeExchangesControllersMap.values()) {
             allPairsObservableList = FXCollections.concat(allPairsObservableList, controller.getReadonlyTableItems());
         }
+        FXCollections.sort(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
         findTableView.getColumns().clear();
         FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
         findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
