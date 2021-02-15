@@ -18,7 +18,7 @@ Note that choosing a lot of currency pairs will cause longer initialization (Cry
 Very low volume (so with low liquidity) currency pairs could trigger a lot of undesirable price alerts. You should choose currency pairs carefully.
 
 ## Main window
-* **_Find (press F)..._** lets you make a quic search for currency pair from any connected exchange, to see informations about it or access it's exchange webpage (you can do it quickly just by pressing the enter key).
+* **_Find (press F)..._** lets you make a quick search for currency pair from any connected exchange, to see information about it or access it's exchange web page (you can do it quickly just by pressing the enter key).
 * **_Price alerts_ tab** shows recent price alerts from all exchanges.
 * **Exchange tabs** - every exchange runs in separate tab. Near the exchange name there's a little box showing connection status: red - disconnected, green - connected, yellow - reconnecting.
 * ***Global options*** - preferences for all exchanges:
@@ -59,7 +59,7 @@ A button to show search interface (_Find (press F)..._) is always visible at the
 When you've finished your search, press ESC or click on (_Find (press F)..._) button to hide the interface. Also it will be hidden automatically if you start interacting with the rest of the Cryptonose interface. 
 
 ## Coins plugins
-You can find small buttons with colored text on the price alerts tab and currency pairs tables. Currently there are 2 plugins:
+You can find small buttons with colored text on the price alerts tab and currency pairs tables. Currently there are 2 buttons - plugins:
 
 * **CoinGecko plugin (_CG_)** - show additional data about coin's price, market cap and usually a short description. All the data are from CoinGecko website. The data are downloaded using coin's symbol (BTC, ETH, DOGE etc.). If there's a situation when there are multiple coins with the same symbol (which is not very likely), data for a coin with highest market cap will be shown. So keep in mind there's a minimal chance that data for wrong coin will be shown. 
 * **CryptoPanic plugin (_CG_)** - show latest news about a coin from CryptoPanic website. Precisely, news for all coins with given symbol are shown in rare cases when multiple coins use this symbol.
@@ -69,6 +69,7 @@ The default values should be useful. You may want to try them before considering
 These settings could be saved for only selected exchange or for all exchanges.
 
 Price alert is triggered by:
+
 * significant percent **and** relative price changes (_Required..._ fields)
 * significant relative change only (_Sufficient..._ fields).
 
@@ -82,7 +83,7 @@ Price alert is triggered by:
 * Price rise 1%, relative 9.3 will trigger the alert - relative change is bigger than _sufficient_ value.
 
 #### Cryptonose liquidity factor
-Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency paris that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
+Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency pairs that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
 
 (number-of-periods-where-price-changed) / (number-of-periods)
 
