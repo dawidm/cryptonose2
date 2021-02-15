@@ -15,17 +15,26 @@ package pl.dmotyka.cryptonose2.settings;
 
 import java.util.prefs.Preferences;
 
+import pl.dmotyka.cryptonose2.CryptonoseGuiNotification;
 import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiController;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class CryptonoseSettings {
 
-    public static final long[] TIME_PERIODS = {300,1800};
-
-    public static final int DECIMAL_MAX_DIGITS = 9;
+    public static final int DECIMAL_MAX_DIGITS = 10;
     public static final int FONT_MIN_SIZE = 6;
     public static final int FONT_MAX_SIZE = 24;
+
+    public static final long[] TIME_PERIODS = {300,1800};
+    public static final long NO_TRADES_WARNING_SECONDS = 300;
+    public static final long NO_TRADES_RECONNECT_SECONDS = 900;
+    public static final long MINI_CHART_TIME_PERIOD_SEC = 300;
+    public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
+    public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
+    public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
+    public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
+    public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
     private static final Preferences mainNode = Preferences.userNodeForPackage(CryptonoseGuiController.class);
 

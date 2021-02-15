@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -19,7 +19,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
-import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiExchangeController;
 import pl.dmotyka.cryptonose2.controllers.DecimalFormatter;
 import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
@@ -54,7 +53,7 @@ public class CryptonoseGuiNotification {
     public static void notifyConnectionState(NotificationLibrary notificationLibrary,ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
         String statusText;
         if (cryptonoseGuiConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT))
-            statusText = String.format("No price updates for %d seconds, reconnecting", CryptonoseGuiExchangeController.NO_TRADES_RECONNECT_SECONDS);
+            statusText = String.format("No price updates for %d seconds, reconnecting", CryptonoseSettings.NO_TRADES_RECONNECT_SECONDS);
         else
             statusText = cryptonoseGuiConnectionStatus.getText();
         switch (notificationLibrary) {

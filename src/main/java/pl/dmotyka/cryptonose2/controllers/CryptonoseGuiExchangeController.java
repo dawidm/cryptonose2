@@ -82,15 +82,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
 
-    public static final long NO_TRADES_WARNING_SECONDS = 300;
-    public static final long NO_TRADES_RECONNECT_SECONDS = 900;
-    private static final long MINI_CHART_TIME_PERIOD_SEC = 300;
-    public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
-    public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
-    public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
-    public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
-    private static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
-
     @FXML
     public VBox mainVBox;
     @FXML
@@ -197,11 +188,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
                     this,
                     CryptonoseSettings.TIME_PERIODS,
-                    RELATIVE_CHANGE_NUM_CANDLES,
+                    CryptonoseSettings.RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
                     additionalPairs);
             engine.enableInitEngineWithLowerPeriodChartData();
-            engine.autoRefreshPairData(AUTO_REFRESH_INTERVAL_MINUTES);
+            engine.autoRefreshPairData(CryptonoseSettings.AUTO_REFRESH_INTERVAL_MINUTES);
             engine.setCheckChangesDelayMs(100);
             engine.setEngineMessageReceiver(this);
             engine.setEngineUpdateHeartbeatReceiver(this);
@@ -257,7 +248,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             indicatorBox.switchColor(newConnectionStatus.getCssClass());
         });
         if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS))
-            CryptonoseGuiNotification.notifyConnectionState(NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
+            CryptonoseGuiNotification.notifyConnectionState(CryptonoseSettings.NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
     }
 
     @Override
@@ -293,11 +284,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     });
                 }
                 if (reconnectScheduledFuture == null || reconnectScheduledFuture.isDone()) {
-                    consoleLog(String.format("Reconnecting in %d minutes", NO_PAIRS_RECONNECT_MINUTES));
+                    consoleLog(String.format("Reconnecting in %d minutes", CryptonoseSettings.NO_PAIRS_RECONNECT_MINUTES));
                     reconnectScheduledFuture = scheduledExecutorService.schedule(() -> {
                         if (connectionStatus.get() == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_PAIRS)
                             reconnectEngine();
-                    }, NO_PAIRS_RECONNECT_MINUTES, TimeUnit.MINUTES);
+                    }, CryptonoseSettings.NO_PAIRS_RECONNECT_MINUTES, TimeUnit.MINUTES);
                 }
                 break;
             case AUTO_REFRESHING_DONE:
@@ -329,8 +320,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             while (it.hasNext()) {
                 PriceAlert priceAlert = it.next();
                 ChartCandle[] candles = engine.getCandleData(new CurrencyPairTimePeriod(priceAlert.getPair(), priceAlert.getPeriodSeconds()));
-                if (candles.length >= RELATIVE_CHANGE_NUM_CANDLES) {
-                    double liqFactorVal = liquidityFactorIndicator.calcValue(candles, RELATIVE_CHANGE_NUM_CANDLES);
+                if (candles.length >= CryptonoseSettings.RELATIVE_CHANGE_NUM_CANDLES) {
+                    double liqFactorVal = liquidityFactorIndicator.calcValue(candles, CryptonoseSettings.RELATIVE_CHANGE_NUM_CANDLES);
                     if (liqFactorVal < CryptonoseSettings.getDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, exchangeSpecs)) {
                         logger.fine(String.format("Cn liquidity factor is too low, filtering out alert: %s %d", priceAlert.getPair(), priceAlert.getPeriodSeconds()));
                         it.remove();
@@ -347,7 +338,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void handlePriceAlert(PriceAlert priceAlert) {
-        CurrencyPairTimePeriod currencyPairTimePeriod = new CurrencyPairTimePeriod(priceAlert.getPair(),MINI_CHART_TIME_PERIOD_SEC);
+        CurrencyPairTimePeriod currencyPairTimePeriod = new CurrencyPairTimePeriod(priceAlert.getPair(),CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
         ChartCandle[] chartCandles = engine.requestCandlesGeneration(currencyPairTimePeriod);
         ChartCandle lastCandle = chartCandles[chartCandles.length-1];
         chartCandles[chartCandles.length-1] = new ChartCandle(lastCandle.getHigh(),
@@ -355,7 +346,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 lastCandle.getOpen(),
                 priceAlert.getFinalPrice(),
                 lastCandle.getTimestampSeconds());
-        int numCandles = (int)(MINI_CHART_TIMEFRAME_SEC / MINI_CHART_TIME_PERIOD_SEC);
+        int numCandles = (int)(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC / CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
         if (chartCandles.length < numCandles)
             chartCandles = null;
         else
@@ -376,7 +367,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         }
         if(notificationCheckBox.isSelected()) {
-            CryptonoseGuiNotification.notifyPriceAlert(NOTIFICATION_LIBRARY,priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
+            CryptonoseGuiNotification.notifyPriceAlert(CryptonoseSettings.NOTIFICATION_LIBRARY,priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
         }
         if (soundCheckBox.isSelected()) {
             cryptonoseGuiSoundAlerts.soundAlert(priceAlert);
@@ -397,14 +388,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if (lastUpdateTimeMillis.get() !=0) {
                 long lastTradeSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
                 javafx.application.Platform.runLater(() -> lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago"));
-                if (lastTradeSecondsAgo > NO_TRADES_RECONNECT_SECONDS) {
-                    consoleLog(String.format("No trades for %d seconds. Reconnecting...", NO_TRADES_RECONNECT_SECONDS));
+                if (lastTradeSecondsAgo > CryptonoseSettings.NO_TRADES_RECONNECT_SECONDS) {
+                    consoleLog(String.format("No trades for %d seconds. Reconnecting...", CryptonoseSettings.NO_TRADES_RECONNECT_SECONDS));
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT, true);
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING, false);
                     reconnectEngine();
-                } else if (lastTradeSecondsAgo > NO_TRADES_WARNING_SECONDS) {
+                } else if (lastTradeSecondsAgo > CryptonoseSettings.NO_TRADES_WARNING_SECONDS) {
                     if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
-                        consoleLog(String.format("No trades for %d seconds.", NO_TRADES_WARNING_SECONDS));
+                        consoleLog(String.format("No trades for %d seconds.", CryptonoseSettings.NO_TRADES_WARNING_SECONDS));
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES, false);
                 } else if (connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, false);
