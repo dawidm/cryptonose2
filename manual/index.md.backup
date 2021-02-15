@@ -58,6 +58,8 @@ A button to show search interface (_Find (press F)..._) is always visible at the
 
 When you've finished your search, press ESC or click on (_Find (press F)..._) button to hide the interface. Also it will be hidden automatically if you start interacting with the rest of the Cryptonose interface. 
 
+// TODO screenshot
+
 ## Coins plugins
 You can find small buttons with colored text on the price alerts tab and currency pairs tables. Currently there are 2 plugins:
 
