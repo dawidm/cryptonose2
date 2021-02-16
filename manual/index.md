@@ -14,7 +14,7 @@ Cryptonose needs to know on which currency pairs it should track price changes. 
 
 ![cryptonose paris configuration]({{ site.baseurl }}/images/pairs-settings.png "Pairs configuration window")
 
-Note that choosing a lot of currency pairs will cause longer initialization (Cryptonose needs to get chart data from exchange). Bitfinex has quite strict limits for downloading chart data - getting data for one currency pair will take at least 18 seconds.  
+**Note that choosing a lot of currency pairs will cause longer initialization** (Cryptonose needs to get chart data from exchange). Bitfinex has quite strict limits for downloading chart data - getting data for one currency pair will take at least 18 seconds.  
 Very low volume (so with low liquidity) currency pairs could trigger a lot of undesirable price alerts. You should choose currency pairs carefully.
 
 ## Main window
