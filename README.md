@@ -2,7 +2,7 @@
 
 # Cryptonose
 
-[![cryptonose pricae alerts tab and notifications]({{ site.baseurl }}/images/desktop-screenshot.png "Main window, price alerts")]({{ site.baseurl }}/images/desktop-screenshot.png)
+[![cryptonose pricae alerts tab and notifications]({{ site.baseurl }}/images/desktop-screenshot.jpg "Main window, price alerts")]({{ site.baseurl }}/images/desktop-screenshot.png)
 
 <p style="text-align: center; margin-top: 40px; margin-bottom: 40px;"><a class="download-button" href="https://dawidm.github.io/cryptonose2/download/">Download Cryptonose</a></p>
 
