@@ -54,6 +54,9 @@ To visualize, example values of relative price change:
 * ***Sound, Browser*** and ***Notification*** - same as is _Global options_ but only for given exchange.
 
 ## Search for a currency pair
+
+![cryptonose search]({{ site.baseurl }}/images/cryptonose-exchange.png "Cryptonose search interface")
+
 A button to show search interface (_Find (press F)..._) is always visible at the top of the Cryptonose window. You can click on it or just press F key to start typing, to find desired currency pair. It's designed to let you access exchange page quickly - just press enter to go to the page for the top pair in the search results or use arrow keys to select another pair before pressing enter. You can also do use a double-click.
 
 When you've finished your search, press ESC or click on (_Find (press F)..._) button to hide the interface. Also it will be hidden automatically if you start interacting with the rest of the Cryptonose interface. 
@@ -63,6 +66,10 @@ You can find small buttons with colored text on the price alerts tab and currenc
 
 * **CoinGecko plugin (_CG_)** - show additional data about coin's price, market cap and usually a short description. All the data are from CoinGecko website. The data are downloaded using coin's symbol (BTC, ETH, DOGE etc.). If there's a situation when there are multiple coins with the same symbol (which is not very likely), data for a coin with highest market cap will be shown. So keep in mind there's a minimal chance that data for wrong coin will be shown. 
 * **CryptoPanic plugin (_CG_)** - show latest news about a coin from CryptoPanic website. Precisely, news for all coins with given symbol are shown in rare cases when multiple coins use this symbol.
+
+![coingecko plugin]({{ site.baseurl }}/images/cryptonose-coingecko.jpg "CoinGecko plugin")
+
+![cryptopanic plugin]({{ site.baseurl }}/images/cryptonose-cryptopanic.jpg "CryptoPanic plugin")
 
 ## Alerts conditions
 The default values should be useful. You may want to try them before considering any changes.
