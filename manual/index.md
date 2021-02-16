@@ -84,10 +84,10 @@ Price alert is triggered by:
 
 ![cryptonose alert threshold]({{ site.baseurl }}/images/cryptonose-thresholds.png "5m period price alert thresholds")
 
-* Price rise 3.5%, relative 4.5 will trigger an alert.
-* Price drop -3.5%, relative -4.5 will trigger an alert.
-* Price rise 3.5%, relative 3 will not trigger an alert - relative change is too low.
-* Price rise 1%, relative 9.3 will trigger the alert - relative change is bigger than _sufficient_ value.
+* Price rise 3.1%, relative 4.1 will trigger an alert.
+* Price drop -3.1%, relative -4.1 will trigger an alert.
+* Price rise 3.1%, relative 2.0 will not trigger an alert - relative change is too low.
+* Price rise 1.0%, relative 9.3 will trigger the alert - relative change is bigger than _sufficient_ value.
 
 #### Cryptonose liquidity factor
 Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency pairs that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
