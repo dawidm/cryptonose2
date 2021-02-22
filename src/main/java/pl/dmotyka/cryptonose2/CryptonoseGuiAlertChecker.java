@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -31,15 +31,14 @@ public class CryptonoseGuiAlertChecker {
 
     private final ExchangeSpecs exchangeSpecs;
     private final PairSymbolConverter pairSymbolConverter;
-    private Map<String, PriceAlert> priceAlertsMap;
-    private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap;
-    private long maxTimePeriod;
+    // the key is symbol,time_period, example: DOGE_BTC,300
+    private final Map<String, PriceAlert> priceAlertsMap;
+    private final Map<Long, PriceAlertThresholds> priceAlertThresholdsMap;
 
     public CryptonoseGuiAlertChecker(ExchangeSpecs exchangeSpecs, Map<Long, PriceAlertThresholds> priceAlertThresholdsMap) {
         this.exchangeSpecs = exchangeSpecs;
         pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         this.priceAlertThresholdsMap = priceAlertThresholdsMap;
-        maxTimePeriod = priceAlertThresholdsMap.keySet().stream().max(Long::compareTo).get();
         priceAlertsMap = new HashMap<>();
     }
 
@@ -48,7 +47,7 @@ public class CryptonoseGuiAlertChecker {
         for (PriceChanges currentPriceChanges : changesList) {
             PriceAlertThresholds priceAlertThresholds = priceAlertThresholdsMap.get(currentPriceChanges.getTimePeriodSeconds());
             if (currentPriceChanges.getRelativePriceChange() != null) {
-                double relativeChangeValue = currentPriceChanges.getRelativePriceChange().doubleValue();
+                double relativeChangeValue = currentPriceChanges.getRelativePriceChange();
                 if ((currentPriceChanges.getPercentChange() > priceAlertThresholds.getRequiredRisingValue()
                         && (relativeChangeValue >= priceAlertThresholds.getRequiredRelativeRisingValue() || relativeChangeValue==0.0)
                         || relativeChangeValue >= priceAlertThresholds.getSufficientRelativeRisingValue()) ||
@@ -66,7 +65,9 @@ public class CryptonoseGuiAlertChecker {
                             currentPriceChanges.getRelativePriceChange(),
                             currentPriceChanges.getMinPrice(),
                             currentPriceChanges.getMaxPrice(),
-                            currentPriceChanges.getChangeTimeSeconds());
+                            currentPriceChanges.getChangeTimeSeconds(),
+                            currentPriceChanges.getFinalPriceTimestamp(),
+                            currentPriceChanges.getReferencePriceTimestamp());
                     if(!checkPreviousAlerts(priceAlert))
                         priceAlertList.add(priceAlert);
 
@@ -76,27 +77,23 @@ public class CryptonoseGuiAlertChecker {
         return priceAlertList;
     }
 
-    //returns true if not outdated alert exist on recent alerts list
+    // check whether there were previous alerts that should block this alert
     private boolean checkPreviousAlerts(PriceAlert priceAlert) {
-        if (priceAlertsMap.containsKey(priceAlert.getPair())) {
-            PriceAlert oldPriceAlert = priceAlertsMap.get(priceAlert.getPair());
-            long currentTimestamp = System.currentTimeMillis()/1000;
-            if(currentTimestamp - oldPriceAlert.getTimestamp() > maxTimePeriod) {
-                priceAlertsMap.put(priceAlert.getPair(), priceAlert); //replace
+        String alertKey = priceAlert.getPair() + "," + priceAlert.getPeriodSeconds();
+        if (priceAlertsMap.containsKey(alertKey)) {
+            PriceAlert oldPriceAlert = priceAlertsMap.get(alertKey);
+            if (Math.abs(priceAlert.getPriceChange()) >= 2 * Math.abs(oldPriceAlert.getPriceChange())) {
+                priceAlertsMap.put(alertKey, priceAlert); // replace
                 return false;
-            } else {
-                if (Math.abs(priceAlert.getPriceChange()) > 2*Math.abs(oldPriceAlert.getPriceChange()) &&
-                        priceAlert.getPriceChange()*oldPriceAlert.getPriceChange() > 0) {
-                    priceAlertsMap.put(priceAlert.getPair(), priceAlert); //replace
-                    return false;
-                }
-                return true;
             }
-        } else {
-            priceAlertsMap.put(priceAlert.getPair(),priceAlert);
-            return false;
+            if (priceAlert.getReferencePriceTimestamp() >= oldPriceAlert.getFinalPriceTimestamp()) {
+                priceAlertsMap.put(alertKey, priceAlert); // replace
+                return false;
+            }
+            return true;
         }
-
+        priceAlertsMap.put(alertKey, priceAlert);
+        return false;
     }
 
 }
