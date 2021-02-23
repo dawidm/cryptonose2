@@ -86,7 +86,7 @@ public class CryptonoseGuiAlertChecker {
                 priceAlertsMap.put(alertKey, priceAlert); // replace
                 return false;
             }
-            if (priceAlert.getReferencePriceTimestamp() >= oldPriceAlert.getFinalPriceTimestamp()) {
+            if (priceAlert.getReferencePriceTimestamp() > oldPriceAlert.getFinalPriceTimestamp()) {
                 priceAlertsMap.put(alertKey, priceAlert); // replace
                 return false;
             }
