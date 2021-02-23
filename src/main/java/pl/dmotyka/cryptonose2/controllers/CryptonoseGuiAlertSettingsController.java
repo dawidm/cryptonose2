@@ -159,8 +159,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             p2sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
             cnLiquidityCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, exchangeSpecs));
             cnLiquiditySlider.setValue(CryptonoseSettings.getDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, exchangeSpecs));
-            blockSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS));
-            allowSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS));
+            blockSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, exchangeSpecs));
+            allowSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, exchangeSpecs));
     }
 
     private PriceAlertThresholds[] readTextFields() throws NumberFormatException {
@@ -218,8 +218,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
                 CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
                 CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), currentExchangeSpecs);
                 CryptonoseSettings.putDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, cnLiquiditySlider.getValue(), currentExchangeSpecs);
-                CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, blockSubsequentCheckBox.isSelected());
-                CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, allowSubsequentCheckBox.isSelected());
+                CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, blockSubsequentCheckBox.isSelected(), currentExchangeSpecs);
+                CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, allowSubsequentCheckBox.isSelected(), currentExchangeSpecs);
             }
             closeStage();
         }
@@ -232,8 +232,8 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
             CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
             CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), exchangeSpecs);
             CryptonoseSettings.putDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, cnLiquiditySlider.getValue(), exchangeSpecs);
-            CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, blockSubsequentCheckBox.isSelected());
-            CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, allowSubsequentCheckBox.isSelected());
+            CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, blockSubsequentCheckBox.isSelected(), exchangeSpecs);
+            CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, allowSubsequentCheckBox.isSelected(), exchangeSpecs);
             closeStage();
         }
     }
