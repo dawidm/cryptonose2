@@ -68,7 +68,14 @@
                               <TextField fx:id="p1sufficientRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER" />
+                        <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Label styleClass="h2" text="Use predefined values" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="p1ExampleButtonLow" mnemonicParsing="false" text="Low" />
+                              <Button fx:id="p1ExampleButtonMed" mnemonicParsing="false" text="Medium" />
+                              <Button fx:id="p1ExampleButtonHigh" mnemonicParsing="false" text="High" />
+                           </children></HBox>
                      </children>
                      <padding>
                         <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
@@ -124,7 +131,15 @@
                               <TextField fx:id="p2sufficientRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER" />
+                        <HBox alignment="CENTER_RIGHT" spacing="7.0">
+                           <children>
+                              <Label styleClass="h2" text="Use predefined values" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Button fx:id="p2ExampleButtonLow" mnemonicParsing="false" text="Low" />
+                              <Button fx:id="p2ExampleButtonMed" mnemonicParsing="false" text="Medium" />
+                              <Button fx:id="p2ExampleButtonHigh" mnemonicParsing="false" text="High" />
+                           </children>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />

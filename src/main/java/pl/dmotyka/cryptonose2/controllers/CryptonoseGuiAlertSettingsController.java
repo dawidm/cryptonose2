@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
+import pl.dmotyka.cryptonose2.settings.ExampleAlertThresholds;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
@@ -113,12 +114,42 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     public CheckBox blockSubsequentCheckBox;
     @FXML
     public CheckBox allowSubsequentCheckBox;
+    @FXML
+    public Button p1ExampleButtonLow;
+    @FXML
+    public Button p1ExampleButtonMed;
+    @FXML
+    public Button p1ExampleButtonHigh;
+    @FXML
+    public Button p2ExampleButtonLow;
+    @FXML
+    public Button p2ExampleButtonMed;
+    @FXML
+    public Button p2ExampleButtonHigh;
 
     private long[] timePeriods;
     private ExchangeSpecs exchangeSpecs;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        p1ExampleButtonLow.setOnMouseClicked(e -> {
+            fillP1ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.LOW, CryptonoseSettings.TimePeriod.M5));
+        });
+        p1ExampleButtonMed.setOnMouseClicked(e -> {
+            fillP1ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.MEDIUM, CryptonoseSettings.TimePeriod.M5));
+        });
+        p1ExampleButtonHigh.setOnMouseClicked(e -> {
+            fillP1ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.HIGH, CryptonoseSettings.TimePeriod.M5));
+        });
+        p2ExampleButtonLow.setOnMouseClicked(e -> {
+            fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.LOW, CryptonoseSettings.TimePeriod.M30));
+        });
+        p2ExampleButtonMed.setOnMouseClicked(e -> {
+            fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.MEDIUM, CryptonoseSettings.TimePeriod.M30));
+        });
+        p2ExampleButtonHigh.setOnMouseClicked(e -> {
+            fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.HIGH, CryptonoseSettings.TimePeriod.M30));
+        });
         addFormatters();
     }
 
@@ -139,28 +170,37 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
 
     private void fillFields() {
             long p1timePeriod=timePeriods[0];
-            PriceAlertThresholds priceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1timePeriod));
+            PriceAlertThresholds p1PriceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1timePeriod));
+            fillP1ThresholdFields(p1PriceAlertThresholds);
             p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
-            String format = "%.2f";
-            p1requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
-            p1requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
-            p1requiredRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeRisingValue()));
-            p1requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
-            p1sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
-            p1sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
             long p2timePeriod=timePeriods[1];
-            priceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p2timePeriod));
+            PriceAlertThresholds p2PriceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p2timePeriod));
+            fillP2ThresholdFields(p2PriceAlertThresholds);
             p2titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p2timePeriod)+" period alerts thresholds");
-            p2requiredRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRisingValue()));
-            p2requiredDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredFallingValue()));
-            p2requiredRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeRisingValue()));
-            p2requiredRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getRequiredRelativeFallingValue()));
-            p2sufficientRelativeRisingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeRisingValue()));
-            p2sufficientRelativeDroppingTextField.setText(String.format(format,priceAlertThresholds.getSufficientRelativeFallingValue()));
             cnLiquidityCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, exchangeSpecs));
             cnLiquiditySlider.setValue(CryptonoseSettings.getDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, exchangeSpecs));
             blockSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, exchangeSpecs));
             allowSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, exchangeSpecs));
+    }
+
+    private void fillP1ThresholdFields(PriceAlertThresholds thresholds) {
+        String format = "%.2f";
+        p1requiredRisingTextField.setText(String.format(format,thresholds.getRequiredRisingValue()));
+        p1requiredDroppingTextField.setText(String.format(format,thresholds.getRequiredFallingValue()));
+        p1requiredRelativeRisingTextField.setText(String.format(format,thresholds.getRequiredRelativeRisingValue()));
+        p1requiredRelativeDroppingTextField.setText(String.format(format,thresholds.getRequiredRelativeFallingValue()));
+        p1sufficientRelativeRisingTextField.setText(String.format(format,thresholds.getSufficientRelativeRisingValue()));
+        p1sufficientRelativeDroppingTextField.setText(String.format(format,thresholds.getSufficientRelativeFallingValue()));
+    }
+
+    private void fillP2ThresholdFields(PriceAlertThresholds thresholds) {
+        String format = "%.2f";
+        p2requiredRisingTextField.setText(String.format(format,thresholds.getRequiredRisingValue()));
+        p2requiredDroppingTextField.setText(String.format(format,thresholds.getRequiredFallingValue()));
+        p2requiredRelativeRisingTextField.setText(String.format(format,thresholds.getRequiredRelativeRisingValue()));
+        p2requiredRelativeDroppingTextField.setText(String.format(format,thresholds.getRequiredRelativeFallingValue()));
+        p2sufficientRelativeRisingTextField.setText(String.format(format,thresholds.getSufficientRelativeRisingValue()));
+        p2sufficientRelativeDroppingTextField.setText(String.format(format,thresholds.getSufficientRelativeFallingValue()));
     }
 
     private PriceAlertThresholds[] readTextFields() throws NumberFormatException {
