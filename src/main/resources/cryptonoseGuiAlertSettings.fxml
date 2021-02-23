@@ -68,6 +68,7 @@
                               <TextField fx:id="p1sufficientRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
+                        <Separator prefWidth="200.0" />
                         <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
                               <Label styleClass="h2" text="Use predefined values" />
@@ -131,6 +132,7 @@
                               <TextField fx:id="p2sufficientRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
+                        <Separator prefWidth="200.0" />
                         <HBox alignment="CENTER_RIGHT" spacing="7.0">
                            <children>
                               <Label styleClass="h2" text="Use predefined values" />
