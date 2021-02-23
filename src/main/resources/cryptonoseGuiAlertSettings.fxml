@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose
   ~
-  ~ Copyright © 2019-2020 Dawid Motyka
+  ~ Copyright © 2019-2021 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -25,7 +25,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<HBox fx:id="mainHBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController" stylesheets="style-alerts-settings.css">
+
+<HBox fx:id="mainHBox" stylesheets="style-alerts-settings.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiAlertSettingsController">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -35,12 +36,12 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
-                              <Label styleClass="h2" style="-fx-padding: 0 10em 0 0" text="Requiered % change" />
+                              <Label style="-fx-padding: 0 10em 0 0" styleClass="h2" text="Requiered % change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField styleClass="valueField" fx:id="p1requiredRisingTextField" />
+                              <TextField fx:id="p1requiredRisingTextField" styleClass="valueField" />
                               <Label text="dropping" />
-                              <TextField styleClass="valueField" fx:id="p1requiredDroppingTextField" />
+                              <TextField fx:id="p1requiredDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
@@ -48,9 +49,9 @@
                               <Label styleClass="h2" text="Requiered relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField styleClass="valueField" fx:id="p1requiredRelativeRisingTextField" />
+                              <TextField fx:id="p1requiredRelativeRisingTextField" styleClass="valueField" />
                               <Label text="dropping" />
-                              <TextField styleClass="valueField" fx:id="p1requiredRelativeDroppingTextField" />
+                              <TextField fx:id="p1requiredRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -62,9 +63,9 @@
                               <Label styleClass="h2" text="Sufficient relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField styleClass="valueField" fx:id="p1sufficientRelativeRisingTextField" />
+                              <TextField fx:id="p1sufficientRelativeRisingTextField" styleClass="valueField" />
                               <Label text="dropping" />
-                              <TextField styleClass="valueField" fx:id="p1sufficientRelativeDroppingTextField" />
+                              <TextField fx:id="p1sufficientRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER" />
@@ -75,7 +76,7 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label styleClass="h2" fx:id="p1titleLabel" text="Title"/>
+                  <Label fx:id="p1titleLabel" styleClass="h2" text="Title" />
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
@@ -91,9 +92,9 @@
                               <Label styleClass="h2" text="Requiered % change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField styleClass="valueField" fx:id="p2requiredRisingTextField" />
+                              <TextField fx:id="p2requiredRisingTextField" styleClass="valueField" />
                               <Label text="dropping" />
-                              <TextField styleClass="valueField" fx:id="p2requiredDroppingTextField" />
+                              <TextField fx:id="p2requiredDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
@@ -104,9 +105,9 @@
                                  </HBox.margin></Label>
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField styleClass="valueField" fx:id="p2requiredRelativeRisingTextField" />
+                              <TextField fx:id="p2requiredRelativeRisingTextField" styleClass="valueField" />
                               <Label text="dropping" />
-                              <TextField styleClass="valueField" fx:id="p2requiredRelativeDroppingTextField" />
+                              <TextField fx:id="p2requiredRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -118,9 +119,9 @@
                               <Label styleClass="h2" text="Sufficient relative change" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Label text="rising" />
-                              <TextField styleClass="valueField" fx:id="p2sufficientRelativeRisingTextField" />
+                              <TextField fx:id="p2sufficientRelativeRisingTextField" styleClass="valueField" />
                               <Label text="dropping" />
-                              <TextField styleClass="valueField" fx:id="p2sufficientRelativeDroppingTextField" />
+                              <TextField fx:id="p2sufficientRelativeDroppingTextField" styleClass="valueField" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="7.0" VBox.vgrow="NEVER" />
@@ -131,7 +132,7 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label styleClass="h2" fx:id="p2titleLabel" text="Title"/>
+                  <Label fx:id="p2titleLabel" styleClass="h2" text="Title" />
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
@@ -156,7 +157,26 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label styleClass="h2" fx:id="cnLiquidityTitle" text="Market liquidity"/>
+                  <Label fx:id="cnLiquidityTitle" styleClass="h2" text="Market liquidity" />
+               </graphic>
+               <VBox.margin>
+                  <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+               </VBox.margin>
+            </TitledPane>
+            <TitledPane fx:id="cnLiquidityTitledPane1" animated="false" collapsible="false">
+               <content>
+                  <VBox spacing="7.0">
+                     <padding>
+                        <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                     </padding>
+                     <children>
+                        <CheckBox fx:id="blockSubsequentCheckBox" mnemonicParsing="false" text="After an alert block subsequent alerts for same pair for 30 minutes" />
+                        <CheckBox fx:id="allowSubsequentCheckBox" mnemonicParsing="false" text="Allow subsequent alert if price change value is more than 2x higher then in the previous one" />
+                     </children>
+                  </VBox>
+               </content>
+               <graphic>
+                  <Label fx:id="cnLiquidityTitle1" styleClass="h2" text="Additional conditions" />
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
@@ -170,7 +190,7 @@
                   <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveClick" text="Save" />
                </children>
                <VBox.margin>
-                  <Insets bottom="7.0" left="7.0" right="7.0" />
+                  <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
                </VBox.margin>
             </HBox>
          </children>
