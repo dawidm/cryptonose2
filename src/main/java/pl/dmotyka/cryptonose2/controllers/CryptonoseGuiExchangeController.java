@@ -97,7 +97,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public CheckBox notificationCheckBox;
     @FXML
-    public TableView currenciesTableView;
+    public TableView<TablePairPriceChanges> currenciesTableView;
     @FXML
     public HBox tableDisabledHbox;
     @FXML
@@ -119,13 +119,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private ScheduledExecutorService scheduledExecutorService;
     private ScheduledFuture<?> updatePreferencesScheduledFuture;
     private ScheduledFuture<?> reconnectScheduledFuture;
-    private Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
+    private final Map<Long, PriceAlertThresholds> priceAlertThresholdsMap=Collections.synchronizedMap(new HashMap<>());
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
-    private LiquidityFactor liquidityFactorIndicator = new LiquidityFactor();
+    private final LiquidityFactor liquidityFactorIndicator = new LiquidityFactor();
 
-    PriceChangesTable priceChangesTable;
-    private AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
-    private AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
+    private PriceChangesTable priceChangesTable;
+    private final AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
+    private final AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
     private boolean noPairsAlertShown = false;
 
     public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, ColorIndicatorBox indicatorBox) {
@@ -142,7 +142,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         CryptonoseSettings.getPrefsNode(CryptonoseSettings.PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs).addPreferenceChangeListener(evt -> {
             if(evt.getNode().name().equals(exchangeSpecs.getName())) {
                 if(updatePreferencesScheduledFuture==null || updatePreferencesScheduledFuture.isDone())
-                updatePreferencesScheduledFuture=scheduledExecutorService.schedule(()->initPriceAlertThresholds(),1,TimeUnit.SECONDS);
+                updatePreferencesScheduledFuture=scheduledExecutorService.schedule(this::initPriceAlertThresholds,1,TimeUnit.SECONDS);
             }
         });
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts();
@@ -171,7 +171,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
         if(!markets.equals("")) {
             Arrays.stream(markets.split(",")).forEach(market -> {
-                Double minVolume = CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market), exchangeSpecs);
+                double minVolume = CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market), exchangeSpecs);
                 if(minVolume>=0)
                     pairSelectionCriteria.add(new PairSelectionCriteria(market,minVolume));
             });
@@ -189,7 +189,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     this,
                     CryptonoseSettings.TIME_PERIODS,
                     CryptonoseSettings.RELATIVE_CHANGE_NUM_CANDLES,
-                    pairSelectionCriteria.toArray(new PairSelectionCriteria[pairSelectionCriteria.size()]),
+                    pairSelectionCriteria.toArray(PairSelectionCriteria[]::new),
                     additionalPairs);
             engine.enableInitEngineWithLowerPeriodChartData();
             engine.autoRefreshPairData(CryptonoseSettings.AUTO_REFRESH_INTERVAL_MINUTES);
@@ -380,7 +380,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             priceAlertThresholdsMap.put(currentTimePeriod,
                     CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(currentTimePeriod))
             );
-        };
+        }
     }
 
     private void startLastTransactionTimer() {
