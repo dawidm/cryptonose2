@@ -27,6 +27,7 @@ public class CryptonoseSettings {
     public static final int FONT_MAX_SIZE = 24;
 
     public static final long[] TIME_PERIODS = {300,1800};
+    public static final long ALERTS_PAUSE_SECONDS = 1800; // how long to block subsequent alerts for the same pair (if the option is active)
     public static final long NO_TRADES_WARNING_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     public static final long MINI_CHART_TIME_PERIOD_SEC = 300;
@@ -168,6 +169,8 @@ public class CryptonoseSettings {
         private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M30);
         public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", false, TimePeriod.ANY);
         public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.5, TimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_BLOCK_SUBSEQUENT_ALERTS = new AlertPreferenceSpecs<>("enableBlockSubsequentAlerts", false, TimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS = new AlertPreferenceSpecs<>("enableAllowSubsequent2xAlerts", true, TimePeriod.ANY);
     }
 
     public static class Pairs {

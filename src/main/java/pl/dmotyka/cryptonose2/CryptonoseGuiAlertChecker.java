@@ -20,6 +20,7 @@ import java.util.Map;
 
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
@@ -85,20 +86,30 @@ public class CryptonoseGuiAlertChecker {
     // check whether there were previous alerts that should block this alert
     private boolean checkPreviousAlerts(PriceAlert priceAlert) {
         String alertKey = priceAlert.getPair() + "," + priceAlert.getPeriodSeconds();
-        if (priceAlertsMap.containsKey(alertKey)) {
+        if (!priceAlertsMap.containsKey(alertKey)) {
+            priceAlertsMap.put(alertKey, priceAlert);
+            return false; // allow the alert
+        } else {
             PriceAlert oldPriceAlert = priceAlertsMap.get(alertKey);
-            if (Math.abs(priceAlert.getPriceChange()) >= 2 * Math.abs(oldPriceAlert.getPriceChange())) {
+            if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS) &&
+                    Math.abs(priceAlert.getPriceChange()) >= 2 * Math.abs(oldPriceAlert.getPriceChange())) {
                 priceAlertsMap.put(alertKey, priceAlert); // replace
-                return false;
+                return false; // allow the alert
             }
-            if (priceAlert.getReferencePriceTimestamp() > oldPriceAlert.getFinalPriceTimestamp()) {
-                priceAlertsMap.put(alertKey, priceAlert); // replace
-                return false;
+            if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS)) {
+                if (priceAlert.getTimestamp() - oldPriceAlert.getTimestamp() > CryptonoseSettings.ALERTS_PAUSE_SECONDS) {
+                    priceAlertsMap.put(alertKey, priceAlert); // replace
+                    return false; // allow the alert
+                }
+            } else {
+                if (priceAlert.getReferencePriceTimestamp() > oldPriceAlert.getFinalPriceTimestamp()) {
+                    priceAlertsMap.put(alertKey, priceAlert); // replace
+                    return false; // allow the alert
+                }
             }
-            return true;
+            return true; // block the alert
         }
-        priceAlertsMap.put(alertKey, priceAlert);
-        return false;
+
     }
 
 }
