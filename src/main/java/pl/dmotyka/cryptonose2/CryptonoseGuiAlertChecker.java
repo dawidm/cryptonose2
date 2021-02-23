@@ -34,17 +34,22 @@ public class CryptonoseGuiAlertChecker {
     // the key is symbol,time_period, example: DOGE_BTC,300
     private final Map<String, PriceAlert> priceAlertsMap;
     private final Map<Long, PriceAlertThresholds> priceAlertThresholdsMap;
+    private final long[] sortedTimePeriods;
 
     public CryptonoseGuiAlertChecker(ExchangeSpecs exchangeSpecs, Map<Long, PriceAlertThresholds> priceAlertThresholdsMap) {
         this.exchangeSpecs = exchangeSpecs;
         pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         this.priceAlertThresholdsMap = priceAlertThresholdsMap;
+        sortedTimePeriods = priceAlertThresholdsMap.keySet().stream().mapToLong(val -> val).sorted().toArray();
         priceAlertsMap = new HashMap<>();
     }
 
     public List<PriceAlert> checkAlerts(List<PriceChanges> changesList) {
         List<PriceAlert> priceAlertList = new LinkedList<>();
         for (PriceChanges currentPriceChanges : changesList) {
+            if (currentPriceChanges.getChangeTimeSeconds() <= sortedTimePeriods[0] && currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1]) {
+                continue;
+            }
             PriceAlertThresholds priceAlertThresholds = priceAlertThresholdsMap.get(currentPriceChanges.getTimePeriodSeconds());
             if (currentPriceChanges.getRelativePriceChange() != null) {
                 double relativeChangeValue = currentPriceChanges.getRelativePriceChange();
