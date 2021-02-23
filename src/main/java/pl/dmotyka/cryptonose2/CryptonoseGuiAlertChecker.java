@@ -102,7 +102,7 @@ public class CryptonoseGuiAlertChecker {
                     return false; // allow the alert
                 }
             } else {
-                if (priceAlert.getReferencePriceTimestamp() > oldPriceAlert.getFinalPriceTimestamp()) {
+                if (priceAlert.getReferencePriceTimestamp() > oldPriceAlert.getFinalPriceTimestamp() && priceAlert.getPriceChange() * oldPriceAlert.getPriceChange() < 0) {
                     priceAlertsMap.put(alertKey, priceAlert); // replace
                     return false; // allow the alert
                 }
