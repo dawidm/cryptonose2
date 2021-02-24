@@ -132,22 +132,22 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        p1ExampleButtonLow.setOnMouseClicked(e -> {
+        p1ExampleButtonLow.setOnAction(e -> {
             fillP1ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.LOW, CryptonoseSettings.TimePeriod.M5));
         });
-        p1ExampleButtonMed.setOnMouseClicked(e -> {
+        p1ExampleButtonMed.setOnAction(e -> {
             fillP1ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.MEDIUM, CryptonoseSettings.TimePeriod.M5));
         });
-        p1ExampleButtonHigh.setOnMouseClicked(e -> {
+        p1ExampleButtonHigh.setOnAction(e -> {
             fillP1ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.HIGH, CryptonoseSettings.TimePeriod.M5));
         });
-        p2ExampleButtonLow.setOnMouseClicked(e -> {
+        p2ExampleButtonLow.setOnAction(e -> {
             fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.LOW, CryptonoseSettings.TimePeriod.M30));
         });
-        p2ExampleButtonMed.setOnMouseClicked(e -> {
+        p2ExampleButtonMed.setOnAction(e -> {
             fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.MEDIUM, CryptonoseSettings.TimePeriod.M30));
         });
-        p2ExampleButtonHigh.setOnMouseClicked(e -> {
+        p2ExampleButtonHigh.setOnAction(e -> {
             fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.HIGH, CryptonoseSettings.TimePeriod.M30));
         });
         addFormatters();

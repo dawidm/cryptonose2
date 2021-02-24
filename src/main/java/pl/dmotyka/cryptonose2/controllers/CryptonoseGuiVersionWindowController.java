@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -39,9 +39,9 @@ public class CryptonoseGuiVersionWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        downloadsLinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(downloadsLinkLabel.getText()));
-        releaseLinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(releaseLinkLabel.getText()));
-        closeButton.setOnMouseClicked(e -> ((Stage)((Button)e.getSource()).getScene().getWindow()).close());
+        downloadsLinkLabel.setOnAction(e -> CryptonoseGuiBrowser.runBrowser(downloadsLinkLabel.getText()));
+        releaseLinkLabel.setOnAction(e -> CryptonoseGuiBrowser.runBrowser(releaseLinkLabel.getText()));
+        closeButton.setOnAction(e -> ((Stage)((Button)e.getSource()).getScene().getWindow()).close());
     }
 
     public void init(VersionInfo versionInfo) {

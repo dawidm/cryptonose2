@@ -133,8 +133,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.cryptonoseGuiController = cryptonoseGuiController;
         this.indicatorBox = indicatorBox;
         this.exchangeSpecs = exchangeSpecs;
-        pairsButton.setOnMouseClicked(event -> pairsClick());
-        alertSettingsButton.setOnMouseClicked(event -> alertSettingsClick());
+        pairsButton.setOnAction(event -> pairsClick());
+        alertSettingsButton.setOnAction(event -> alertSettingsClick());
         currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
         tableDisabledHbox.managedProperty().bind(tableDisabledHbox.visibleProperty());
         logTitledPane.managedProperty().bind(logTitledPane.visibleProperty());
@@ -207,9 +207,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         startLastTransactionTimer();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
         logTitledPane.visibleProperty().bind(showLogCheckBox.selectedProperty());
-        soundCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
-        runBrowserCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
-        notificationCheckBox.setOnMouseClicked(e -> cryptonoseGuiController.updateCheckboxes());
+        soundCheckBox.setOnAction(e -> cryptonoseGuiController.updateCheckboxes());
+        runBrowserCheckBox.setOnAction(e -> cryptonoseGuiController.updateCheckboxes());
+        notificationCheckBox.setOnAction(e -> cryptonoseGuiController.updateCheckboxes());
     }
 
     public void pairsClick() {

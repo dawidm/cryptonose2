@@ -28,7 +28,7 @@ public class PriceAlertPluginsButtons {
         geckoButton.getStyleClass().add("button-small");
         geckoButton.getStyleClass().add(geckoPlugin.getButtonCssClass());
         geckoButton.setTooltip(new Tooltip(geckoPlugin.getDescription()));
-        geckoButton.setOnMouseClicked(e -> geckoPlugin.show());
+        geckoButton.setOnAction(e -> geckoPlugin.show());
         geckoButton.setFocusTraversable(focusTraversable);
         geckoPlugin.setAnchor(geckoButton);
         hbox.getChildren().add(geckoButton);
@@ -37,7 +37,7 @@ public class PriceAlertPluginsButtons {
         cpButton.getStyleClass().add("button-small");
         cpButton.getStyleClass().add(cpPlugin.getButtonCssClass());
         cpButton.setTooltip(new Tooltip(cpPlugin.getDescription()));
-        cpButton.setOnMouseClicked(e -> cpPlugin.show());
+        cpButton.setOnAction(e -> cpPlugin.show());
         cpButton.setFocusTraversable(focusTraversable);
         cpPlugin.setAnchor(cpButton);
         hbox.getChildren().add(cpButton);

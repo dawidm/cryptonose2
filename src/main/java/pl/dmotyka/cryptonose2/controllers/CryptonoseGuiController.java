@@ -208,26 +208,26 @@ public class CryptonoseGuiController extends Application {
         }
         checkIfAllExchangesLoaded();
 
-        soundCheckBox.setOnMouseClicked(event -> {
+        soundCheckBox.setOnAction(event -> {
             globalEnableSound(soundCheckBox.isSelected());
         });
-        runBrowserCheckBox.setOnMouseClicked(event -> {
+        runBrowserCheckBox.setOnAction(event -> {
             globalEnableBrowser(runBrowserCheckBox.isSelected());
         });
-        notificationCheckBox.setOnMouseClicked(event -> {
+        notificationCheckBox.setOnAction(event -> {
             globalEnableNotif(notificationCheckBox.isSelected());
         });
         powerSaveCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.GuiState.POWER_SAVE));
         for(CryptonoseGuiExchangeController cryptonoseGuiExchangeController : activeExchangesControllersMap.values()) {
             cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
         }
-        powerSaveCheckBox.setOnMouseClicked(event -> {
+        powerSaveCheckBox.setOnAction(event -> {
             enablePowerSave(powerSaveCheckBox.isSelected());
         });
         addExchangeMenuButton.setOnShowing(event -> addExchangeClick());
-        addExchangeMenuButton.setOnMouseClicked(event -> removeExchangesButtonShadow());
-        settingsButton.setOnMouseClicked(event -> settingsClick());
-        helpButton.setOnMouseClicked(event -> helpClick());
+        addExchangeMenuButton.setOnAction(event -> removeExchangesButtonShadow());
+        settingsButton.setOnAction(event -> settingsClick());
+        helpButton.setOnAction(event -> helpClick());
 
         findTitledPane.expandedProperty().addListener((obs, wasExpanded, isExpanded) -> {
             if (isExpanded)
