@@ -91,12 +91,12 @@ public class CryptonoseGuiAlertChecker {
             return false; // allow the alert
         } else {
             PriceAlert oldPriceAlert = priceAlertsMap.get(alertKey);
-            if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS) &&
+            if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, exchangeSpecs) &&
                     Math.abs(priceAlert.getPriceChange()) >= 2 * Math.abs(oldPriceAlert.getPriceChange())) {
                 priceAlertsMap.put(alertKey, priceAlert); // replace
                 return false; // allow the alert
             }
-            if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS)) {
+            if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, exchangeSpecs)) {
                 if (priceAlert.getTimestamp() - oldPriceAlert.getTimestamp() > CryptonoseSettings.ALERTS_PAUSE_SECONDS) {
                     priceAlertsMap.put(alertKey, priceAlert); // replace
                     return false; // allow the alert
