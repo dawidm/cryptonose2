@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose
   ~
-  ~ Copyright © 2019-2020 Dawid Motyka
+  ~ Copyright © 2019-2021 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -19,9 +19,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiVersionWindowController">
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiVersionWindowController">
     <children>
-        <Label styleClass="h1" fx:id="titleLabel" text="Cryptonose ">
+        <Label fx:id="titleLabel" styleClass="h1" text="Cryptonose ">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
@@ -48,7 +49,7 @@
         </HBox>
       <HBox alignment="TOP_RIGHT" VBox.vgrow="NEVER">
          <children>
-            <Button fx:id="closeButton" mnemonicParsing="false" text="Close" />
+            <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Close" />
          </children>
          <padding>
             <Insets top="5.0" />

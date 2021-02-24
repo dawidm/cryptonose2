@@ -201,10 +201,10 @@
             </TitledPane>
             <HBox alignment="CENTER_RIGHT" spacing="7.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />
                   <Pane HBox.hgrow="ALWAYS" />
                   <Button minWidth="100.0" mnemonicParsing="false" onAction="#saveForAllExchangesClick" text="Save for all exchanges" />
-                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveClick" text="Save" />
+                  <Button fx:id="saveButton" defaultButton="true" mnemonicParsing="false" onAction="#saveClick" text="Save" />
                </children>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />

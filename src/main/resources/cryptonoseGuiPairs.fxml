@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose
   ~
-  ~ Copyright © 2019-2020 Dawid Motyka
+  ~ Copyright © 2019-2021 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -26,7 +26,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPairsController">
+
+<StackPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPairsController">
    <children>
       <GridPane fx:id="loadingGridPane" style="-fx-pref-width: 60em; -fx-pref-height: 30em;" visible="false">
         <columnConstraints>
@@ -94,8 +95,8 @@
             </HBox>
             <HBox alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="7.0" VBox.vgrow="NEVER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />
-                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#saveClick" text="Save" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelClick" text="Cancel" />
+                  <Button fx:id="saveButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#saveClick" text="Save" />
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
