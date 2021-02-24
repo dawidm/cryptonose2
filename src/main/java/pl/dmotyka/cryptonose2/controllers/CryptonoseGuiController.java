@@ -287,36 +287,38 @@ public class CryptonoseGuiController extends Application {
 
     private void initShortcuts() {
         mainVbox.setOnKeyPressed(event -> {
-            if(event.getCode()==KeyCode.S) {
-                if (soundCheckBox.isIndeterminate())
-                    soundCheckBox.setSelected(true);
-                else
-                    soundCheckBox.setSelected(!soundCheckBox.isSelected());
-                globalEnableSound(soundCheckBox.isSelected());
-                return;
+            if (event.isControlDown()) {
+                if (event.getCode() == KeyCode.S) {
+                    if (soundCheckBox.isIndeterminate())
+                        soundCheckBox.setSelected(true);
+                    else
+                        soundCheckBox.setSelected(!soundCheckBox.isSelected());
+                    globalEnableSound(soundCheckBox.isSelected());
+                    return;
+                }
+                if (event.getCode() == KeyCode.B) {
+                    if (runBrowserCheckBox.isIndeterminate())
+                        runBrowserCheckBox.setSelected(true);
+                    else
+                        runBrowserCheckBox.setSelected(!runBrowserCheckBox.isSelected());
+                    globalEnableBrowser(runBrowserCheckBox.isSelected());
+                    return;
+                }
+                if (event.getCode() == KeyCode.N) {
+                    if (notificationCheckBox.isIndeterminate())
+                        notificationCheckBox.setSelected(true);
+                    else
+                        notificationCheckBox.setSelected(!notificationCheckBox.isSelected());
+                    globalEnableNotif(notificationCheckBox.isSelected());
+                    return;
+                }
+                if (event.getCode() == KeyCode.P) {
+                    powerSaveCheckBox.setSelected(!powerSaveCheckBox.isSelected());
+                    enablePowerSave(powerSaveCheckBox.isSelected());
+                    return;
+                }
             }
-            if(event.getCode()==KeyCode.B) {
-                if (runBrowserCheckBox.isIndeterminate())
-                    runBrowserCheckBox.setSelected(true);
-                else
-                    runBrowserCheckBox.setSelected(!runBrowserCheckBox.isSelected());
-                globalEnableBrowser(runBrowserCheckBox.isSelected());
-                return;
-            }
-            if(event.getCode()==KeyCode.N) {
-                if (notificationCheckBox.isIndeterminate())
-                    notificationCheckBox.setSelected(true);
-                else
-                    notificationCheckBox.setSelected(!notificationCheckBox.isSelected());
-                globalEnableNotif(notificationCheckBox.isSelected());
-                return;
-            }
-            if(event.getCode()==KeyCode.P) {
-                powerSaveCheckBox.setSelected(!powerSaveCheckBox.isSelected());
-                enablePowerSave(powerSaveCheckBox.isSelected());
-                return;
-            }
-            if(event.getCode()==KeyCode.F) {
+            if (event.getCode() == KeyCode.F) {
                 event.consume();
                 if (findTitledPane.isExpanded()) {
                     findTitledPane.setExpanded(false);
