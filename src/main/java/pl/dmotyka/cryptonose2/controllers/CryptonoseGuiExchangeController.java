@@ -196,6 +196,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             engine.setCheckChangesDelayMs(100);
             engine.setEngineMessageReceiver(this);
             engine.setEngineUpdateHeartbeatReceiver(this);
+            engine.useMedianRelativeChanges();
             engine.start();
         }).start();
     }
