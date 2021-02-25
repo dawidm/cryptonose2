@@ -74,7 +74,7 @@ You can find small buttons with colored text on the price alerts tab and currenc
 ## Alerts conditions
 The predefined values should be useful. You may want to try them before considering any changes. Try starting with the _Low_ settings and then switching to the next presets if the alerts are to frequent.
 
-Now if you want understand better what do all these values mean. Price alert is triggered by:
+Price alert is triggered by:
 
 * significant percent **and** relative price changes (_Required..._ fields)
 * significant relative change only (_Sufficient..._ fields).
@@ -90,10 +90,10 @@ Now if you want understand better what do all these values mean. Price alert is 
 
 These settings are quite flexible. If you're only interested in percent changes, you can set the required relative change to 0, and sufficient relative change to a highest possible value, which is 100.
 
-#### Alerts logic
+#### Alerts logic settings
 
-* _After an alert block subsequent alerts for the same pair for 30 minutes_. You can use this to make alerts less frequent, but keep in mind that during this time something interesting could happen and you won't be notified. 
-* _Allow a subsequent alert if the price change value is more than 2x higher than in the previous one_. For example if you get alert for a significant price rise and after a feq seconds the price rises even more, more than 2x than the previous change - you'll get a second alert.
+* ***After an alert block subsequent alerts for the same pair for 30 minutes***. You can use this to make alerts less frequent, but keep in mind that during this time something interesting could happen and you won't be notified. 
+* ***Allow a subsequent alert if the price change value is more than 2x higher than in the previous one***. For example if you get alert for a significant price rise and after a feq seconds the price rises even more, more than 2x than the previous change - you'll get a second alert.
 
 #### Cryptonose liquidity factor
 Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency pairs that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
