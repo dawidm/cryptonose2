@@ -30,7 +30,7 @@ Very low volume (so with low liquidity) currency pairs could trigger a lot of un
 ## Price alerts tab
 ![cryptonose price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
 ### What is relative price change?
-Relative price change is an indicator reflecting price change in given period in comparison to the average price change in the same time periods in past. The "past" is set to 50 periods.
+Relative price change is an indicator reflecting price change in given period in comparison to the average price change in the same time periods in past. The "past" is set to 50 periods. More technically this average is a median of absolute differences between high and low of past periods (candles).
 To visualize, example values of relative price change:
 * around 1 is typical value
 * 4 is pretty much - means that probably something interesting is happening with the price
@@ -72,10 +72,9 @@ You can find small buttons with colored text on the price alerts tab and currenc
 ![cryptopanic plugin]({{ site.baseurl }}/images/cryptonose-cryptopanic.jpg "CryptoPanic plugin")
 
 ## Alerts conditions
-The default values should be useful. You may want to try them before considering any changes.
-These settings could be saved for only selected exchange or for all exchanges.
+The predefined values should be useful. You may want to try them before considering any changes. Try starting with the _Low_ settings and then switching to the next presets if the alerts are to frequent.
 
-Price alert is triggered by:
+Now if you want understand better what do all these values mean. Price alert is triggered by:
 
 * significant percent **and** relative price changes (_Required..._ fields)
 * significant relative change only (_Sufficient..._ fields).
@@ -88,6 +87,13 @@ Price alert is triggered by:
 * Price drop -3.1%, relative -4.1 will trigger an alert.
 * Price rise 3.1%, relative 2.0 will not trigger an alert - relative change is too low.
 * Price rise 1.0%, relative 9.3 will trigger the alert - relative change is bigger than _sufficient_ value.
+
+These settings are quite flexible. If you're only interested in percent changes, you can set the required relative change to 0, and sufficient relative change to a highest possible value, which is 100.
+
+#### Alerts logic
+
+* _After an alert block subsequent alerts for the same pair for 30 minutes_. You can use this to make alerts less frequent, but keep in mind that during this time something interesting could happen and you won't be notified. 
+* _Allow a subsequent alert if the price change value is more than 2x higher than in the previous one_. For example if you get alert for a significant price rise and after a feq seconds the price rises even more, more than 2x than the previous change - you'll get a second alert.
 
 #### Cryptonose liquidity factor
 Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency pairs that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
