@@ -8,6 +8,8 @@ See what has changed in this version.
 
 <a class="changelog-button" href="https://github.com/dawidm/cryptonose2/releases/tag/v2.17.0">What's new?</a>
 
+&nbsp;
+
 ## Windows installer
 
 <a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.17.0/Cryptonose-2.17.0.exe">Download Windows version (Cryptonose-2.17.0.exe)</a>
