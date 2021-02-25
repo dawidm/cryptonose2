@@ -14,7 +14,7 @@ See what has changed in this version.
 
 <a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.17.0/Cryptonose-2.17.0.exe">Download Windows version (Cryptonose-2.17.0.exe)</a>
 
-**Windows Defender SmartScreen** is blocking the installation? This could unfortunetly happen, because it doesn't find Cryptonose "a known application". To install Cryptonose you need to click "More info" and "Run anyway".
+**Windows Defender SmartScreen** is blocking the installation? This could unfortunately happen, because it doesn't find Cryptonose "a known application". To install Cryptonose you need to click "More info" and "Run anyway".
 
 To fix this I would have to pay for a special certificate every year but still Windows Defender could be sceptical, because of relatively low popularity of this application. [More about the issue.](https://getimageview.net/2020/06/02/microsoft-defender-smartscreen-is-hurting-independent-developers/)
 
