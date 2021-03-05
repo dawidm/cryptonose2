@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -32,6 +33,9 @@ import pl.dmotyka.minimalfxcharts.MinimalFxChart;
  * Created by dawid on 9/3/17.
  */
 public class CryptonoseGuiPriceAlertNodeController {
+
+    private static final Logger logger = Logger.getLogger(CryptonoseGuiPriceAlertNodeController.class.getName());
+
     @FXML
     public HBox mainHBox;
     @FXML
@@ -68,6 +72,8 @@ public class CryptonoseGuiPriceAlertNodeController {
             minimalFxChart.setChartPaint(Color.BLACK);
             finalPriceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(finalPriceLabel.getTextFill()));
             chartPane.getChildren().add(minimalFxChart);
+        } else {
+            logger.warning("chartCandles is null");
         }
         pairNameLabel.setText(priceAlert.getFormattedPair());
         String changeText = String.format("%s %.2f%% (%.2f)",arrowString, Math.abs(priceAlert.getPriceChange()),Math.abs(priceAlert.getRelativePriceChange()));
