@@ -335,8 +335,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
-        if(currenciesTableView.isVisible())
-            priceChangesTable.updateTable(priceChangesList);
+        if(currenciesTableView.isVisible()) {
+            Platform.runLater(() -> priceChangesTable.updateTable(priceChangesList));
+        }
     }
 
     private void handlePriceAlert(PriceAlert priceAlert) {
