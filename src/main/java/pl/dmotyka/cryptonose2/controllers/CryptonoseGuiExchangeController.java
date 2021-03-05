@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -448,5 +449,23 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public ObservableList<TablePairPriceChanges> getReadonlyTableItems() {
         return priceChangesTable.getReadonlyTableItems();
+    }
+
+    // returns property with last price which is updated every time it's updated in the table
+    //  pair - currency pair in api format
+    public SimpleDoubleProperty subscribeTicker(String pair) {
+        if (priceChangesTable == null) {
+            throw new IllegalStateException("you should call init() first");
+        }
+        return priceChangesTable.subscribeTicker(pair);
+    }
+
+    // unsubscribe last price updates
+    //  pair - currency pair in api format
+    public synchronized void unsubscribeTicker(String pair) {
+        if (priceChangesTable == null) {
+            throw new IllegalStateException("you should call init() first");
+        }
+        priceChangesTable.unsubscribeTicker(pair);
     }
 }

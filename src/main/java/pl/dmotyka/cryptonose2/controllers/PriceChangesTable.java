@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -54,6 +55,8 @@ public class PriceChangesTable {
     private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
     private long lastTableSortMillis = 0;
+
+    private final Map<String, SimpleDoubleProperty> subscribedTickers = new HashMap<>();
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
 
@@ -194,6 +197,9 @@ public class PriceChangesTable {
                 tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
                 pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
                 tablePairPriceChangesObservableList.add(tablePairPriceChanges);
+                SimpleDoubleProperty tickerProperty = subscribedTickers.get(priceChanges.getCurrencyPair());
+                if (tickerProperty != null)
+                    tickerProperty.bind(tablePairPriceChanges.lastPriceProperty());
             }
             int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
             tablePairPriceChanges.setPriceChanges(priceChanges,period);
@@ -236,6 +242,28 @@ public class PriceChangesTable {
 
     public void disablePluginButtonsFocusTraversable() {
         buttonsFocusTraversable = false;
+    }
+
+    // returns property with last price which is updated every time it's updated in the table
+    //  pair - currency pair in api format
+    public synchronized SimpleDoubleProperty subscribeTicker(String pair) {
+        SimpleDoubleProperty property = new SimpleDoubleProperty();
+        TablePairPriceChanges tableChanges = pairPriceChangesMap.get(pair);
+        if (tableChanges != null) {
+            property.bind(tableChanges.lastPriceProperty());
+        }
+        subscribedTickers.put(pair, property);
+        return property;
+    }
+
+    // unsubscribe last price updates
+    //  pair - currency pair in api format
+    public synchronized void unsubscribeTicker(String pair) {
+        SimpleDoubleProperty property = subscribedTickers.get(pair);
+        if (property != null) {
+            property.unbind();
+        }
+        subscribedTickers.remove(pair);
     }
 
 }
