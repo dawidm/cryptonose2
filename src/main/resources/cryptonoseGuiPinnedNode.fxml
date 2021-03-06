@@ -2,9 +2,8 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
 
 <!--
   ~ Cryptonose
@@ -19,14 +18,14 @@
   ~
   -->
 
-<HBox xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPinnedNodeController">
+<HBox fx:id="mainHBox" spacing="3.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPinnedNodeController">
    <children>
+      <StackPane fx:id="chartPane" styleClass="pinned-mini-chart" />
       <VBox>
          <children>
-            <Label fx:id="pairLabel" alignment="CENTER_RIGHT" text="(pair)" textAlignment="RIGHT" />
-            <Label fx:id="priceLabel" alignment="CENTER_RIGHT" text="(price)" textAlignment="RIGHT" />
+            <Label fx:id="pairLabel" styleClass="pinned-price" text="(pair)" />
+            <Label fx:id="priceLabel" styleClass="pinned-price" text="(price)" />
          </children>
       </VBox>
-      <Pane fx:id="chartPane" />
    </children>
 </HBox>

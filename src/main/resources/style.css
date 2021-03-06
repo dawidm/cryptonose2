@@ -27,3 +27,12 @@
 .prices-table .table-column {
     -fx-alignment: center-left;
 }
+
+.pinned-mini-chart {
+    -fx-pref-width: 6em;
+}
+
+.pinned-price {
+    -fx-pref-width: 6em;
+    -fx-max-width: 6em;
+}
