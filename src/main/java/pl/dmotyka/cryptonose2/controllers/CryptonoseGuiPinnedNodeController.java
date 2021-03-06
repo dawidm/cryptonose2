@@ -16,10 +16,12 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -61,6 +63,8 @@ public class CryptonoseGuiPinnedNodeController {
 
     private synchronized void updateChart(ChartCandle[] chartCandles) {
         int numCandles = (int)(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC / CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
+        if (chartCandles == null)
+            return;
         if (chartCandles.length < numCandles)
             chartCandles = null;
         else
@@ -68,13 +72,14 @@ public class CryptonoseGuiPinnedNodeController {
         if (chartCandles != null) {
             chartValues = Arrays.stream(chartCandles).mapToDouble(ChartCandle::getClose).toArray();
             if (minimalFxChart != null) {
-                minimalFxChart.repaint(chartValues);
+                Platform.runLater(() -> minimalFxChart.repaint(chartValues));
             } else {
                 minimalFxChart = new MinimalFxChart(chartValues);
                 minimalFxChart.setMarginsHorizontalPercent(0.01);
                 minimalFxChart.setMarginsVerticalPercent(0.01);
                 minimalFxChart.setChartPaint(Color.BLACK);
-                chartPane.getChildren().add(minimalFxChart);
+                priceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(priceLabel.getTextFill()));
+                Platform.runLater(() -> chartPane.getChildren().add(minimalFxChart));
             }
         } else {
             logger.warning("chartCandles is null");
@@ -84,7 +89,7 @@ public class CryptonoseGuiPinnedNodeController {
     private synchronized void updateChartLastVal(double val) {
         if (minimalFxChart != null) {
             chartValues[chartValues.length-1] = val;
-            minimalFxChart.repaint(chartValues);
+            Platform.runLater(() -> minimalFxChart.repaint(chartValues));
         } else {
             logger.warning("nothing to update");
         }
