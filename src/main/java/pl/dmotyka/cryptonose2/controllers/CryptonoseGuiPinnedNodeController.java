@@ -35,6 +35,9 @@ public class CryptonoseGuiPinnedNodeController {
     private MinimalFxChart minimalFxChart;
     private double[] chartValues;
 
+    private SimpleDoubleProperty priceProperty; // to keep reference
+    private SimpleObjectProperty<ChartCandle[]> chartCandlesProperty; // to keep reference
+
     @FXML
     public Label pairLabel;
     @FXML
@@ -45,6 +48,8 @@ public class CryptonoseGuiPinnedNodeController {
 
     public synchronized void fillPane(String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
         this.pairName = pairName;
+        this.priceProperty = priceProperty;
+        this.chartCandlesProperty = chartCandlesProperty;
         pairLabel.setText(pairName);
         priceLabel.textProperty().bind(priceProperty.asString());
         ChartCandle[] chartCandles = chartCandlesProperty.get();
