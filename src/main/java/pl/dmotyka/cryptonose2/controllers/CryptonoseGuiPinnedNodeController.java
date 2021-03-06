@@ -23,7 +23,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
@@ -58,7 +57,8 @@ public class CryptonoseGuiPinnedNodeController {
         this.pairName = pairName;
         this.priceProperty = priceProperty;
         this.chartCandlesProperty = chartCandlesProperty;
-        pairLabel.setText(pairName);
+        pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
+        pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
         priceLabel.textProperty().bind(priceProperty.asString());
         ChartCandle[] chartCandles = chartCandlesProperty.get();
         updateChart(chartCandles);
@@ -81,9 +81,8 @@ public class CryptonoseGuiPinnedNodeController {
             } else {
                 minimalFxChart = new MinimalFxChart(chartValues);
                 minimalFxChart.setMarginsHorizontalPercent(0.01);
-                minimalFxChart.setMarginsVerticalPercent(0.01);
-                minimalFxChart.setChartPaint(Color.BLACK);
-                priceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(priceLabel.getTextFill()));
+                minimalFxChart.setMarginsVerticalPercent(0.15);
+                minimalFxChart.setChartPaint(priceLabel.getTextFill());
                 Platform.runLater(() -> chartPane.getChildren().add(minimalFxChart));
             }
         } else {
