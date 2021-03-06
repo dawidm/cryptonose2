@@ -27,11 +27,14 @@ import javafx.scene.paint.Color;
 
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
+import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
 public class CryptonoseGuiPinnedNodeController {
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiPinnedNodeController.class.getName());
+
+    private ExchangeSpecs exchangeSpecs;
 
     private String pairName;
     private MinimalFxChart minimalFxChart;
@@ -41,6 +44,8 @@ public class CryptonoseGuiPinnedNodeController {
     private SimpleObjectProperty<ChartCandle[]> chartCandlesProperty; // to keep reference
 
     @FXML
+    public HBox mainHBox;
+    @FXML
     public Label pairLabel;
     @FXML
     public Label priceLabel;
@@ -48,7 +53,8 @@ public class CryptonoseGuiPinnedNodeController {
     public Pane chartPane;
 
 
-    public synchronized void fillPane(String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
+    public synchronized void fillPane(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
+        this.exchangeSpecs = exchangeSpecs;
         this.pairName = pairName;
         this.priceProperty = priceProperty;
         this.chartCandlesProperty = chartCandlesProperty;
@@ -58,7 +64,6 @@ public class CryptonoseGuiPinnedNodeController {
         updateChart(chartCandles);
         chartCandlesProperty.addListener(((observable, oldValue, newValue) -> updateChart(newValue)));
         priceProperty.addListener((observable, oldValue, newValue) -> updateChartLastVal(newValue.doubleValue()));
-
     }
 
     private synchronized void updateChart(ChartCandle[] chartCandles) {
