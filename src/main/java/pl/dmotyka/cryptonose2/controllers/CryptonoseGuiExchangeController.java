@@ -69,6 +69,7 @@ import pl.dmotyka.cryptonoseengine.EngineMessage;
 import pl.dmotyka.cryptonoseengine.EngineMessageReceiver;
 import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
+import pl.dmotyka.exchangeutils.chartdataprovider.ChartDataReceiver;
 import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.chartutils.LiquidityFactor;
@@ -463,10 +464,17 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     // unsubscribe last price updates
     //  pair - currency pair in api format
-    public synchronized void unsubscribeTicker(String pair) {
+    public void unsubscribeTicker(String pair) {
         if (priceChangesTable == null) {
             throw new IllegalStateException("you should call init() first");
         }
         priceChangesTable.unsubscribeTicker(pair);
     }
+
+    // subscribe chart data
+    //  chartDataReceiver - will be updated with map with chart data for all pairs for which exchange connection is active
+    public void subscribeChartData(ChartDataReceiver chartDataReceiver) {
+        engine.subscribeChartData(chartDataReceiver);
+    }
+
 }
