@@ -64,6 +64,8 @@ public class CryptonoseGuiPinnedNodeController {
         updateChart(chartCandles);
         chartCandlesProperty.addListener(((observable, oldValue, newValue) -> updateChart(newValue)));
         priceProperty.addListener((observable, oldValue, newValue) -> updateChartLastVal(newValue.doubleValue()));
+        mainHBox.managedProperty().bind(mainHBox.visibleProperty());
+        mainHBox.setVisible(false);
     }
 
     private synchronized void updateChart(ChartCandle[] chartCandles) {
@@ -76,6 +78,7 @@ public class CryptonoseGuiPinnedNodeController {
             chartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length-numCandles, chartCandles.length);
         if (chartCandles != null) {
             chartValues = Arrays.stream(chartCandles).mapToDouble(ChartCandle::getClose).toArray();
+            priceProperty.set(chartValues[chartValues.length-1]);
             if (minimalFxChart != null) {
                 Platform.runLater(() -> minimalFxChart.repaint(chartValues));
             } else {
@@ -84,6 +87,7 @@ public class CryptonoseGuiPinnedNodeController {
                 minimalFxChart.setMarginsVerticalPercent(0.15);
                 minimalFxChart.setChartPaint(priceLabel.getTextFill());
                 Platform.runLater(() -> chartPane.getChildren().add(minimalFxChart));
+                mainHBox.setVisible(true);
             }
         } else {
             logger.warning("chartCandles is null");
