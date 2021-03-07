@@ -33,14 +33,18 @@ public class CryptonoseGuiPinnedNodeController {
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiPinnedNodeController.class.getName());
 
+    private static final long MIN_UPDATE_PERIOD_MS = 1000;
+
     private ExchangeSpecs exchangeSpecs;
 
     private String pairName;
     private MinimalFxChart minimalFxChart;
-    private double[] chartValues;
+    private double[] lastChartValues;
 
     private SimpleDoubleProperty priceProperty; // to keep reference
     private SimpleObjectProperty<ChartCandle[]> chartCandlesProperty; // to keep reference
+
+    private long lastChartUpdateMs;
 
     @FXML
     public HBox mainHBox;
@@ -51,6 +55,9 @@ public class CryptonoseGuiPinnedNodeController {
     @FXML
     public Pane chartPane;
 
+    public CryptonoseGuiPinnedNodeController() {
+        lastChartUpdateMs = milliTime();
+    }
 
     public synchronized void fillPane(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
         this.exchangeSpecs = exchangeSpecs;
@@ -59,48 +66,69 @@ public class CryptonoseGuiPinnedNodeController {
         this.chartCandlesProperty = chartCandlesProperty;
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
-        priceLabel.textProperty().bind(priceProperty.asString());
-        ChartCandle[] chartCandles = chartCandlesProperty.get();
-        updateChart(chartCandles);
-        chartCandlesProperty.addListener(((observable, oldValue, newValue) -> updateChart(newValue)));
-        priceProperty.addListener((observable, oldValue, newValue) -> updateChartLastVal(newValue.doubleValue()));
+        chartCandlesProperty.addListener(((observable, oldValue, newValue) -> {
+            updateChartValues(newValue);
+            if (!mainHBox.isVisible()) {
+                Platform.runLater(() -> {
+                    mainHBox.setVisible(true);
+                    priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length-1]));
+                });
+            }
+            updateChart();
+        }));
+        priceProperty.addListener((observable, oldValue, newValue) -> {
+            if (!mainHBox.isVisible()) {
+                Platform.runLater(() -> mainHBox.setVisible(true));
+                updateChart();
+            }
+            if (milliTime() - lastChartUpdateMs > MIN_UPDATE_PERIOD_MS) {
+                priceLabel.setText(DecimalFormatter.formatDecimalPrice(newValue.doubleValue()));
+                updateChartLastVal(newValue.doubleValue());
+                lastChartUpdateMs = milliTime();
+            }
+        });
         mainHBox.managedProperty().bind(mainHBox.visibleProperty());
         mainHBox.setVisible(false);
     }
 
-    private synchronized void updateChart(ChartCandle[] chartCandles) {
-        int numCandles = (int)(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC / CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
+    private synchronized void updateChartValues(ChartCandle[] chartCandles) {
         if (chartCandles == null)
             return;
+        int numCandles = (int)(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC / CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
         if (chartCandles.length < numCandles)
             chartCandles = null;
         else
             chartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length-numCandles, chartCandles.length);
         if (chartCandles != null) {
-            chartValues = Arrays.stream(chartCandles).mapToDouble(ChartCandle::getClose).toArray();
-            priceProperty.set(chartValues[chartValues.length-1]);
-            if (minimalFxChart != null) {
-                Platform.runLater(() -> minimalFxChart.repaint(chartValues));
-            } else {
-                minimalFxChart = new MinimalFxChart(chartValues);
-                minimalFxChart.setMarginsHorizontalPercent(0.01);
-                minimalFxChart.setMarginsVerticalPercent(0.15);
-                minimalFxChart.setChartPaint(priceLabel.getTextFill());
-                Platform.runLater(() -> chartPane.getChildren().add(minimalFxChart));
-                mainHBox.setVisible(true);
-            }
+            lastChartValues = Arrays.stream(chartCandles).mapToDouble(ChartCandle::getClose).toArray();
         } else {
             logger.warning("chartCandles is null");
         }
     }
 
+    private void updateChart() {
+        if (minimalFxChart != null) {
+            Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
+        } else {
+            minimalFxChart = new MinimalFxChart(lastChartValues);
+            minimalFxChart.setMarginsHorizontalPercent(0.01);
+            minimalFxChart.setMarginsVerticalPercent(0.15);
+            minimalFxChart.setChartPaint(priceLabel.getTextFill());
+            Platform.runLater(() -> chartPane.getChildren().add(minimalFxChart));
+        }
+    }
+
     private synchronized void updateChartLastVal(double val) {
         if (minimalFxChart != null) {
-            chartValues[chartValues.length-1] = val;
-            Platform.runLater(() -> minimalFxChart.repaint(chartValues));
+            lastChartValues[lastChartValues.length-1] = val;
+            Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
         } else {
             logger.warning("nothing to update");
         }
+    }
+
+    private long milliTime() {
+        return System.nanoTime()/1000000;
     }
 
 }
