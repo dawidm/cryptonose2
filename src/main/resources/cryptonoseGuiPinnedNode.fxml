@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -28,4 +29,7 @@
          </children>
       </VBox>
    </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
 </HBox>
