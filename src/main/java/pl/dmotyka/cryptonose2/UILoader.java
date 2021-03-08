@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -32,12 +32,16 @@ public class UILoader <T> {
         this(resourcesFXMLPath, null);
     }
 
-    public UILoader(String resourcesFXMLPath, T controller) throws IOException {
+    public UILoader(String resourcesFXMLPath, T controller) {
         fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(resourcesFXMLPath));
         if (controller != null)
             fxmlLoader.setController(controller);
-        fxmlLoader.load();
-        applyStyles(fxmlLoader.getRoot());
+        try {
+            fxmlLoader.load();
+            applyStyles(fxmlLoader.getRoot());
+        } catch (IOException e) {
+            throw new RuntimeException("cannot load FXML");
+        }
     }
 
     public static void applyStyles(Parent root) {
