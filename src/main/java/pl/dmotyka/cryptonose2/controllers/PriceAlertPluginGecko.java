@@ -88,45 +88,41 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
     public void show() {
         if (anchor == null)
             throw new IllegalStateException("Anchor should be set before showing, use setAnchor()");
-        try {
-            UILoader<PriceAlertPluginGecko> uiLoader = new UILoader<>("priceAlertPluginGecko.fxml", this);
-            Popup popup = new Popup();
-            popup.setAutoHide(true);
-            popup.setAutoFix(true);
-            popup.getContent().add(uiLoader.getRoot());
-            showingProperty.bind(popup.showingProperty());
-            titleLabel.setText(currencySymbol + titleLabel.getText());
-            Point2D location = anchor.localToScreen(0,0);
-            popup.show(anchor, location.getX(), location.getY());
-            new Thread(() -> {
-                try {
-                    GeckoCurrencyInfo info = GeckoApi.getInfoBySymbol(currencySymbol);
-                    Platform.runLater(() -> {
-                        nameLabel.setText(info.getName());
-                        hyperlinkLabel.setText(info.getHomepage());
-                        hyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(info.getHomepage()));
-                        dailyChangeLabel.setText(String.format("%.2f%%", info.getDayChange()));
-                        weeklyChangeLabel.setText(String.format("%.2f%%", info.getWeekChange()));
-                        marketCapLabel.setText(String.format("$%,d", (int)info.getMarketCapUSD()));
-                        rankLabel.setText(""+info.getGeckoMarketCapRank());
-                        volumeLabel.setText(String.format("$%,d",(int)info.getDayVolume()));
-                        String description = info.getDescription().replaceAll("<.*>","");
-                        if (description.strip().length() == 0)
-                            description = ("Description it not available.");
-                        descriptionTextArea.setText(description);
-                        marketHyperlinkLabel.setText(GeckoApi.getMarketUrl(info.getId()));
-                        marketHyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(marketHyperlinkLabel.getText()));
-                    });
-                } catch (GeckoNoSuchSymbolException | IOException e) {
-                    logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);
-                    Platform.runLater(() -> {
-                        errorContainer.setVisible(true);
-                    });
-                }
-            }).start();
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot load fxml");
-        }
+        UILoader<PriceAlertPluginGecko> uiLoader = new UILoader<>("priceAlertPluginGecko.fxml", this);
+        Popup popup = new Popup();
+        popup.setAutoHide(true);
+        popup.setAutoFix(true);
+        popup.getContent().add(uiLoader.getRoot());
+        showingProperty.bind(popup.showingProperty());
+        titleLabel.setText(currencySymbol + titleLabel.getText());
+        Point2D location = anchor.localToScreen(0,0);
+        popup.show(anchor, location.getX(), location.getY());
+        new Thread(() -> {
+            try {
+                GeckoCurrencyInfo info = GeckoApi.getInfoBySymbol(currencySymbol);
+                Platform.runLater(() -> {
+                    nameLabel.setText(info.getName());
+                    hyperlinkLabel.setText(info.getHomepage());
+                    hyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(info.getHomepage()));
+                    dailyChangeLabel.setText(String.format("%.2f%%", info.getDayChange()));
+                    weeklyChangeLabel.setText(String.format("%.2f%%", info.getWeekChange()));
+                    marketCapLabel.setText(String.format("$%,d", (int)info.getMarketCapUSD()));
+                    rankLabel.setText(""+info.getGeckoMarketCapRank());
+                    volumeLabel.setText(String.format("$%,d",(int)info.getDayVolume()));
+                    String description = info.getDescription().replaceAll("<.*>","");
+                    if (description.strip().length() == 0)
+                        description = ("Description it not available.");
+                    descriptionTextArea.setText(description);
+                    marketHyperlinkLabel.setText(GeckoApi.getMarketUrl(info.getId()));
+                    marketHyperlinkLabel.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(marketHyperlinkLabel.getText()));
+                });
+            } catch (GeckoNoSuchSymbolException | IOException e) {
+                logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);
+                Platform.runLater(() -> {
+                    errorContainer.setVisible(true);
+                });
+            }
+        }).start();
     }
 
     @Override
