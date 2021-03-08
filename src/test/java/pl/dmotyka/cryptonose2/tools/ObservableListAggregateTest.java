@@ -29,20 +29,23 @@ public class ObservableListAggregateTest {
     @Test
     public void testList() {
         ObservableListAggregate<String> agg = new ObservableListAggregate<>();
+        ObservableList<String> obsAgg = agg.getObservableAggregate(); // will change as lists are modified
         ObservableList<String> l1 = FXCollections.observableArrayList("a", "b", "c");
         ObservableList<String> l2 = FXCollections.observableArrayList("f");
         ObservableList<String> l3 = FXCollections.observableArrayList("d", "e");
         agg.addList(l1);
+        ObservableList<String> statAgg = agg.getAggregate(); // will not change
         agg.addList(l2);
         agg.addList(l3);
         l3.add("g");
-        assertEquals(7, agg.getItems().size());
-        Set<String> aggSet = new HashSet<>(agg.getItems());
+        assertEquals(3, statAgg.size());
+        assertEquals(7, obsAgg.size());
+        Set<String> aggSet = new HashSet<>(obsAgg);
         Set<String> testSet = Set.of("b", "a", "c", "d", "e", "f", "g");
         assertTrue(testSet.containsAll(aggSet));
 
         agg.removeList(l1);
-        assertEquals(4, agg.getItems().size());
+        assertEquals(4, obsAgg.size());
 
         AtomicBoolean changed = new AtomicBoolean(false);
         agg.setListener(list -> {

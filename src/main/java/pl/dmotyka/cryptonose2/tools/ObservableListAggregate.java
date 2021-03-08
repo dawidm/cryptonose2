@@ -34,18 +34,21 @@ public class ObservableListAggregate<T> {
     private OnChangeListener<T> onChangeListener;
 
     private final List<ObservableList<T>> lists = new LinkedList();
+    private final ObservableList<T> aggregate = FXCollections.observableArrayList();
 
     private final Map<ObservableList<T>, ListChangeListener<T>> listListenersMap = new HashMap<>();
 
     public synchronized void addList(ObservableList<T> list) {
         lists.add(list);
         ListChangeListener<T> listener = c -> {
+            refreshAggregate();
             if (onChangeListener != null) {
-                onChangeListener.onChange(concatLists());
+                onChangeListener.onChange(aggregate);
             }
         };
         list.addListener(listener);
         listListenersMap.put(list, listener);
+        refreshAggregate();
     }
 
     public synchronized void removeList(ObservableList<T> list) {
@@ -57,14 +60,26 @@ public class ObservableListAggregate<T> {
         }
         listListenersMap.remove(list);
         lists.remove(list);
+        refreshAggregate();
     }
 
-    public synchronized ObservableList<T> getItems() {
-        return concatLists();
+    // get aggregate which is updated when base lists change
+    public synchronized ObservableList<T> getObservableAggregate() {
+        return aggregate;
+    }
+
+    // get aggregate which is not updated when base lists change
+    public synchronized ObservableList<T> getAggregate() {
+        return FXCollections.observableArrayList(aggregate);
     }
 
     public void setListener(OnChangeListener<T> listener) {
         this.onChangeListener = listener;
+    }
+
+    private void refreshAggregate() {
+        aggregate.clear();
+        aggregate.addAll(concatLists());
     }
 
     private ObservableList<T> concatLists() {

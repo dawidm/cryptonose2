@@ -372,7 +372,7 @@ public class CryptonoseGuiController extends Application {
     }
 
     private void showFindPane() {
-        ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getItems();
+        ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getAggregate();
         FXCollections.sort(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
         findTableView.getColumns().clear();
         FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
