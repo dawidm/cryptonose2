@@ -28,7 +28,7 @@ public class UILoader <T> {
 
     private final FXMLLoader fxmlLoader;
 
-    public UILoader(String resourcesFXMLPath) throws IOException {
+    public UILoader(String resourcesFXMLPath) {
         this(resourcesFXMLPath, null);
     }
 
