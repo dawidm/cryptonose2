@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -36,8 +35,6 @@ public class ExchangePairsDataModel {
 
     private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
-
-    private final Map<String, SimpleDoubleProperty> subscribedTickers = new HashMap<>();
 
     public ExchangePairsDataModel(ExchangeSpecs exchangeSpecs, long[] timePeriods) {
         this.exchangeSpecs = exchangeSpecs;
