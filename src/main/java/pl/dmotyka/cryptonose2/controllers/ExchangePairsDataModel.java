@@ -23,7 +23,10 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
+import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;
+import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
@@ -36,6 +39,8 @@ public class ExchangePairsDataModel {
     private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
     private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
 
+    private Map<CurrencyPairTimePeriod, ChartCandle[]> candlesMap;
+
     public ExchangePairsDataModel(ExchangeSpecs exchangeSpecs, long[] timePeriods) {
         this.exchangeSpecs = exchangeSpecs;
         this.timePeriods = timePeriods;
@@ -47,6 +52,10 @@ public class ExchangePairsDataModel {
             TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
             if (tablePairPriceChanges == null) {
                 tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
+                ChartCandle[] candles = candlesMap.get(new CurrencyPairTimePeriod(priceChanges.getCurrencyPair(), CryptonoseSettings.TIME_PERIODS[0]));
+                if (candles != null) {
+                    tablePairPriceChanges.chartCandlesProperty().set(candles);
+                }
                 pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
                 tablePairPriceChangesObservableList.add(tablePairPriceChanges);
             }
@@ -55,9 +64,19 @@ public class ExchangePairsDataModel {
         }
     }
 
+    public synchronized void updateChartData(Map<CurrencyPairTimePeriod, ChartCandle[]> candlesMap) {
+        this.candlesMap = candlesMap;
+        for (TablePairPriceChanges tablePairPriceChanges : tablePairPriceChangesObservableList) {
+            ChartCandle[] candles = candlesMap.get(new CurrencyPairTimePeriod(tablePairPriceChanges.getPairName(), CryptonoseSettings.TIME_PERIODS[0]));
+            if (candles != null) {
+                tablePairPriceChanges.chartCandlesProperty().set(candles);
+            }
+        }
+    }
+
     // update pairs list, removing these that are not in provided list
     // pairs - list of api symbols of pairs
-    public void removeOutdatedPairs(String[] pairs) {
+    public synchronized void removeOutdatedPairs(String[] pairs) {
         Set<String> newPairs = Set.of(pairs);
         Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
         outdatedPairs.removeAll(newPairs);
@@ -68,16 +87,16 @@ public class ExchangePairsDataModel {
     }
 
     // clears a table
-    public void clear() {
+    public synchronized void clear() {
         Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
         pairPriceChangesMap.clear();
     }
 
-    public ObservableList<TablePairPriceChanges> getReadonlyItems() {
+    public synchronized ObservableList<TablePairPriceChanges> getReadonlyItems() {
         return FXCollections.unmodifiableObservableList(tablePairPriceChangesObservableList);
     }
 
-    public ObservableList<TablePairPriceChanges> getItems() {
+    public synchronized ObservableList<TablePairPriceChanges> getItems() {
         return tablePairPriceChangesObservableList;
     }
 }
