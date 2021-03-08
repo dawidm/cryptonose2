@@ -13,9 +13,12 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import pl.dmotyka.cryptonoseengine.PriceChanges;
+import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 /**
@@ -26,6 +29,7 @@ public class TablePairPriceChanges {
     public static final int PERIOD1 = 1;
     public static final int PERIOD2 = 2;
 
+    private final SimpleBooleanProperty pinnedProperty;
     private final ExchangeSpecs exchangeSpecs;
     private final String pairName;
     private final String formattedPairName;
@@ -34,16 +38,19 @@ public class TablePairPriceChanges {
     private final SimpleDoubleProperty p1RelativeChange;
     private final SimpleDoubleProperty p2RelativeChange;
     private final SimpleDoubleProperty lastPrice;
+    private final SimpleObjectProperty<ChartCandle[]> chartCandlesProperty;
 
     public TablePairPriceChanges(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
         this.exchangeSpecs = exchangeSpecs;
         this.pairName = pairName;
         this.formattedPairName=formattedPairName;
+        pinnedProperty = new SimpleBooleanProperty(false);
         p1PercentChange=new SimpleDoubleProperty(0.0);
         p1RelativeChange=new SimpleDoubleProperty(0.0);
         p2PercentChange=new SimpleDoubleProperty(0.0);
         p2RelativeChange=new SimpleDoubleProperty(0.0);
         lastPrice=new SimpleDoubleProperty(0.0);
+        chartCandlesProperty = new SimpleObjectProperty<>(null);
     }
 
     public String getPairName() {
@@ -52,6 +59,10 @@ public class TablePairPriceChanges {
 
     public String getFormattedPairName() {
         return formattedPairName;
+    }
+
+    public SimpleBooleanProperty pinnedProperty() {
+        return pinnedProperty;
     }
 
     public SimpleDoubleProperty p1PercentChangeProperty() {
@@ -74,6 +85,10 @@ public class TablePairPriceChanges {
         return lastPrice;
     }
 
+    public void setPinned(boolean pinned) {
+        pinnedProperty.set(pinned);
+    }
+
     public void setPriceChanges(PriceChanges priceChanges, int period) {
         switch(period) {
             case PERIOD1:
@@ -86,6 +101,10 @@ public class TablePairPriceChanges {
                 break;
         }
         lastPrice.set(priceChanges.getLastPrice());
+    }
+
+    public SimpleObjectProperty<ChartCandle[]> chartCandlesProperty() {
+        return chartCandlesProperty;
     }
 
     public ExchangeSpecs getExchangeSpecs() {
