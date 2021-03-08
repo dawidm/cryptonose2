@@ -77,37 +77,33 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
     public void show() {
         if (anchor == null)
             throw new IllegalStateException("Anchor should be set before showing, use setAnchor()");
-        try {
-            UILoader<PriceAlertPluginCryptoPanic> uiLoader = new UILoader<>("priceAlertPluginCryptoPanic.fxml", this);
-            Popup popup = new Popup();
-            popup.setAutoHide(true);
-            popup.setAutoFix(true);
-            popup.getContent().add(uiLoader.getRoot());
-            showingProperty.bind(popup.showingProperty());
-            titleLabel.setText(currencySymbol + titleLabel.getText());
-            Point2D location = anchor.localToScreen(0,0);
-            String cpLink = formatCpHyperlink(currencySymbol);
-            cpHyperlink.setText(cpLink);
-            cpHyperlink.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(cpLink));
-            popup.show(anchor, location.getX(), location.getY());
-            popup.setAutoFix(false); // workaround because popup was moving to unexpected location after adding news
-            new Thread(() -> {
-                try {
-                    CryptoPanicNews[] news = CryptoPanicApi.getNewsForSymbol(currencySymbol, NEWS_LIMIT);
-                    Platform.runLater(() -> newsVBox.getChildren().clear());
-                    for (CryptoPanicNews currentNews : news) {
-                        addNewsToPopup(currentNews);
-                    }
-                } catch (IOException e) {
-                    logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);
-                    Platform.runLater(() -> {
-                        errorContainer.setVisible(true);
-                    });
+        UILoader<PriceAlertPluginCryptoPanic> uiLoader = new UILoader<>("priceAlertPluginCryptoPanic.fxml", this);
+        Popup popup = new Popup();
+        popup.setAutoHide(true);
+        popup.setAutoFix(true);
+        popup.getContent().add(uiLoader.getRoot());
+        showingProperty.bind(popup.showingProperty());
+        titleLabel.setText(currencySymbol + titleLabel.getText());
+        Point2D location = anchor.localToScreen(0,0);
+        String cpLink = formatCpHyperlink(currencySymbol);
+        cpHyperlink.setText(cpLink);
+        cpHyperlink.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(cpLink));
+        popup.show(anchor, location.getX(), location.getY());
+        popup.setAutoFix(false); // workaround because popup was moving to unexpected location after adding news
+        new Thread(() -> {
+            try {
+                CryptoPanicNews[] news = CryptoPanicApi.getNewsForSymbol(currencySymbol, NEWS_LIMIT);
+                Platform.runLater(() -> newsVBox.getChildren().clear());
+                for (CryptoPanicNews currentNews : news) {
+                    addNewsToPopup(currentNews);
                 }
-            }).start();
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot load fxml");
-        }
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "when getting gecko data for " + currencySymbol, e);
+                Platform.runLater(() -> {
+                    errorContainer.setVisible(true);
+                });
+            }
+        }).start();
     }
 
     private void addNewsToPopup(CryptoPanicNews news) {
