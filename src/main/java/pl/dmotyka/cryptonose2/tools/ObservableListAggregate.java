@@ -1,0 +1,79 @@
+/*
+ * Cryptonose
+ *
+ * Copyright © 2019-2021 Dawid Motyka
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+package pl.dmotyka.cryptonose2.tools;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+
+public class ObservableListAggregate<T> {
+
+    private static final Logger logger = Logger.getLogger(ObservableListAggregate.class.getName());
+
+    public interface OnChangeListener<T> {
+        void onChange(ObservableList<T> changedList);
+    }
+
+    private OnChangeListener<T> onChangeListener;
+
+    private final List<ObservableList<T>> lists = new LinkedList();
+
+    private final Map<ObservableList<T>, ListChangeListener<T>> listListenersMap = new HashMap<>();
+
+    public synchronized void addList(ObservableList<T> list) {
+        lists.add(list);
+        ListChangeListener<T> listener = c -> {
+            if (onChangeListener != null) {
+                onChangeListener.onChange(concatLists());
+            }
+        };
+        list.addListener(listener);
+        listListenersMap.put(list, listener);
+    }
+
+    public synchronized void removeList(ObservableList<T> list) {
+        var listener = listListenersMap.get(list);
+        if (listener != null) {
+            list.removeListener(listener);
+        } else {
+            logger.warning("no listener for a list");
+        }
+        listListenersMap.remove(list);
+        lists.remove(list);
+    }
+
+    public synchronized ObservableList<T> getItems() {
+        return concatLists();
+    }
+
+    public void setListener(OnChangeListener<T> listener) {
+        this.onChangeListener = listener;
+    }
+
+    private ObservableList<T> concatLists() {
+        ObservableList<T> allPairsObservableList = FXCollections.emptyObservableList();
+        for (var list : lists) {
+            allPairsObservableList = FXCollections.concat(allPairsObservableList, list);
+        }
+        return allPairsObservableList;
+    }
+
+
+}
