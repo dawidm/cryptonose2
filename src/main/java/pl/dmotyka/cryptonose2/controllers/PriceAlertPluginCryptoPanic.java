@@ -107,15 +107,11 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
     }
 
     private void addNewsToPopup(CryptoPanicNews news) {
-        try {
-            UILoader<PriceAlertPluginCryptoPanicNewsNode> newsNodeUILoader = new UILoader<>("priceAlertPluginCryptoPanicNews.fxml");
-            newsNodeUILoader.getController().init(news);
-            Platform.runLater(()-> {
-                newsVBox.getChildren().add(newsNodeUILoader.getRoot());
-            });
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot load fxml");
-        }
+        UILoader<PriceAlertPluginCryptoPanicNewsNode> newsNodeUILoader = new UILoader<>("priceAlertPluginCryptoPanicNews.fxml");
+        newsNodeUILoader.getController().init(news);
+        Platform.runLater(()-> {
+            newsVBox.getChildren().add(newsNodeUILoader.getRoot());
+        });
     }
 
     @Override

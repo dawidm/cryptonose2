@@ -13,7 +13,6 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -215,31 +214,23 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     public void pairsClick() {
-        try {
-            UILoader<CryptonoseGuiPairsController> uiLoader = new UILoader<>("cryptonoseGuiPairs.fxml");
-            AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
-            uiLoader.getController().init(exchangeSpecs,()->settingsChangedAtomic.set(true));
-            pairsButton.setDisable(true);
-            uiLoader.stageShowAndWait("Pairs settings: " + exchangeSpecs.getName());
-            pairsButton.setDisable(false);
-            if(settingsChangedAtomic.get()) {
-                startEngine();
-            }
-        } catch(IOException e) {
-            throw new Error(e);
+        UILoader<CryptonoseGuiPairsController> uiLoader = new UILoader<>("cryptonoseGuiPairs.fxml");
+        AtomicBoolean settingsChangedAtomic = new AtomicBoolean(false);
+        uiLoader.getController().init(exchangeSpecs,()->settingsChangedAtomic.set(true));
+        pairsButton.setDisable(true);
+        uiLoader.stageShowAndWait("Pairs settings: " + exchangeSpecs.getName());
+        pairsButton.setDisable(false);
+        if(settingsChangedAtomic.get()) {
+            startEngine();
         }
     }
 
     public void alertSettingsClick() {
-        try {
-            UILoader<CryptonoseGuiAlertSettingsController> uiLoader = new UILoader<>("cryptonoseGuiAlertSettings.fxml");
-            uiLoader.getController().init(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
-            alertSettingsButton.setDisable(true);
-            uiLoader.stageShowAndWait("Alerts conditions: " + exchangeSpecs.getName());
-            alertSettingsButton.setDisable(false);
-        } catch(IOException e) {
-            throw new Error(e);
-        }
+        UILoader<CryptonoseGuiAlertSettingsController> uiLoader = new UILoader<>("cryptonoseGuiAlertSettings.fxml");
+        uiLoader.getController().init(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
+        alertSettingsButton.setDisable(true);
+        uiLoader.stageShowAndWait("Alerts conditions: " + exchangeSpecs.getName());
+        alertSettingsButton.setDisable(false);
     }
 
     private void setConnectionStatus(CryptonoseGuiConnectionStatus newConnectionStatus, boolean notify) {

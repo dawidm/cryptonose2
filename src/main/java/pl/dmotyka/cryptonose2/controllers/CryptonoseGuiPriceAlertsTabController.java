@@ -13,7 +13,6 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
@@ -46,29 +45,21 @@ public class CryptonoseGuiPriceAlertsTabController implements Initializable{
             if (mainVBox.getChildren().size() == 1) {
                 mainVBox.setStyle("-fx-background-image: none");
                 mainVBox.getChildren().clear();
-                try {
-                    UILoader<Object> uiLoader = new UILoader("cryptonoseGuiPriceAlertPaneLabels.fxml");
-                    Node priceAlertPaneLabels = uiLoader.getRoot();
-                    mainVBox.getChildren().add(priceAlertPaneLabels);
-                } catch (IOException e) {
-                    throw new Error(e);
-                }
+                UILoader<Object> uiLoader = new UILoader("cryptonoseGuiPriceAlertPaneLabels.fxml");
+                Node priceAlertPaneLabels = uiLoader.getRoot();
+                mainVBox.getChildren().add(priceAlertPaneLabels);
             }
-            try {
-                UILoader<CryptonoseGuiPriceAlertNodeController> uiLoader = new UILoader<>("cryptonoseGuiPriceAlertPane.fxml");
-                Node alertPane = uiLoader.getRoot();
-                uiLoader.getController().fillPane(priceAlert, chartCandles);
-                mainVBox.getChildren().listIterator(1).add(alertPane);
-                //iterator for outdated alerts
-                if (mainVBox.getChildren().size() > maxAlerts + 1) {
-                    ListIterator<Node> listIterator = mainVBox.getChildren().listIterator(maxAlerts + 1);
-                    while (listIterator.hasNext()) {
-                        listIterator.next();
-                        listIterator.remove();
-                    }
+            UILoader<CryptonoseGuiPriceAlertNodeController> uiLoader = new UILoader<>("cryptonoseGuiPriceAlertPane.fxml");
+            Node alertPane = uiLoader.getRoot();
+            uiLoader.getController().fillPane(priceAlert, chartCandles);
+            mainVBox.getChildren().listIterator(1).add(alertPane);
+            //iterator for outdated alerts
+            if (mainVBox.getChildren().size() > maxAlerts + 1) {
+                ListIterator<Node> listIterator = mainVBox.getChildren().listIterator(maxAlerts + 1);
+                while (listIterator.hasNext()) {
+                    listIterator.next();
+                    listIterator.remove();
                 }
-            } catch (IOException e) {
-                throw new Error(e);
             }
         });
     }

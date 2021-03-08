@@ -277,14 +277,10 @@ public class CryptonoseGuiController extends Application {
     }
 
     private void versionWindow(VersionInfo versionInfo) {
-        try {
-            UILoader<CryptonoseGuiVersionWindowController> uiLoader = new UILoader<>("cryptonoseGuiVersionWindow.fxml");
-            CryptonoseGuiVersionWindowController cryptonoseGuiVersionWindowController = uiLoader.getController();
-            cryptonoseGuiVersionWindowController.init(versionInfo);
-            uiLoader.stageShowAndWait("New version");
-        } catch (IOException e) {
-            throw new Error(e);
-        }
+        UILoader<CryptonoseGuiVersionWindowController> uiLoader = new UILoader<>("cryptonoseGuiVersionWindow.fxml");
+        CryptonoseGuiVersionWindowController cryptonoseGuiVersionWindowController = uiLoader.getController();
+        cryptonoseGuiVersionWindowController.init(versionInfo);
+        uiLoader.stageShowAndWait("New version");
     }
 
     private void initShortcuts() {
@@ -336,40 +332,35 @@ public class CryptonoseGuiController extends Application {
     }
 
     public void loadExchange(ExchangeSpecs exchangeSpecs, boolean activate) {
-        try {
-            logger.info("loading "+ exchangeSpecs.getName());
-            if(activeExchangesControllersMap.keySet().contains(exchangeSpecs))
-                return;
-            UILoader<CryptonoseGuiExchangeController> uiLoader = new UILoader<>("cryptonoseGuiExchange.fxml");
-            Node cryptonoseGuiNode = uiLoader.getRoot();
-            Tab tab = new Tab(exchangeSpecs.getName());
-            ColorIndicatorBox indicatorBox = new ColorIndicatorBox(1);
-            tab.setGraphic(indicatorBox);
-            tab.setContent(cryptonoseGuiNode);
-            mainTabPane.getTabs().add(tab);
-            if(activate)
-                mainTabPane.getSelectionModel().select(tab);
-            CryptonoseGuiExchangeController cryptonoseGuiExchangeController = uiLoader.getController();
-            cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
-            final ObservableList<TablePairPriceChanges> readOnlyTableItems = cryptonoseGuiExchangeController.getReadonlyTableItems();
-            tableItemsAggregate.addList(readOnlyTableItems);
-            tab.setOnCloseRequest((event) -> {
-                logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
-                tableItemsAggregate.removeList(readOnlyTableItems);
-                new Thread(cryptonoseGuiExchangeController::close).start();
-                activeExchangesControllersMap.remove(exchangeSpecs);
-                checkIfAllExchangesLoaded();
-            });
-            cryptonoseGuiExchangeController.soundCheckBox.setSelected(soundCheckBox.isSelected());
-            cryptonoseGuiExchangeController.runBrowserCheckBox.setSelected(runBrowserCheckBox.isSelected());
-            cryptonoseGuiExchangeController.notificationCheckBox.setSelected(notificationCheckBox.isSelected());
-            cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
-            activeExchangesControllersMap.put(exchangeSpecs, cryptonoseGuiExchangeController);
-            removeExchangesButtonShadow();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE,"when loading exchange",e);
-            throw new Error();
-        }
+        logger.info("loading "+ exchangeSpecs.getName());
+        if(activeExchangesControllersMap.keySet().contains(exchangeSpecs))
+            return;
+        UILoader<CryptonoseGuiExchangeController> exchangeLoader = new UILoader<>("cryptonoseGuiExchange.fxml");
+        Node cryptonoseGuiNode = exchangeLoader.getRoot();
+        Tab tab = new Tab(exchangeSpecs.getName());
+        ColorIndicatorBox indicatorBox = new ColorIndicatorBox(1);
+        tab.setGraphic(indicatorBox);
+        tab.setContent(cryptonoseGuiNode);
+        mainTabPane.getTabs().add(tab);
+        if(activate)
+            mainTabPane.getSelectionModel().select(tab);
+        CryptonoseGuiExchangeController cryptonoseGuiExchangeController = exchangeLoader.getController();
+        cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
+        final ObservableList<TablePairPriceChanges> readOnlyTableItems = cryptonoseGuiExchangeController.getReadonlyTableItems();
+        tableItemsAggregate.addList(readOnlyTableItems);
+        tab.setOnCloseRequest((event) -> {
+            logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
+            tableItemsAggregate.removeList(readOnlyTableItems);
+            new Thread(cryptonoseGuiExchangeController::close).start();
+            activeExchangesControllersMap.remove(exchangeSpecs);
+            checkIfAllExchangesLoaded();
+        });
+        cryptonoseGuiExchangeController.soundCheckBox.setSelected(soundCheckBox.isSelected());
+        cryptonoseGuiExchangeController.runBrowserCheckBox.setSelected(runBrowserCheckBox.isSelected());
+        cryptonoseGuiExchangeController.notificationCheckBox.setSelected(notificationCheckBox.isSelected());
+        cryptonoseGuiExchangeController.enablePowerSave(powerSaveCheckBox.isSelected());
+        activeExchangesControllersMap.put(exchangeSpecs, cryptonoseGuiExchangeController);
+        removeExchangesButtonShadow();
     }
 
     void checkIfAllExchangesLoaded() {
@@ -472,26 +463,18 @@ public class CryptonoseGuiController extends Application {
     }
 
     public void settingsClick() {
-        try {
-            UILoader<CryptonoseGuiSettingsController> uiLoader = new UILoader<>("cryptonoseGuiSettings.fxml");
-            settingsButton.setDisable(true);
-            uiLoader.stageShowAndWait("Cryptonose2 settings");
-            settingsButton.setDisable(false);
-        } catch(IOException e) {
-            throw new Error(e);
-        }
+        UILoader<CryptonoseGuiSettingsController> uiLoader = new UILoader<>("cryptonoseGuiSettings.fxml");
+        settingsButton.setDisable(true);
+        uiLoader.stageShowAndWait("Cryptonose2 settings");
+        settingsButton.setDisable(false);
     }
 
     public void helpClick() {
-        try {
-            UILoader<CryptonoseGuiHelpWindowController> uiLoader = new UILoader<>("cryptonoseGuiHelpWindow.fxml");
-            uiLoader.getController().init();
-            helpButton.setDisable(true);
-            uiLoader.stageShowAndWait("Help");
-            helpButton.setDisable(false);
-        } catch(IOException e) {
-            throw new Error(e);
-        }
+        UILoader<CryptonoseGuiHelpWindowController> uiLoader = new UILoader<>("cryptonoseGuiHelpWindow.fxml");
+        uiLoader.getController().init();
+        helpButton.setDisable(true);
+        uiLoader.stageShowAndWait("Help");
+        helpButton.setDisable(false);
     }
 
     public void updateCheckboxes() {
