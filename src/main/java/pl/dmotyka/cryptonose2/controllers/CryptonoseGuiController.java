@@ -60,6 +60,7 @@ import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.UILoader;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
+import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
@@ -105,6 +106,7 @@ public class CryptonoseGuiController extends Application {
     public TextField findTextField;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
+    private ObservableListAggregate<TablePairPriceChanges> tableItemsAggregate = new ObservableListAggregate<>();
 
     private CryptonoseGuiPriceAlertsTabController priceAlertsTabController;
 
@@ -349,9 +351,12 @@ public class CryptonoseGuiController extends Application {
                 mainTabPane.getSelectionModel().select(tab);
             CryptonoseGuiExchangeController cryptonoseGuiExchangeController = uiLoader.getController();
             cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
+            final ObservableList<TablePairPriceChanges> readOnlyTableItems = cryptonoseGuiExchangeController.getReadonlyTableItems();
+            tableItemsAggregate.addList(readOnlyTableItems);
             tab.setOnCloseRequest((event) -> {
                 logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
-                new Thread(()-> cryptonoseGuiExchangeController.close()).start();
+                tableItemsAggregate.removeList(readOnlyTableItems);
+                new Thread(cryptonoseGuiExchangeController::close).start();
                 activeExchangesControllersMap.remove(exchangeSpecs);
                 checkIfAllExchangesLoaded();
             });
@@ -376,10 +381,7 @@ public class CryptonoseGuiController extends Application {
     }
 
     private void showFindPane() {
-        ObservableList<TablePairPriceChanges> allPairsObservableList = FXCollections.emptyObservableList();
-        for (CryptonoseGuiExchangeController controller : activeExchangesControllersMap.values()) {
-            allPairsObservableList = FXCollections.concat(allPairsObservableList, controller.getReadonlyTableItems());
-        }
+        ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getItems();
         FXCollections.sort(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
         findTableView.getColumns().clear();
         FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
