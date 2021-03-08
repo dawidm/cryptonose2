@@ -13,16 +13,12 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -30,33 +26,26 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonoseengine.PriceChanges;
-import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
-import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 public class PriceChangesTable {
 
     private static final long TABLE_SORT_FREQUENCY_MILLIS = 2500;
 
-    private final TableView<TablePairPriceChanges> tableView;
-    private final ExchangeSpecs exchangeSpecs;
     private final long[] timePeriods;
+    private final TableView<TablePairPriceChanges> tableView;
+    private final ObservableList<TablePairPriceChanges> items;
 
-    private PairSymbolConverter pairSymbolConverter;
-
-    private boolean updatable = true;
     private boolean enableShowExchange = false;
+    private boolean pinnedCheckboxes = false;
     private boolean buttonsFocusTraversable = true;
-    private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
-    private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
-    private long lastTableSortMillis = 0;
 
-    private final Map<String, SimpleDoubleProperty> subscribedTickers = new HashMap<>();
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     class PriceChangesTableCell extends TableCell<TablePairPriceChanges,Number> {
 
@@ -96,19 +85,10 @@ public class PriceChangesTable {
         }
     }
 
-    public PriceChangesTable(TableView<TablePairPriceChanges> tableView, ExchangeSpecs exchangeSpecs, long[] timePeriods) {
+    public PriceChangesTable(TableView<TablePairPriceChanges> tableView, ObservableList<TablePairPriceChanges> items, long[] timePeriods) {
         this.tableView = tableView;
-        this.exchangeSpecs = exchangeSpecs;
+        this.items = items;
         this.timePeriods = timePeriods;
-        if (exchangeSpecs != null)
-            pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
-    }
-
-    public static PriceChangesTable nonUpdateableTable(TableView<TablePairPriceChanges> tableView, ObservableList<TablePairPriceChanges> items,  long[] timePeriods) {
-        PriceChangesTable table = new PriceChangesTable(tableView, null, timePeriods);
-        table.tablePairPriceChangesObservableList = items;
-        table.updatable = false;
-        return table;
     }
 
     // add columns and cell factories (including price alert plugins), add listener for double click
@@ -160,6 +140,14 @@ public class PriceChangesTable {
             };
             return tableCell;
         });
+        if (pinnedCheckboxes) {
+            TableColumn<TablePairPriceChanges,Boolean> pinCol = new TableColumn("Pin");
+            pinCol.setCellValueFactory(cellDataFeatures -> cellDataFeatures.getValue().pinnedProperty());
+            pinCol.setCellFactory(tc -> new CheckBoxTableCell<>());
+            pinCol.setMaxWidth(Integer.MAX_VALUE * 0.05);
+            pinCol.setEditable(true);
+            tableView.getColumns().add(pinCol);
+        }
         if (enableShowExchange) {
             TableColumn<TablePairPriceChanges,String> exchangeCol = new TableColumn("Exchange");
             exchangeCol.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getExchangeSpecs().getName()));
@@ -167,7 +155,7 @@ public class PriceChangesTable {
             tableView.getColumns().addAll(pairNameCol,exchangeCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
         } else
             tableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
-        tableView.setItems(tablePairPriceChangesObservableList);
+        tableView.setItems(items);
         tableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
@@ -186,54 +174,7 @@ public class PriceChangesTable {
                 CryptonoseGuiBrowser.runBrowser(tableChanges.getPairName(), tableChanges.getExchangeSpecs());
             }
         });
-    }
-
-    public synchronized void updateTable(List<PriceChanges> priceChangesList) {
-        if (updatable == false)
-            throw new IllegalStateException("shouldnt be called when table not updateable");
-        for (PriceChanges priceChanges : priceChangesList) {
-            TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
-            if(tablePairPriceChanges == null) {
-                tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
-                pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
-                tablePairPriceChangesObservableList.add(tablePairPriceChanges);
-                SimpleDoubleProperty tickerProperty = subscribedTickers.get(priceChanges.getCurrencyPair());
-                if (tickerProperty != null)
-                    tickerProperty.bind(tablePairPriceChanges.lastPriceProperty());
-            }
-            int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
-            tablePairPriceChanges.setPriceChanges(priceChanges,period);
-        }
-        if(System.currentTimeMillis()- lastTableSortMillis > TABLE_SORT_FREQUENCY_MILLIS) {
-            tableView.sort();
-            lastTableSortMillis=System.currentTimeMillis();
-        }
-    }
-
-    // update pairs list, removing these that are not in provided list
-    // pairs - list of api symbols of pairs
-    public void removeOutdatedPairs(String[] pairs) {
-        if (updatable == false)
-            throw new IllegalStateException("shouldnt be called when table not updateable");
-        Set<String> newPairs = Set.of(pairs);
-        Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
-        outdatedPairs.removeAll(newPairs);
-        for (String pair : outdatedPairs) {
-            tablePairPriceChangesObservableList.remove(pairPriceChangesMap.get(pair));
-            pairPriceChangesMap.remove(pair);
-        }
-    }
-
-    // clears a table
-    public void clearTable() {
-        if (updatable == false)
-            throw new IllegalStateException("shouldnt be called when table not updateable");
-        Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
-        pairPriceChangesMap.clear();
-    }
-
-    public ObservableList<TablePairPriceChanges> getReadonlyTableItems() {
-        return FXCollections.unmodifiableObservableList(tablePairPriceChangesObservableList);
+        scheduledExecutorService.scheduleWithFixedDelay(() -> Platform.runLater(() -> tableView.sort()), TABLE_SORT_FREQUENCY_MILLIS, TABLE_SORT_FREQUENCY_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     public void enableShowExchange() {
@@ -244,26 +185,8 @@ public class PriceChangesTable {
         buttonsFocusTraversable = false;
     }
 
-    // returns property with last price which is updated every time it's updated in the table
-    //  pair - currency pair in api format
-    public synchronized SimpleDoubleProperty subscribeTicker(String pair) {
-        SimpleDoubleProperty property = new SimpleDoubleProperty();
-        TablePairPriceChanges tableChanges = pairPriceChangesMap.get(pair);
-        if (tableChanges != null) {
-            property.bind(tableChanges.lastPriceProperty());
-        }
-        subscribedTickers.put(pair, property);
-        return property;
-    }
-
-    // unsubscribe last price updates
-    //  pair - currency pair in api format
-    public synchronized void unsubscribeTicker(String pair) {
-        SimpleDoubleProperty property = subscribedTickers.get(pair);
-        if (property != null) {
-            property.unbind();
-        }
-        subscribedTickers.remove(pair);
+    public void enablePinnedCheckboxes() {
+        pinnedCheckboxes = true;
     }
 
 }

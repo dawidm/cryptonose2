@@ -346,7 +346,7 @@ public class CryptonoseGuiController extends Application {
             mainTabPane.getSelectionModel().select(tab);
         CryptonoseGuiExchangeController cryptonoseGuiExchangeController = exchangeLoader.getController();
         cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
-        final ObservableList<TablePairPriceChanges> readOnlyTableItems = cryptonoseGuiExchangeController.getReadonlyTableItems();
+        final ObservableList<TablePairPriceChanges> readOnlyTableItems = cryptonoseGuiExchangeController.getPairsData();
         tableItemsAggregate.addList(readOnlyTableItems);
         tab.setOnCloseRequest((event) -> {
             logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
@@ -418,7 +418,7 @@ public class CryptonoseGuiController extends Application {
         });
         findTextField.requestFocus();
         findTextField.setText("");
-        PriceChangesTable priceChangesTable = PriceChangesTable.nonUpdateableTable(findTableView, filteredPairsList, CryptonoseSettings.TIME_PERIODS);
+        PriceChangesTable priceChangesTable = new PriceChangesTable(findTableView, filteredPairsList, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableShowExchange();
         priceChangesTable.disablePluginButtonsFocusTraversable();
         priceChangesTable.init();

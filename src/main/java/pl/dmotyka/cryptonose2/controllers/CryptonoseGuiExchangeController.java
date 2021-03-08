@@ -38,7 +38,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,7 +67,6 @@ import pl.dmotyka.cryptonoseengine.EngineMessage;
 import pl.dmotyka.cryptonoseengine.EngineMessageReceiver;
 import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
-import pl.dmotyka.exchangeutils.chartdataprovider.ChartDataReceiver;
 import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.chartutils.LiquidityFactor;
@@ -124,6 +122,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private CryptonoseGuiSoundAlerts cryptonoseGuiSoundAlerts;
     private final LiquidityFactor liquidityFactorIndicator = new LiquidityFactor();
 
+    private ExchangePairsDataModel pairsDataModel;
     private PriceChangesTable priceChangesTable;
     private final AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
     private final AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
@@ -149,7 +148,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts();
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
-        priceChangesTable = new PriceChangesTable(currenciesTableView, exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
+        pairsDataModel = new ExchangePairsDataModel(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
+        priceChangesTable = new PriceChangesTable(currenciesTableView, pairsDataModel.getItems(), CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.init();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());
         startEngine();
@@ -166,7 +166,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
-        priceChangesTable.clearTable();
+        pairsDataModel.clear();
         lastUpdateTimeMillis.set(0);
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
@@ -287,7 +287,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 break;
             case AUTO_REFRESHING_DONE:
                 lastUpdateTimeMillis.set(System.currentTimeMillis());
-                priceChangesTable.removeOutdatedPairs(engine.getAllPairs());
+                pairsDataModel.removeOutdatedPairs(engine.getAllPairs());
         }
     }
 
@@ -328,7 +328,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
         if(currenciesTableView.isVisible()) {
-            Platform.runLater(() -> priceChangesTable.updateTable(priceChangesList));
+            Platform.runLater(() -> pairsDataModel.updateData(priceChangesList));
         }
     }
 
@@ -400,7 +400,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void reconnectEngine() {
         lastUpdateTimeMillis.set(0);
-        priceChangesTable.clearTable();
+        pairsDataModel.clear();
         javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
         new Thread(() -> engine.reconnect()).start();
     }
@@ -427,7 +427,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public void enablePowerSave(boolean enable) {
         currenciesTableView.setVisible(!enable);
         if(!enable && engine!=null)
-            priceChangesTable.updateTable(Arrays.asList(engine.requestAllPairsChanges()));
+            pairsDataModel.updateData(Arrays.asList(engine.requestAllPairsChanges()));
     }
 
     public boolean getIsSoundEnabled() {
@@ -440,32 +440,12 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         return notificationCheckBox.isSelected();
     }
 
-    public ObservableList<TablePairPriceChanges> getReadonlyTableItems() {
-        return priceChangesTable.getReadonlyTableItems();
+    public ObservableList<TablePairPriceChanges> getReadonlyPairsData() {
+        return pairsDataModel.getReadonlyItems();
     }
 
-    // returns property with last price which is updated every time it's updated in the table
-    //  pair - currency pair in api format
-    public SimpleDoubleProperty subscribeTicker(String pair) {
-        if (priceChangesTable == null) {
-            throw new IllegalStateException("you should call init() first");
-        }
-        return priceChangesTable.subscribeTicker(pair);
-    }
-
-    // unsubscribe last price updates
-    //  pair - currency pair in api format
-    public void unsubscribeTicker(String pair) {
-        if (priceChangesTable == null) {
-            throw new IllegalStateException("you should call init() first");
-        }
-        priceChangesTable.unsubscribeTicker(pair);
-    }
-
-    // subscribe chart data
-    //  chartDataReceiver - will be updated with map with chart data for all pairs for which exchange connection is active
-    public void subscribeChartData(ChartDataReceiver chartDataReceiver) {
-        engine.subscribeChartData(chartDataReceiver);
+    public ObservableList<TablePairPriceChanges> getPairsData() {
+        return pairsDataModel.getItems();
     }
 
 }
