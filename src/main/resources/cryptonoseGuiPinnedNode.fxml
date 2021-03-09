@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
@@ -32,4 +33,7 @@
    <cursor>
       <Cursor fx:constant="HAND" />
    </cursor>
+   <padding>
+      <Insets bottom="4.0" left="5.0" right="5.0" top="4.0" />
+   </padding>
 </HBox>
