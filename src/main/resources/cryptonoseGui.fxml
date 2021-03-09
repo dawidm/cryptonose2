@@ -77,6 +77,11 @@
             <Label styleClass="h2" text="Find (press F)..." />
          </graphic>
       </TitledPane>
+      <HBox fx:id="pinnedHBox" alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
       <TabPane fx:id="mainTabPane" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" />
       <TitledPane animated="false" collapsible="false" VBox.vgrow="NEVER">
          <content>

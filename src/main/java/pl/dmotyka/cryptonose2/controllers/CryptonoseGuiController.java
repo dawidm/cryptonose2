@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -104,9 +105,12 @@ public class CryptonoseGuiController extends Application {
     public TableView<TablePairPriceChanges> findTableView;
     @FXML
     public TextField findTextField;
+    @FXML
+    public HBox pinnedHBox;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
-    private ObservableListAggregate<TablePairPriceChanges> tableItemsAggregate = new ObservableListAggregate<>();
+    private final ObservableListAggregate<TablePairPriceChanges> tableItemsAggregate = new ObservableListAggregate<>();
+    private final List<PinnedTicker> pinnedTickers = new LinkedList<>();
 
     private CryptonoseGuiPriceAlertsTabController priceAlertsTabController;
 
@@ -238,6 +242,57 @@ public class CryptonoseGuiController extends Application {
 
         primaryStage.show();
         initShortcuts();
+
+        tableItemsAggregate.setListener(new ObservableListAggregate.AggregateChangeListener<>() {
+            @Override
+            public void onChange(ObservableList<? extends TablePairPriceChanges> changedList) {
+
+            }
+
+            @Override
+            public void added(List<? extends TablePairPriceChanges> added) {
+                for (var tablePriceChanges : added) {
+                    tablePriceChanges.pinnedProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue) {
+                            addPinnedTickers(List.of(tablePriceChanges));
+                        } else {
+                            removePinnedTickers(List.of(tablePriceChanges));
+                        }
+                    });
+                }
+                addPinnedTickers(added.stream().filter(tablePairPriceChanges -> tablePairPriceChanges.pinnedProperty().get()).collect(Collectors.toList()));
+            }
+
+            @Override
+            public void removed(List<? extends TablePairPriceChanges> removed) {
+                removePinnedTickers(removed);
+            }
+        });
+    }
+
+    private void addPinnedTickers(List<? extends TablePairPriceChanges> newItems) {
+        for (var tablePriceChanges : newItems) {
+            UILoader<CryptonoseGuiPinnedNodeController> pinnedLoader = new UILoader<>("cryptonoseGuiPinnedNode.fxml");
+            CryptonoseGuiPinnedNodeController pnCtrl = pinnedLoader.getController();
+            pnCtrl.init(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName(), tablePriceChanges.lastPriceProperty(), tablePriceChanges.chartCandlesProperty());
+            PinnedTicker newPt = new PinnedTicker(tablePriceChanges, pnCtrl, pinnedLoader.getRoot());
+            pinnedTickers.add(newPt);
+            pinnedHBox.getChildren().add(pinnedHBox.getChildren().size(), newPt.getRoot());
+            newPt.setListPosition(pinnedHBox.getChildren().size());
+        }
+    }
+
+    private void removePinnedTickers(List<? extends TablePairPriceChanges> removed) {
+        for (var tablePairPriceChanges : removed) {
+            var pinnedIt = pinnedTickers.iterator();
+            while (pinnedIt.hasNext()) {
+                PinnedTicker pinned = pinnedIt.next();
+                if (pinned.getTablePairPriceChanges() == tablePairPriceChanges) {
+                    pinnedHBox.getChildren().removeIf(node -> node == pinned.getRoot());
+                    pinnedIt.remove();
+                }
+            }
+        }
     }
 
     private void checkVersion() {
@@ -408,18 +463,11 @@ public class CryptonoseGuiController extends Application {
                     findTextField.requestFocus();
             }
         });
-        findTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && oldValue && !findTableView.isFocused() && !findTitledPane.isFocused())
-                findTitledPane.setExpanded(false);
-        });
-        findTableView.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue && oldValue && !findTextField.isFocused() && !findTitledPane.isFocused())
-                findTitledPane.setExpanded(false);
-        });
         findTextField.requestFocus();
         findTextField.setText("");
         PriceChangesTable priceChangesTable = new PriceChangesTable(findTableView, filteredPairsList, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableShowExchange();
+        priceChangesTable.enablePinnedCheckboxes();
         priceChangesTable.disablePluginButtonsFocusTraversable();
         priceChangesTable.init();
     }
