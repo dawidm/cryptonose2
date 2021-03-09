@@ -70,25 +70,30 @@ public class CryptonoseGuiPinnedNodeController {
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
         if (chartCandlesProperty.get() != null) {
             updateChartValues(chartCandlesProperty.get());
-            priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length-1]));
+            Platform.runLater(() -> {
+                if (!mainHBox.isVisible()) {
+                    mainHBox.setVisible(true);
+                }
+                priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length - 1]));
+                updateChart();
+            });
         }
         chartCandlesProperty.addListener(((observable, oldValue, newValue) -> {
             updateChartValues(newValue);
-            if (!mainHBox.isVisible()) {
-                Platform.runLater(() -> {
+            Platform.runLater(() -> {
+                if (!mainHBox.isVisible()) {
                     mainHBox.setVisible(true);
                     priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length-1]));
-                });
-            }
-            updateChart();
+                }
+                updateChart();
+            });
         }));
         priceProperty.addListener((observable, oldValue, newValue) -> {
             if (!mainHBox.isVisible()) {
                 Platform.runLater(() -> mainHBox.setVisible(true));
-                updateChart();
             }
             if (milliTime() - lastChartUpdateMs > MIN_UPDATE_PERIOD_MS) {
-                priceLabel.setText(DecimalFormatter.formatDecimalPrice(newValue.doubleValue()));
+                Platform.runLater(() -> priceLabel.setText(DecimalFormatter.formatDecimalPrice(newValue.doubleValue())));
                 updateChartLastVal(newValue.doubleValue());
                 lastChartUpdateMs = milliTime();
             }
@@ -128,7 +133,7 @@ public class CryptonoseGuiPinnedNodeController {
     }
 
     private synchronized void updateChartLastVal(double val) {
-        if (minimalFxChart != null) {
+        if (minimalFxChart != null && lastChartValues.length > 0) {
             lastChartValues[lastChartValues.length-1] = val;
             Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
         } else {
