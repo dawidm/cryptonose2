@@ -18,6 +18,10 @@
     -fx-text-fill: #2ECC40
 }
 
+.huobi-color {
+    -fx-text-fill: #7FDBFF
+}
+
 .status-connecting {
     -fx-background-color: #FFDC00
 }
