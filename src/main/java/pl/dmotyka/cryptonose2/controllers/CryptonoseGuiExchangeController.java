@@ -198,6 +198,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             engine.setEngineMessageReceiver(this);
             engine.setEngineUpdateHeartbeatReceiver(this);
             engine.useMedianRelativeChanges();
+            engine.subscribeChartData(map -> pairsDataModel.updateChartData(map));
             engine.start();
         }).start();
     }
