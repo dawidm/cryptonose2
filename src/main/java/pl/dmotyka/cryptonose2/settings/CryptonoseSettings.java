@@ -26,7 +26,7 @@ public class CryptonoseSettings {
     public static final int FONT_MIN_SIZE = 6;
     public static final int FONT_MAX_SIZE = 24;
 
-    public static final long[] TIME_PERIODS = {300,1800};
+    public static final long[] TIME_PERIODS = {300,1800}; // keep it sorted
     public static final long ALERTS_PAUSE_SECONDS = 1800; // how long to block subsequent alerts for the same pair (if the option is active)
     public static final long NO_TRADES_WARNING_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
