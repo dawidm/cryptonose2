@@ -14,6 +14,7 @@
 package pl.dmotyka.cryptonose2.tools;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -48,14 +49,27 @@ public class ObservableListAggregateTest {
         assertEquals(4, obsAgg.size());
 
         AtomicBoolean changed = new AtomicBoolean(false);
-        agg.setListener(list -> {
-            changed.set(true);
+        agg.setListener(new ObservableListAggregate.AggregateChangeListener<String>() {
+            @Override
+            public void onChange(ObservableList<? extends String> changedList) {
+                changed.set(true);
+            }
+
+            @Override
+            public void added(List<? extends String> added) {
+                assertArrayEquals(new String[] {"x"}, added.toArray());
+            }
+
+            @Override
+            public void removed(List<? extends String> removed) {
+                assertArrayEquals(new String[] {"y"}, removed.toArray());
+            }
         });
         l1.add("x"); // should call listener cause the list was removed
         assertFalse(changed.get());
         l3.add("x");
         assertTrue(changed.get());
-
+        l3.remove("y");
     }
 
 }

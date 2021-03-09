@@ -27,13 +27,15 @@ public class ObservableListAggregate<T> {
 
     private static final Logger logger = Logger.getLogger(ObservableListAggregate.class.getName());
 
-    public interface OnChangeListener<T> {
-        void onChange(ObservableList<T> changedList);
+    public interface AggregateChangeListener<T> {
+        void onChange(ObservableList<? extends T> changedList);
+        void added(List<? extends T> added);
+        void removed(List<? extends T> removed);
     }
 
-    private OnChangeListener<T> onChangeListener;
+    private AggregateChangeListener<T> aggregateChangeListener;
 
-    private final List<ObservableList<T>> lists = new LinkedList();
+    private final List<ObservableList<T>> lists = new LinkedList<>();
     private final ObservableList<T> aggregate = FXCollections.observableArrayList();
 
     private final Map<ObservableList<T>, ListChangeListener<T>> listListenersMap = new HashMap<>();
@@ -42,13 +44,32 @@ public class ObservableListAggregate<T> {
         lists.add(list);
         ListChangeListener<T> listener = c -> {
             refreshAggregate();
-            if (onChangeListener != null) {
-                onChangeListener.onChange(aggregate);
+            if (aggregateChangeListener != null) {
+                List<T> added = new LinkedList<>();
+                List<T> removed = new LinkedList<>();
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        added.addAll(c.getAddedSubList());
+                    }
+                    if (c.wasRemoved()) {
+                        removed.addAll(c.getRemoved());
+                    }
+                }
+                aggregateChangeListener.onChange(FXCollections.unmodifiableObservableList(aggregate));
+                if (added.size() != 0) {
+                    aggregateChangeListener.added(added);
+                }
+                if (removed.size() != 0) {
+                    aggregateChangeListener.removed(removed);
+                }
             }
         };
         list.addListener(listener);
         listListenersMap.put(list, listener);
         refreshAggregate();
+        if (aggregateChangeListener != null) {
+            aggregateChangeListener.added(FXCollections.unmodifiableObservableList(list));
+        }
     }
 
     public synchronized void removeList(ObservableList<T> list) {
@@ -60,6 +81,9 @@ public class ObservableListAggregate<T> {
         }
         listListenersMap.remove(list);
         lists.remove(list);
+        if (aggregateChangeListener != null) {
+            aggregateChangeListener.removed(FXCollections.unmodifiableObservableList(list));
+        }
         refreshAggregate();
     }
 
@@ -73,8 +97,8 @@ public class ObservableListAggregate<T> {
         return FXCollections.observableArrayList(aggregate);
     }
 
-    public void setListener(OnChangeListener<T> listener) {
-        this.onChangeListener = listener;
+    public void setListener(AggregateChangeListener<T> listener) {
+        this.aggregateChangeListener = listener;
     }
 
     private void refreshAggregate() {
