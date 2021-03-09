@@ -60,13 +60,18 @@ public class CryptonoseGuiPinnedNodeController {
         lastChartUpdateMs = milliTime();
     }
 
-    public synchronized void fillPane(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
+    public synchronized void init(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
         this.exchangeSpecs = exchangeSpecs;
         this.pairName = pairName;
         this.priceProperty = priceProperty;
         this.chartCandlesProperty = chartCandlesProperty;
+        mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
+        if (chartCandlesProperty.get() != null) {
+            updateChartValues(chartCandlesProperty.get());
+            priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length-1]));
+        }
         chartCandlesProperty.addListener(((observable, oldValue, newValue) -> {
             updateChartValues(newValue);
             if (!mainHBox.isVisible()) {
@@ -109,6 +114,8 @@ public class CryptonoseGuiPinnedNodeController {
     }
 
     private void updateChart() {
+        if (mainHBox.getWidth() == 0 || lastChartValues == null)
+            return;
         if (minimalFxChart != null) {
             Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
         } else {
