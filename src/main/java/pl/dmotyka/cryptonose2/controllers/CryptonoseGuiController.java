@@ -243,6 +243,9 @@ public class CryptonoseGuiController extends Application {
         primaryStage.show();
         initShortcuts();
 
+        pinnedHBox.visibleProperty().bind(powerSaveCheckBox.selectedProperty().not());
+        pinnedHBox.managedProperty().bind(powerSaveCheckBox.selectedProperty().not());
+
         tableItemsAggregate.setListener(new ObservableListAggregate.AggregateChangeListener<>() {
             @Override
             public void onChange(ObservableList<? extends TablePairPriceChanges> changedList) {
