@@ -156,6 +156,9 @@ public class PriceChangesTable {
         } else
             tableView.getColumns().addAll(pairNameCol,lastPriceCol,p1ChangeCol,p1RelativeChangeCol,p2ChangeCol,p2RelativeChangeCol, buttonsCol);
         tableView.setItems(items);
+        if (pinnedCheckboxes) {
+            tableView.setEditable(true);
+        }
         tableView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
