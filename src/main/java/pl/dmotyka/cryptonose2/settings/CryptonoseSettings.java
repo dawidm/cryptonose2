@@ -31,7 +31,7 @@ public class CryptonoseSettings {
     public static final long NO_TRADES_WARNING_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
     public static final long MINI_CHART_TIME_PERIOD_SEC = 300;
-    public static final long MINI_CHART_TIMEFRAME_SEC = 7200;
+    public static final long MINI_CHART_TIMEFRAME_SEC = 14400;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
     public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
