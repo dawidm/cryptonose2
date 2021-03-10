@@ -17,4 +17,5 @@ module cryptonose {
     requires org.apache.commons.text;
     exports pl.dmotyka.cryptonose2.controllers;
     exports pl.dmotyka.cryptonose2.cryptopanic;
+    exports pl.dmotyka.cryptonose2.tools;
 }
