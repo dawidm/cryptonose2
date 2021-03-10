@@ -329,7 +329,7 @@ public class CryptonoseGuiController extends Application {
             if (event.getCode() == KeyCode.F) {
                 event.consume();
                 if (findTitledPane.isExpanded()) {
-                    findTitledPane.setExpanded(false);
+                    Platform.runLater(() -> findTextField.requestFocus());
                 } else {
                     findTitledPane.setExpanded(true);
                 }
