@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -384,7 +385,6 @@ public class CryptonoseGuiController extends Application {
     private void showFindPane() {
         ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getAggregate();
         FXCollections.sort(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
-        findTableView.getColumns().clear();
         FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
         findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
         findTextField.setOnKeyPressed(event -> {

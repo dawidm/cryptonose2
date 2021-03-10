@@ -93,6 +93,7 @@ public class PriceChangesTable {
 
     // add columns and cell factories (including price alert plugins), add listener for double click
     public void init() {
+        tableView.getColumns().clear();
         TableColumn<TablePairPriceChanges,String> pairNameCol = new TableColumn("Pair name");
         pairNameCol.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getFormattedPairName()));
         pairNameCol.setMaxWidth(Integer.MAX_VALUE * 0.2);
