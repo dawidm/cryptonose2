@@ -385,7 +385,13 @@ public class CryptonoseGuiController extends Application {
     private void showFindPane() {
         ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getObservableAggregate();
         FXCollections.sort(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
-        SortedList<TablePairPriceChanges> sortedPairsList = new SortedList<>(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
+        SortedList<TablePairPriceChanges> sortedPairsList = new SortedList<>(allPairsObservableList, Comparator.comparing(item -> {
+            if (item.pinnedProperty().get()) {
+                return "a" + item.getFormattedPairName();
+            } else {
+                return "b" + item.getFormattedPairName();
+            }
+        }, String::compareTo));
         FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(sortedPairsList);
         findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
         findTextField.setOnKeyPressed(event -> {
