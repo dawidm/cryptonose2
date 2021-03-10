@@ -403,6 +403,7 @@ public class CryptonoseGuiController extends Application {
                     findTableView.scrollTo(0);
                     findTableView.requestFocus();
                     findTableView.getOnKeyPressed().handle(event);
+                    Platform.runLater(() -> findTitledPane.setExpanded(false));
                 }
             }
         });
