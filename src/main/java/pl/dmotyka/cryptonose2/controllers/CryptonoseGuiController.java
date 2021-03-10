@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -383,9 +383,10 @@ public class CryptonoseGuiController extends Application {
     }
 
     private void showFindPane() {
-        ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getAggregate();
+        ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getObservableAggregate();
         FXCollections.sort(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
-        FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
+        SortedList<TablePairPriceChanges> sortedPairsList = new SortedList<>(allPairsObservableList, Comparator.comparing(TablePairPriceChanges::getFormattedPairName));
+        FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(sortedPairsList);
         findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
         findTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE)
