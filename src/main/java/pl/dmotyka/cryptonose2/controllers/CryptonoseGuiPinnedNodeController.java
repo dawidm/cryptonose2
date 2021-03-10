@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -98,7 +99,11 @@ public class CryptonoseGuiPinnedNodeController {
                 lastChartUpdateMs = milliTime();
             }
         });
-        mainHBox.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(pairName, exchangeSpecs));
+        mainHBox.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                CryptonoseGuiBrowser.runBrowser(pairName, exchangeSpecs);
+            }
+        });
         mainHBox.managedProperty().bind(mainHBox.visibleProperty());
         mainHBox.setVisible(false);
     }

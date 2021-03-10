@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -85,7 +86,9 @@ public class CryptonoseGuiPriceAlertNodeController {
             pairNameLabel.getStyleClass().add(priceAlert.getExchangeSpecs().getName().toLowerCase()+"-color");
         }
         mainHBox.setOnMouseClicked((event) -> {
-            CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
+            if (event.getButton() == MouseButton.PRIMARY) {
+                CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(), priceAlert.getExchangeSpecs());
+            }
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
         String baseCurrency = priceAlert.getExchangeSpecs().getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(priceAlert.getPair()).base.getCurrencyCode();
