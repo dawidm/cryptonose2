@@ -13,14 +13,15 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 
 import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
 
 public class PinnedTickersHBox {
@@ -28,7 +29,7 @@ public class PinnedTickersHBox {
     private final HBox pinnedHBox;
     private final ObservableListAggregate<TablePairPriceChanges> items;
 
-    private final List<PinnedTicker> pinnedTickers = new LinkedList<>();
+    private final TreeSet<PinnedTicker> pinnedTickers = new TreeSet<>();
 
     public PinnedTickersHBox(HBox pinnedHBox, ObservableListAggregate<TablePairPriceChanges> items) {
         this.pinnedHBox = pinnedHBox;
@@ -39,16 +40,7 @@ public class PinnedTickersHBox {
 
             @Override
             public void added(List<? extends TablePairPriceChanges> added) {
-                for (var tablePriceChanges : added) {
-                    tablePriceChanges.pinnedProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue) {
-                            addPinnedTickers(List.of(tablePriceChanges));
-                        } else {
-                            removePinnedTickers(List.of(tablePriceChanges));
-                        }
-                    });
-                }
-                addPinnedTickers(added.stream().filter(tablePairPriceChanges -> tablePairPriceChanges.pinnedProperty().get()).collect(Collectors.toList()));
+                handleAdded(added);
             }
 
             @Override
@@ -58,15 +50,42 @@ public class PinnedTickersHBox {
         });
     }
 
+    private void handleAdded(List<? extends TablePairPriceChanges> added) {
+        for (var tablePriceChanges : added) {
+            long pinTime = CryptonoseSettings.getPinnedTimestampMs(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
+            if (pinTime != 0) {
+                tablePriceChanges.setPinned(true);
+                tablePriceChanges.setPinnedTimestampMs(pinTime);
+            }
+            tablePriceChanges.pinnedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    long timestampMs = CryptonoseSettings.pinTicker(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
+                    tablePriceChanges.setPinnedTimestampMs(timestampMs);
+                    addPinnedTickers(List.of(tablePriceChanges));
+                } else {
+                    CryptonoseSettings.unpinTicker(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
+                    removePinnedTickers(List.of(tablePriceChanges));
+                }
+            });
+        }
+        addPinnedTickers(added.stream().filter(tablePairPriceChanges -> tablePairPriceChanges.pinnedProperty().get()).collect(Collectors.toList()));
+    }
+
+    // pinnedStateChanged - whether tickers are added because their pinned state changed from false to true
     private void addPinnedTickers(List<? extends TablePairPriceChanges> newItems) {
         for (var tablePriceChanges : newItems) {
             UILoader<CryptonoseGuiPinnedNodeController> pinnedLoader = new UILoader<>("cryptonoseGuiPinnedNode.fxml");
             CryptonoseGuiPinnedNodeController pnCtrl = pinnedLoader.getController();
             pnCtrl.init(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName(), tablePriceChanges.lastPriceProperty(), tablePriceChanges.chartCandlesProperty());
             PinnedTicker newPt = new PinnedTicker(tablePriceChanges, pnCtrl, pinnedLoader.getRoot());
-            pinnedTickers.add(newPt);
-            pinnedHBox.getChildren().add(pinnedHBox.getChildren().size(), newPt.getRoot());
-            newPt.setListPosition(pinnedHBox.getChildren().size());
+            if (pinnedTickers.add(newPt)) {
+                PinnedTicker lowerPt = pinnedTickers.lower(newPt);
+                if (lowerPt != null) {
+                    pinnedHBox.getChildren().add(pinnedHBox.getChildren().indexOf(lowerPt.getRoot())+1, newPt.getRoot());
+                } else {
+                    pinnedHBox.getChildren().add(0,newPt.getRoot());
+                }
+            }
         }
     }
 

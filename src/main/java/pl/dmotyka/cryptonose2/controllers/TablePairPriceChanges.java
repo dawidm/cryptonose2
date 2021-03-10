@@ -30,6 +30,7 @@ public class TablePairPriceChanges {
     public static final int PERIOD2 = 2;
 
     private final SimpleBooleanProperty pinnedProperty;
+    private long pinnedTimestampSec = 0;
     private final ExchangeSpecs exchangeSpecs;
     private final String pairName;
     private final String formattedPairName;
@@ -65,6 +66,10 @@ public class TablePairPriceChanges {
         return pinnedProperty;
     }
 
+    public long getPinnedTimestampMs() {
+        return pinnedTimestampSec;
+    }
+
     public SimpleDoubleProperty p1PercentChangeProperty() {
         return p1PercentChange;
     }
@@ -87,6 +92,10 @@ public class TablePairPriceChanges {
 
     public void setPinned(boolean pinned) {
         pinnedProperty.set(pinned);
+    }
+
+    public void setPinnedTimestampMs(long pinnedTimestampSec) {
+        this.pinnedTimestampSec = pinnedTimestampSec;
     }
 
     public void setPriceChanges(PriceChanges priceChanges, int period) {

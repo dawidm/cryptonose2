@@ -142,6 +142,8 @@ public class CryptonoseSettings {
     }
 
     public static class General {
+        public static String PINNED_NODE_KEY = "pinned";
+
         public static final GeneralPreferenceSpecs<Boolean> USE_DEF_BROWSER = new GeneralPreferenceSpecs<>("tryUseDefBrowser", true);
         public static final GeneralPreferenceSpecs<String> BROWSER_PATH = new GeneralPreferenceSpecs<>("browserPath", "");
         public static final GeneralPreferenceSpecs<Boolean> USE_DEF_RISING_SOUND = new GeneralPreferenceSpecs<>("defaultRisingSound", true);
@@ -298,12 +300,38 @@ public class CryptonoseSettings {
     public static void putDouble(PreferenceSpecs<Double> specs, double val, ExchangeSpecs forExchange) {
         getPrefsNode(specs.getCategory(), forExchange).putDouble(specs.getKey(), val);
     }
+    public static void putLong(PreferenceSpecs<Double> specs, long val) {
+        putLong(specs, val, null);
+    }
+
+    public static void putLong(PreferenceSpecs<Double> specs, long val, ExchangeSpecs forExchange) {
+        getPrefsNode(specs.getCategory(), forExchange).putLong(specs.getKey(), val);
+    }
+
 
     public static Preferences getPrefsNode(PreferenceCategory category, ExchangeSpecs exchangeSpecs) {
         if (exchangeSpecs == null)
             return mainNode.node(category.nodeKey);
         else
             return mainNode.node(category.nodeKey).node(exchangeSpecs.getName());
+    }
+
+    public static long getPinnedTimestampMs(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
+        Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_GENERAL_PREFS, exchangeSpecs).node(General.PINNED_NODE_KEY);
+        return prefs.getLong(pairApiSymbol, 0);
+    }
+
+    // returns milliseconds timestamp for time pinned
+    public static long pinTicker(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
+        Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_GENERAL_PREFS, exchangeSpecs).node(General.PINNED_NODE_KEY);
+        long timestamp = System.currentTimeMillis();
+        prefs.putLong(pairApiSymbol, timestamp);
+        return timestamp;
+    }
+
+    public static void unpinTicker(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
+        Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_GENERAL_PREFS, exchangeSpecs).node(General.PINNED_NODE_KEY);
+        prefs.putInt(pairApiSymbol, 0);
     }
 
 }

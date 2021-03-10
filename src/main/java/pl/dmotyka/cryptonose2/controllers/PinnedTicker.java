@@ -15,9 +15,8 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import javafx.scene.Parent;
 
-public class PinnedTicker {
+public class PinnedTicker implements Comparable<PinnedTicker> {
 
-    private int listPosition = Integer.MAX_VALUE;
     private final TablePairPriceChanges tablePairPriceChanges;
     private final CryptonoseGuiPinnedNodeController controller;
     private final Parent root;
@@ -40,11 +39,8 @@ public class PinnedTicker {
         return root;
     }
 
-    public int getListPosition() {
-        return listPosition;
-    }
-
-    public void setListPosition(int listPosition) {
-        this.listPosition = listPosition;
+    @Override
+    public int compareTo(PinnedTicker o) {
+        return Long.compare(this.getTablePairPriceChanges().getPinnedTimestampMs(), o.tablePairPriceChanges.getPinnedTimestampMs());
     }
 }
