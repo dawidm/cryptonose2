@@ -30,6 +30,7 @@ import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
+import pl.dmotyka.exchangeutils.tools.TimeConverter;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
 public class CryptonoseGuiPinnedNodeController {
@@ -70,7 +71,7 @@ public class CryptonoseGuiPinnedNodeController {
         mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
-        Tooltip.install(chartPane, new Tooltip("Chart time frame: 4h"));
+        Tooltip.install(chartPane, new Tooltip(String.format("Chart time frame: %s", TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC))));
         if (chartCandlesProperty.get() != null) {
             updateChartValues(chartCandlesProperty.get());
             Platform.runLater(() -> {
