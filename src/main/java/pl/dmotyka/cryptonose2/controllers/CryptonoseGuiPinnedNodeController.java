@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -69,6 +70,7 @@ public class CryptonoseGuiPinnedNodeController {
         mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
+        Tooltip.install(chartPane, new Tooltip("Chart time frame: 4h"));
         if (chartCandlesProperty.get() != null) {
             updateChartValues(chartCandlesProperty.get());
             Platform.runLater(() -> {
