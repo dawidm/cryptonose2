@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -25,8 +26,22 @@
       <StackPane fx:id="chartPane" styleClass="pinned-mini-chart" />
       <VBox>
          <children>
-            <Label fx:id="pairLabel" styleClass="pinned-price" text="(pair)" />
-            <Label fx:id="priceLabel" styleClass="pinned-price" text="(price)" />
+            <Label fx:id="pairLabel" text="(pair)">
+               <styleClass>
+                  <String fx:value="pinned-price" />
+                  <String fx:value="pinned-font" />
+               </styleClass></Label>
+            <Label fx:id="priceLabel" text="(price)">
+               <styleClass>
+                  <String fx:value="pinned-price" />
+                  <String fx:value="pinned-font" />
+               </styleClass></Label>
+            <Label fx:id="changeLabel" text="(change)">
+               <styleClass>
+                  <String fx:value="pinned-price" />
+                  <String fx:value="pinned-font" />
+               </styleClass>
+            </Label>
          </children>
       </VBox>
    </children>

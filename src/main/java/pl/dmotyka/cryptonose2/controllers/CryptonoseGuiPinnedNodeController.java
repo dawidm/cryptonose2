@@ -57,6 +57,8 @@ public class CryptonoseGuiPinnedNodeController {
     @FXML
     public Label priceLabel;
     @FXML
+    public Label changeLabel;
+    @FXML
     public Pane chartPane;
 
     public CryptonoseGuiPinnedNodeController() {
@@ -129,6 +131,7 @@ public class CryptonoseGuiPinnedNodeController {
     private void updateChart() {
         if (mainHBox.getWidth() == 0 || lastChartValues == null)
             return;
+        updateChangeLabel();
         if (minimalFxChart != null) {
             Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
         } else {
@@ -143,10 +146,18 @@ public class CryptonoseGuiPinnedNodeController {
     private synchronized void updateChartLastVal(double val) {
         if (minimalFxChart != null && lastChartValues.length > 0) {
             lastChartValues[lastChartValues.length-1] = val;
-            Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
+            Platform.runLater(() -> {
+                updateChangeLabel();
+                minimalFxChart.repaint(lastChartValues);
+            });
         } else {
             logger.warning("nothing to update");
         }
+    }
+
+    private void updateChangeLabel() {
+        double change = 100 * (lastChartValues[lastChartValues.length-1] - lastChartValues[0]) / lastChartValues[0];
+        changeLabel.setText(String.format("%.1f%% (%s)", change, TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC)));
     }
 
     private long milliTime() {

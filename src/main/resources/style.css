@@ -29,10 +29,14 @@
 }
 
 .pinned-mini-chart {
-    -fx-pref-width: 6em;
+    -fx-pref-width: 7em;
 }
 
 .pinned-price {
     -fx-pref-width: 7em;
     -fx-max-width: 7em;
+}
+
+.pinned-font {
+    -fx-font-size: 90%;
 }
