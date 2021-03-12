@@ -23,7 +23,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
 
 public class CryptonoseGuiVersionWindowController implements Initializable {

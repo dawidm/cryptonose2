@@ -11,7 +11,7 @@
  *
  */
 
-package pl.dmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2.model;
 
 import java.util.HashMap;
 import java.util.LinkedList;

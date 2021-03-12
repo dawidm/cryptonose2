@@ -31,9 +31,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonose2.PriceAlertPlugin;
-import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.model.PriceAlertPlugin;
+import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonose2.coingecko.GeckoApi;
 import pl.dmotyka.cryptonose2.coingecko.GeckoCurrencyInfo;
 import pl.dmotyka.cryptonose2.coingecko.GeckoNoSuchSymbolException;

@@ -15,6 +15,8 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import javafx.scene.Parent;
 
+import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
+
 public class PinnedTicker implements Comparable<PinnedTicker> {
 
     private final CryptonosePairData cnPairData;

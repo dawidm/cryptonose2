@@ -52,14 +52,13 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiAlertChecker;
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonose2.CryptonoseGuiNotification;
-import pl.dmotyka.cryptonose2.CryptonoseGuiSoundAlerts;
-import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.model.CryptonoseGuiAlertChecker;
+import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
+import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
+import pl.dmotyka.cryptonose2.model.ExchangePairsDataModel;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;

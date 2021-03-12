@@ -11,7 +11,7 @@
  *
  */
 
-package pl.dmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2.controllers;
 
 import javax.swing.SwingUtilities;
 
@@ -19,7 +19,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 import dorkbox.notify.Notify;
-import pl.dmotyka.cryptonose2.controllers.DecimalFormatter;
 import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;

@@ -11,7 +11,7 @@
  *
  */
 
-package pl.dmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.dataobj;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;

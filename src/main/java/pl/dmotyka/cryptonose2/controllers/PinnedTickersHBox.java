@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 
-import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.tools.UILoader;
+import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
 

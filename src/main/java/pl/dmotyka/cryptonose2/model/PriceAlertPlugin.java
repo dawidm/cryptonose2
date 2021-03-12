@@ -11,7 +11,7 @@
  *
  */
 
-package pl.dmotyka.cryptonose2;
+package pl.dmotyka.cryptonose2.model;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.Node;

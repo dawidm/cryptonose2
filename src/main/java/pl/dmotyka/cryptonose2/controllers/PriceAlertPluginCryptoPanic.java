@@ -30,9 +30,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-import pl.dmotyka.cryptonose2.PriceAlertPlugin;
-import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.model.PriceAlertPlugin;
+import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonose2.cryptopanic.CryptoPanicApi;
 import pl.dmotyka.cryptonose2.cryptopanic.CryptoPanicNews;
 

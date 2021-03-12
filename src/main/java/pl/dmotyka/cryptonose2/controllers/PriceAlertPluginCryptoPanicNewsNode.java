@@ -24,7 +24,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
 import pl.dmotyka.cryptonose2.cryptopanic.CryptoPanicNews;
 
 public class PriceAlertPluginCryptoPanicNewsNode implements Initializable {

@@ -23,8 +23,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
-
 public class CryptonoseGuiHelpWindowController implements Initializable {
 
     @FXML

@@ -58,7 +58,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import pl.dmotyka.cryptonose2.UILoader;
+import pl.dmotyka.cryptonose2.tools.UILoader;
+import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;

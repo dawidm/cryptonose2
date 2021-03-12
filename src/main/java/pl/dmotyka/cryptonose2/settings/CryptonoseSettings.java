@@ -15,7 +15,7 @@ package pl.dmotyka.cryptonose2.settings;
 
 import java.util.prefs.Preferences;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiNotification;
+import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiNotification;
 import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiController;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;

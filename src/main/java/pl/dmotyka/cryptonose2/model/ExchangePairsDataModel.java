@@ -11,7 +11,7 @@
  *
  */
 
-package pl.dmotyka.cryptonose2.controllers;
+package pl.dmotyka.cryptonose2.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +23,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;

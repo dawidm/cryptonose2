@@ -30,7 +30,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
-import pl.dmotyka.cryptonose2.CryptonoseGuiBrowser;
+import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 public class PriceChangesTable {

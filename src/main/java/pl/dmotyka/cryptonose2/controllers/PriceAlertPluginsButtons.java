@@ -17,7 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 
-import pl.dmotyka.cryptonose2.PriceAlertPlugin;
+import pl.dmotyka.cryptonose2.model.PriceAlertPlugin;
 
 public class PriceAlertPluginsButtons {
 

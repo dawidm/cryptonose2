@@ -18,4 +18,6 @@ module cryptonose {
     exports pl.dmotyka.cryptonose2.controllers;
     exports pl.dmotyka.cryptonose2.cryptopanic;
     exports pl.dmotyka.cryptonose2.tools;
+    exports pl.dmotyka.cryptonose2.model;
+    exports pl.dmotyka.cryptonose2.dataobj;
 }
