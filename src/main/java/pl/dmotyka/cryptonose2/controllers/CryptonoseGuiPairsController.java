@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2020 Dawid Motyka
+ * Copyright © 2019-2021 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -160,7 +160,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     private ObservableList<MarketTableItem> marketsObservableList;
     private ObservableList<PairListItem> pairsObservableList;
     private Future loadPairsFuture;
-    private SettingsChangedNotifier settingsChangedNotifier;
+    private SettingsChangedListener settingsChangedListener;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -168,9 +168,9 @@ public class CryptonoseGuiPairsController implements Initializable {
         loadingGridPane.setVisible(true);
     }
 
-    public void init(ExchangeSpecs exchange, SettingsChangedNotifier settingsChangedNotifier) {
+    public void init(ExchangeSpecs exchange, SettingsChangedListener settingsChangedListener) {
         this.exchangeSpecs=exchange;
-        this.settingsChangedNotifier=settingsChangedNotifier;
+        this.settingsChangedListener = settingsChangedListener;
         loadPairsFuture=Executors.newSingleThreadExecutor().submit(this::loadPairs);
     }
 
@@ -315,7 +315,7 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void saveClick() {
         savePreferences();
-        settingsChangedNotifier.notifySettingsChanged();
+        settingsChangedListener.notifySettingsChanged();
         closeStage();
     }
 
