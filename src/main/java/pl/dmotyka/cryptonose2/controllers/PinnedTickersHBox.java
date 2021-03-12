@@ -27,30 +27,30 @@ import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
 public class PinnedTickersHBox {
 
     private final HBox pinnedHBox;
-    private final ObservableListAggregate<TablePairPriceChanges> items;
+    private final ObservableListAggregate<CryptonosePairData> items;
 
     private final TreeSet<PinnedTicker> pinnedTickers = new TreeSet<>();
 
-    public PinnedTickersHBox(HBox pinnedHBox, ObservableListAggregate<TablePairPriceChanges> items) {
+    public PinnedTickersHBox(HBox pinnedHBox, ObservableListAggregate<CryptonosePairData> items) {
         this.pinnedHBox = pinnedHBox;
         this.items = items;
         items.setListener(new ObservableListAggregate.AggregateChangeListener<>() {
             @Override
-            public void onChange(ObservableList<? extends TablePairPriceChanges> changedList) {}
+            public void onChange(ObservableList<? extends CryptonosePairData> changedList) {}
 
             @Override
-            public void added(List<? extends TablePairPriceChanges> added) {
+            public void added(List<? extends CryptonosePairData> added) {
                 handleAdded(added);
             }
 
             @Override
-            public void removed(List<? extends TablePairPriceChanges> removed) {
+            public void removed(List<? extends CryptonosePairData> removed) {
                 removePinnedTickers(removed);
             }
         });
     }
 
-    private void handleAdded(List<? extends TablePairPriceChanges> added) {
+    private void handleAdded(List<? extends CryptonosePairData> added) {
         for (var tablePriceChanges : added) {
             long pinTime = CryptonoseSettings.getPinnedTimestampMs(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
             if (pinTime != 0) {
@@ -72,7 +72,7 @@ public class PinnedTickersHBox {
     }
 
     // pinnedStateChanged - whether tickers are added because their pinned state changed from false to true
-    private void addPinnedTickers(List<? extends TablePairPriceChanges> newItems) {
+    private void addPinnedTickers(List<? extends CryptonosePairData> newItems) {
         for (var tablePriceChanges : newItems) {
             UILoader<CryptonoseGuiPinnedNodeController> pinnedLoader = new UILoader<>("cryptonoseGuiPinnedNode.fxml");
             CryptonoseGuiPinnedNodeController pnCtrl = pinnedLoader.getController();
@@ -89,7 +89,7 @@ public class PinnedTickersHBox {
         }
     }
 
-    private void removePinnedTickers(List<? extends TablePairPriceChanges> removed) {
+    private void removePinnedTickers(List<? extends CryptonosePairData> removed) {
         for (var tablePairPriceChanges : removed) {
             var pinnedIt = pinnedTickers.iterator();
             while (pinnedIt.hasNext()) {

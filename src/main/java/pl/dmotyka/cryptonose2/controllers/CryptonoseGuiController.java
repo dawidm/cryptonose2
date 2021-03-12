@@ -101,7 +101,7 @@ public class CryptonoseGuiController extends Application {
     @FXML
     public TitledPane findTitledPane;
     @FXML
-    public TableView<TablePairPriceChanges> findTableView;
+    public TableView<CryptonosePairData> findTableView;
     @FXML
     public TextField findTextField;
     @FXML
@@ -110,7 +110,7 @@ public class CryptonoseGuiController extends Application {
     private PinnedTickersHBox pinnedTickersHBox;
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
-    private final ObservableListAggregate<TablePairPriceChanges> tableItemsAggregate = new ObservableListAggregate<>();
+    private final ObservableListAggregate<CryptonosePairData> cnPairDataAggregate = new ObservableListAggregate<>();
 
     private CryptonoseGuiPriceAlertsTabController priceAlertsTabController;
 
@@ -246,7 +246,7 @@ public class CryptonoseGuiController extends Application {
         pinnedHBox.visibleProperty().bind(powerSaveCheckBox.selectedProperty().not());
         pinnedHBox.managedProperty().bind(powerSaveCheckBox.selectedProperty().not());
 
-        pinnedTickersHBox = new PinnedTickersHBox(pinnedHBox, tableItemsAggregate);
+        pinnedTickersHBox = new PinnedTickersHBox(pinnedHBox, cnPairDataAggregate);
 
     }
 
@@ -356,11 +356,11 @@ public class CryptonoseGuiController extends Application {
             mainTabPane.getSelectionModel().select(tab);
         CryptonoseGuiExchangeController cryptonoseGuiExchangeController = exchangeLoader.getController();
         cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
-        final ObservableList<TablePairPriceChanges> readOnlyTableItems = cryptonoseGuiExchangeController.getPairsData();
-        tableItemsAggregate.addList(readOnlyTableItems);
+        final ObservableList<CryptonosePairData> readOnlyPairsData = cryptonoseGuiExchangeController.getPairsData();
+        cnPairDataAggregate.addList(readOnlyPairsData);
         tab.setOnCloseRequest((event) -> {
             logger.info("closing tab and disconnecting: " + exchangeSpecs.getName());
-            tableItemsAggregate.removeList(readOnlyTableItems);
+            cnPairDataAggregate.removeList(readOnlyPairsData);
             new Thread(cryptonoseGuiExchangeController::close).start();
             activeExchangesControllersMap.remove(exchangeSpecs);
             checkIfAllExchangesLoaded();
@@ -382,7 +382,7 @@ public class CryptonoseGuiController extends Application {
     }
 
     private void showFindPane() {
-        ObservableList<TablePairPriceChanges> allPairsObservableList = tableItemsAggregate.getObservableAggregate();
+        ObservableList<CryptonosePairData> allPairsObservableList = cnPairDataAggregate.getObservableAggregate();
         FXCollections.sort(allPairsObservableList, Comparator.comparing(item -> {
             if (item.pinnedProperty().get()) {
                 return "a" + item.getFormattedPairName();
@@ -390,7 +390,7 @@ public class CryptonoseGuiController extends Application {
                 return "b" + item.getFormattedPairName();
             }
         }));
-        FilteredList<TablePairPriceChanges> filteredPairsList = new FilteredList<>(allPairsObservableList);
+        FilteredList<CryptonosePairData> filteredPairsList = new FilteredList<>(allPairsObservableList);
         findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
         findTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE)

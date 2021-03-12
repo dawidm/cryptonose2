@@ -24,7 +24,7 @@ import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 /**
  * Created by dawid on 8/9/17.
  */
-public class TablePairPriceChanges {
+public class CryptonosePairData {
 
     public static final int PERIOD1 = 1;
     public static final int PERIOD2 = 2;
@@ -41,7 +41,7 @@ public class TablePairPriceChanges {
     private final SimpleDoubleProperty lastPrice;
     private final SimpleObjectProperty<ChartCandle[]> chartCandlesProperty;
 
-    public TablePairPriceChanges(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
+    public CryptonosePairData(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
         this.exchangeSpecs = exchangeSpecs;
         this.pairName = pairName;
         this.formattedPairName=formattedPairName;

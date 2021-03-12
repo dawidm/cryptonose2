@@ -36,8 +36,8 @@ public class ExchangePairsDataModel {
     private final PairSymbolConverter pairSymbolConverter;
     private final long[] timePeriods;
 
-    private Map<String, TablePairPriceChanges> pairPriceChangesMap = new HashMap<>();
-    private ObservableList<TablePairPriceChanges> tablePairPriceChangesObservableList = FXCollections.observableArrayList();
+    private Map<String, CryptonosePairData> cnPairDataMap = new HashMap<>();
+    private ObservableList<CryptonosePairData> cnPairDataObservableList = FXCollections.observableArrayList();
 
     private Map<CurrencyPairTimePeriod, ChartCandle[]> candlesMap;
 
@@ -49,27 +49,27 @@ public class ExchangePairsDataModel {
 
     public synchronized void updateData(List<PriceChanges> priceChangesList) {
         for (PriceChanges priceChanges : priceChangesList) {
-            TablePairPriceChanges tablePairPriceChanges = pairPriceChangesMap.get(priceChanges.getCurrencyPair());
-            if (tablePairPriceChanges == null) {
-                tablePairPriceChanges = new TablePairPriceChanges(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
+            CryptonosePairData cnPairData = cnPairDataMap.get(priceChanges.getCurrencyPair());
+            if (cnPairData == null) {
+                cnPairData = new CryptonosePairData(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
                 ChartCandle[] candles = candlesMap.get(new CurrencyPairTimePeriod(priceChanges.getCurrencyPair(), CryptonoseSettings.TIME_PERIODS[0]));
                 if (candles != null) {
-                    tablePairPriceChanges.chartCandlesProperty().set(candles);
+                    cnPairData.chartCandlesProperty().set(candles);
                 }
-                pairPriceChangesMap.put(priceChanges.getCurrencyPair(), tablePairPriceChanges);
-                tablePairPriceChangesObservableList.add(tablePairPriceChanges);
+                cnPairDataMap.put(priceChanges.getCurrencyPair(), cnPairData);
+                cnPairDataObservableList.add(cnPairData);
             }
-            int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? TablePairPriceChanges.PERIOD1 : TablePairPriceChanges.PERIOD2;
-            tablePairPriceChanges.setPriceChanges(priceChanges, period);
+            int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? CryptonosePairData.PERIOD1 : CryptonosePairData.PERIOD2;
+            cnPairData.setPriceChanges(priceChanges, period);
         }
     }
 
     public synchronized void updateChartData(Map<CurrencyPairTimePeriod, ChartCandle[]> candlesMap) {
         this.candlesMap = candlesMap;
-        for (TablePairPriceChanges tablePairPriceChanges : tablePairPriceChangesObservableList) {
-            ChartCandle[] candles = candlesMap.get(new CurrencyPairTimePeriod(tablePairPriceChanges.getPairName(), CryptonoseSettings.TIME_PERIODS[0]));
+        for (CryptonosePairData cnPairData : cnPairDataObservableList) {
+            ChartCandle[] candles = candlesMap.get(new CurrencyPairTimePeriod(cnPairData.getPairName(), CryptonoseSettings.TIME_PERIODS[0]));
             if (candles != null) {
-                tablePairPriceChanges.chartCandlesProperty().set(candles);
+                cnPairData.chartCandlesProperty().set(candles);
             }
         }
     }
@@ -78,25 +78,25 @@ public class ExchangePairsDataModel {
     // pairs - list of api symbols of pairs
     public synchronized void removeOutdatedPairs(String[] pairs) {
         Set<String> newPairs = Set.of(pairs);
-        Set<String> outdatedPairs = new HashSet<>(pairPriceChangesMap.keySet());
+        Set<String> outdatedPairs = new HashSet<>(cnPairDataMap.keySet());
         outdatedPairs.removeAll(newPairs);
         for (String pair : outdatedPairs) {
-            tablePairPriceChangesObservableList.remove(pairPriceChangesMap.get(pair));
-            pairPriceChangesMap.remove(pair);
+            cnPairDataObservableList.remove(cnPairDataMap.get(pair));
+            cnPairDataMap.remove(pair);
         }
     }
 
     // clears a table
     public synchronized void clear() {
-        Platform.runLater(() -> tablePairPriceChangesObservableList.clear());
-        pairPriceChangesMap.clear();
+        Platform.runLater(() -> cnPairDataObservableList.clear());
+        cnPairDataMap.clear();
     }
 
-    public synchronized ObservableList<TablePairPriceChanges> getReadonlyItems() {
-        return FXCollections.unmodifiableObservableList(tablePairPriceChangesObservableList);
+    public synchronized ObservableList<CryptonosePairData> getReadonlyItems() {
+        return FXCollections.unmodifiableObservableList(cnPairDataObservableList);
     }
 
-    public synchronized ObservableList<TablePairPriceChanges> getItems() {
-        return tablePairPriceChangesObservableList;
+    public synchronized ObservableList<CryptonosePairData> getItems() {
+        return cnPairDataObservableList;
     }
 }

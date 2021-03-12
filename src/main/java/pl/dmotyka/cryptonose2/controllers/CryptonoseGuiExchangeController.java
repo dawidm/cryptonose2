@@ -96,7 +96,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public CheckBox notificationCheckBox;
     @FXML
-    public TableView<TablePairPriceChanges> currenciesTableView;
+    public TableView<CryptonosePairData> currenciesTableView;
     @FXML
     public HBox tableDisabledHbox;
     @FXML
@@ -441,11 +441,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         return notificationCheckBox.isSelected();
     }
 
-    public ObservableList<TablePairPriceChanges> getReadonlyPairsData() {
+    public ObservableList<CryptonosePairData> getReadonlyPairsData() {
         return pairsDataModel.getReadonlyItems();
     }
 
-    public ObservableList<TablePairPriceChanges> getPairsData() {
+    public ObservableList<CryptonosePairData> getPairsData() {
         return pairsDataModel.getItems();
     }
 

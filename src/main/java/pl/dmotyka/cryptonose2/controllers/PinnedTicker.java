@@ -17,18 +17,18 @@ import javafx.scene.Parent;
 
 public class PinnedTicker implements Comparable<PinnedTicker> {
 
-    private final TablePairPriceChanges tablePairPriceChanges;
+    private final CryptonosePairData cnPairData;
     private final CryptonoseGuiPinnedNodeController controller;
     private final Parent root;
 
-    public PinnedTicker(TablePairPriceChanges tablePairPriceChanges, CryptonoseGuiPinnedNodeController controller, Parent root) {
-        this.tablePairPriceChanges = tablePairPriceChanges;
+    public PinnedTicker(CryptonosePairData cnPairData, CryptonoseGuiPinnedNodeController controller, Parent root) {
+        this.cnPairData = cnPairData;
         this.controller = controller;
         this.root = root;
     }
 
-    public TablePairPriceChanges getTablePairPriceChanges() {
-        return tablePairPriceChanges;
+    public CryptonosePairData getTablePairPriceChanges() {
+        return cnPairData;
     }
 
     public CryptonoseGuiPinnedNodeController getController() {
@@ -41,6 +41,6 @@ public class PinnedTicker implements Comparable<PinnedTicker> {
 
     @Override
     public int compareTo(PinnedTicker o) {
-        return Long.compare(this.getTablePairPriceChanges().getPinnedTimestampMs(), o.tablePairPriceChanges.getPinnedTimestampMs());
+        return Long.compare(this.getTablePairPriceChanges().getPinnedTimestampMs(), o.cnPairData.getPinnedTimestampMs());
     }
 }
