@@ -34,8 +34,6 @@ public class CryptonoseGuiSoundAlerts {
 
     public static final int ALERT_RISING = 1;
     public static final int ALERT_DROPPING = 2;
-    public static final String DEFAULT_RISING_SOUND_FILE="soundR.wav";
-    public static final String DEFAULT_DROPPING_SOUND_FILE="soundD.wav";
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiSoundAlerts.class.getName());
 
@@ -59,14 +57,14 @@ public class CryptonoseGuiSoundAlerts {
             if (type == ALERT_RISING) {
                 String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_RISING_FILE_PATH);
                 if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_RISING_SOUND) || audioPath == null || audioPath.isBlank()) {
-                    audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_RISING_SOUND_FILE));
+                    audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(CryptonoseSettings.DEFAULT_RISING_SOUND_FILE));
                 } else {
                     audioURL = new File(audioPath).toURI().toURL();
                 }
             } else {
                 String audioPath = CryptonoseSettings.getString(CryptonoseSettings.General.SOUND_DROPPING_FILE_PATH);
                 if (CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_DROPPING_SOUND) || audioPath == null || audioPath.isBlank()) {
-                    audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(DEFAULT_DROPPING_SOUND_FILE));
+                    audioURL = Objects.requireNonNull(getClass().getClassLoader().getResource(CryptonoseSettings.DEFAULT_DROPPING_SOUND_FILE));
                 } else {
                     audioURL = new File(audioPath).toURI().toURL();
                 }

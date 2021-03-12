@@ -37,6 +37,9 @@ public class CryptonoseSettings {
     public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
     public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
+    public static final String DEFAULT_RISING_SOUND_FILE="soundR.wav";
+    public static final String DEFAULT_DROPPING_SOUND_FILE="soundD.wav";
+
     private static final Preferences mainNode = Preferences.userNodeForPackage(CryptonoseGuiController.class);
 
     public enum TimePeriod {
