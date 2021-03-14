@@ -19,12 +19,16 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+import org.kordamp.ikonli.javafx.FontIcon;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
@@ -54,8 +58,18 @@ public class CryptonoseGuiPriceAlertNodeController {
     public StackPane chartPane;
     @FXML
     public HBox moreHBox;
+    @FXML
+    public Button blockButton;
+    @FXML
+    public FontIcon blockIcon;
 
-    public void fillPane(PriceAlert priceAlert, ChartCandle[] chartCandles) {
+    public void fillPane(PriceAlert priceAlert, ChartCandle[] chartCandles, AlertBlockListener blockListener) {
+        blockButton.setPrefWidth(blockButton.getPrefHeight());
+        blockIcon.iconColorProperty().bind(finalPriceLabel.textFillProperty());
+        blockButton.setOnAction(event -> {
+            ContextMenu menu = new BlockAlertsMenu(priceAlert.getExchangeSpecs(), priceAlert.getPair(), blockListener);
+            menu.show(blockButton, Side.BOTTOM, 0, 0);
+        });
         String arrowString;
         if(priceAlert.getPriceChange()<0) {
             arrowString = "\u2198";

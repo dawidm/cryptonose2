@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.kordamp.ikonli:ikonli-fontawesome-pack:12.2.0'
+    implementation 'org.kordamp.ikonli:ikonli-javafx:12.2.0'
     //runtime fileTree(dir: 'plugins', include: '*.jar')
 }
 

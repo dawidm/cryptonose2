@@ -14,12 +14,14 @@
   -->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <HBox fx:id="mainHBox" alignment="CENTER_LEFT" spacing="5.0" styleClass="alertNode" stylesheets="style-alerts-tab-node.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPriceAlertNodeController">
    <children>
       <VBox alignment="CENTER_LEFT" prefWidth="130.0" HBox.hgrow="ALWAYS">
@@ -40,11 +42,25 @@
             </HBox>
          </children>
       </VBox>
-      <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
+      <HBox prefWidth="100.0" spacing="7.0" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="pairNameLabel" alignment="CENTER" styleClass="priceAlertsLabel" text="?" />
+            <VBox alignment="CENTER_LEFT" fillWidth="false" HBox.hgrow="NEVER">
+               <children>
+                  <Label fx:id="pairNameLabel" alignment="CENTER" styleClass="priceAlertsLabel" text="?" />
+               </children>
+            </VBox>
+            <VBox fillWidth="false" HBox.hgrow="NEVER">
+               <children>
+                  <Button fx:id="blockButton" mnemonicParsing="false" prefWidth="20.0" styleClass="button-small" >
+                     <graphic>
+                        <FontIcon fx:id="blockIcon" iconLiteral="fa-ban" iconSize="16"/>
+                     </graphic>
+                      <tooltip><Tooltip text="Block alerts for this pair..." /></tooltip>
+                  </Button>
+               </children>
+            </VBox>
          </children>
-      </VBox>
+      </HBox>
       <VBox alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS">
          <children>
             <Label fx:id="finalPriceLabel" text="?" />

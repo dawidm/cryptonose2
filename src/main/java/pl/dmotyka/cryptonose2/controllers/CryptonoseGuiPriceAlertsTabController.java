@@ -35,6 +35,7 @@ public class CryptonoseGuiPriceAlertsTabController implements Initializable{
     public VBox mainVBox;
 
     private int maxAlerts = 100;
+    private AlertBlockListener alertBlockListener;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,7 +52,10 @@ public class CryptonoseGuiPriceAlertsTabController implements Initializable{
             }
             UILoader<CryptonoseGuiPriceAlertNodeController> uiLoader = new UILoader<>("cryptonoseGuiPriceAlertPane.fxml");
             Node alertPane = uiLoader.getRoot();
-            uiLoader.getController().fillPane(priceAlert, chartCandles);
+            if (alertBlockListener == null) {
+                alertBlockListener = blockTime -> {};
+            }
+            uiLoader.getController().fillPane(priceAlert, chartCandles, alertBlockListener);
             mainVBox.getChildren().listIterator(1).add(alertPane);
             //iterator for outdated alerts
             if (mainVBox.getChildren().size() > maxAlerts + 1) {
@@ -66,6 +70,10 @@ public class CryptonoseGuiPriceAlertsTabController implements Initializable{
 
     public void setMaxAlerts(int maxAlerts) {
         this.maxAlerts=maxAlerts;
+    }
+
+    public void setAlertBlockListener(AlertBlockListener alertBlockListener) {
+        this.alertBlockListener = alertBlockListener;
     }
 
 

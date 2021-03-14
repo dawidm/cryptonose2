@@ -147,6 +147,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiSoundAlerts = new CryptonoseGuiSoundAlerts();
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
+        priceAlertTabController.setAlertBlockListener(alertBlock -> {
+           // TODO
+        });
         pairsDataModel = new ExchangePairsDataModel(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable = new PriceChangesTable(currenciesTableView, pairsDataModel.getItems(), CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.init();

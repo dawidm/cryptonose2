@@ -15,6 +15,8 @@ module cryptonose {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires org.apache.commons.text;
+    requires org.kordamp.ikonli.javafx;
+    requires org.kordamp.ikonli.fontawesome;
     exports pl.dmotyka.cryptonose2.controllers;
     exports pl.dmotyka.cryptonose2.cryptopanic;
     exports pl.dmotyka.cryptonose2.tools;
