@@ -37,15 +37,15 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'pl.dmotyka', name: 'dmutils', version:'1.1.0'
-    compile group: 'pl.dmotyka', name: 'exchangeutils', version:'1.15.1'
-    compile group: 'pl.dmotyka', name: 'cryptonoseengine', version:'1.7.0'
-    compile group: 'pl.dmotyka', name: 'minimal-fx-charts', version: '1.1.0'
-    compile group: 'com.dorkbox', name: 'Notify', version:'3.7'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
-    compile group: 'org.apache.commons', name: 'commons-text', version: '1.9'
+    testImplementation 'junit:junit:4.12'
+    implementation 'pl.dmotyka:dmutils:1.1.0'
+    implementation 'pl.dmotyka:exchangeutils:1.15.1'
+    implementation 'pl.dmotyka:cryptonoseengine:1.7.0'
+    implementation 'pl.dmotyka:minimal-fx-charts:1.1.0'
+    implementation 'com.dorkbox:Notify:3.7'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+    implementation 'org.apache.commons:commons-text:1.9'
     //runtime fileTree(dir: 'plugins', include: '*.jar')
 }
 
