@@ -230,12 +230,12 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     public void init(ExchangeSpecs exchangeSpecs, long[] timePeriods) {
-        saveButton.setText(saveButton.getText() + String.format(" for %s", exchangeSpecs.getName()));
         if(timePeriods.length<2) {
             throw new IllegalArgumentException("timePeriods array should have at least 2 elements");
         }
         this.exchangeSpecs = exchangeSpecs;
-        this.timePeriods=timePeriods;
+        this.timePeriods = timePeriods;
+        saveButton.setText(saveButton.getText() + String.format(" for %s", exchangeSpecs.getName()));
         fillFields();
         cnLiquiditySlider.disableProperty().bind(cnLiquidityCheckBox.selectedProperty().not());
     }
