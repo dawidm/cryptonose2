@@ -24,7 +24,7 @@ public class BlockAlertsMenu extends ContextMenu {
     public BlockAlertsMenu(ExchangeSpecs exchangeSpecs, String pairApiSymbol, AlertBlockListener blockListener) {
         super();
         for (AlertBlockTime blockTime : AlertBlockTime.values()) {
-            if (blockTime == AlertBlockTime.BLOCK_PERMANENTLY)
+            if (blockTime == AlertBlockTime.BLOCK_PERMANENTLY || blockTime == AlertBlockTime.UNBLOCK)
                 continue;
             MenuItem currentItem = new MenuItem("Block %s alerts for %s".formatted(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol), blockTime.getLabel()));
             currentItem.setOnAction(event -> blockListener.block(new AlertBlock(exchangeSpecs, pairApiSymbol, blockTime)));

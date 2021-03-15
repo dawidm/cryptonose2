@@ -13,7 +13,10 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.util.Objects;
+
 import pl.dmotyka.cryptonose2.dataobj.AlertBlockTime;
+import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class AlertBlock {
@@ -38,5 +41,30 @@ public class AlertBlock {
 
     public AlertBlockTime getBlockTime() {
         return blockTime;
+    }
+
+    public boolean isSamePair(AlertBlock other) {
+        return this.getPairApiSymbol().equals(other.getPairApiSymbol()) && this.getExchangeSpecs().equals(other.getExchangeSpecs());
+    }
+
+    public boolean isForAlert(PriceAlert priceAlert) {
+        return this.getPairApiSymbol().equals(priceAlert.getPair()) && this.exchangeSpecs.equals(priceAlert.getExchangeSpecs());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        AlertBlock that = (AlertBlock) o;
+        return exchangeSpecs.equals(that.exchangeSpecs) &&
+                pairApiSymbol.equals(that.pairApiSymbol) &&
+                blockTime == that.blockTime;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(exchangeSpecs, pairApiSymbol, blockTime);
     }
 }

@@ -14,5 +14,5 @@
 package pl.dmotyka.cryptonose2.controllers;
 
 public interface AlertBlockListener {
-    void block(AlertBlock blockTime);
+    void block(AlertBlock alertBlock);
 }

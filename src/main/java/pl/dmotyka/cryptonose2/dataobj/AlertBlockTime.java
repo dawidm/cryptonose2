@@ -19,7 +19,8 @@ public enum AlertBlockTime {
     TIME_4H(3600 * 4, "4 hours"),
     TIME_12H(3600 * 12, "12 hours"),
     TIME_DAY(3600 * 24, "1 day"),
-    BLOCK_PERMANENTLY(0, "");
+    BLOCK_PERMANENTLY(Long.MAX_VALUE, "permanent"),
+    UNBLOCK(0, "unblock");
 
     private final long timeSeconds;
     private final String label;
