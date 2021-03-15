@@ -350,7 +350,8 @@ public class CryptonoseSettings {
         } else {
             Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs);
             String blocksString = prefs.get("permanentAlertBlocks", "");
-            prefs.put("permanentAlertBlocks", blocksString + "," + pairApiSymbol);
+            String oldBlocks = blocksString.strip().equals("") ? "" : (blocksString + ",");
+            prefs.put("permanentAlertBlocks", oldBlocks + pairApiSymbol);
         }
     }
 
@@ -371,9 +372,9 @@ public class CryptonoseSettings {
     public static AlertBlock[] getPermanentAlertBlocks(ExchangeSpecs exchangeSpecs) {
         Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs);
         String blocksString = prefs.get("permanentAlertBlocks", "");
-        String[] blockSplit = blocksString.split(",");
-        if (blockSplit.length == 1 && blockSplit[0].strip().length()==0)
+        if (blocksString.strip().isEmpty())
             return new AlertBlock[] {};
+        String[] blockSplit = blocksString.split(",");
         return Arrays.stream(blockSplit).map(pair -> new AlertBlock(exchangeSpecs, pair, AlertBlockTime.BLOCK_PERMANENTLY)).toArray(AlertBlock[]::new);
     }
 
