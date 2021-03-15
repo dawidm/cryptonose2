@@ -106,6 +106,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public Button pairsButton;
     @FXML
     public Button alertSettingsButton;
+    @FXML
+    public Button alertBlocksButton;
 
     private ColorIndicatorBox indicatorBox;
     private CryptonoseGuiController cryptonoseGuiController;
@@ -134,6 +136,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.exchangeSpecs = exchangeSpecs;
         pairsButton.setOnAction(event -> pairsClick());
         alertSettingsButton.setOnAction(event -> alertSettingsClick());
+        alertBlocksButton.setOnAction(event -> alertBlocksClick());
         currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
         tableDisabledHbox.managedProperty().bind(tableDisabledHbox.visibleProperty());
         logTitledPane.managedProperty().bind(logTitledPane.visibleProperty());
@@ -231,6 +234,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         alertSettingsButton.setDisable(true);
         uiLoader.stageShowAndWait("Alerts conditions: " + exchangeSpecs.getName());
         alertSettingsButton.setDisable(false);
+    }
+
+    public void alertBlocksClick() {
+        UILoader<CryptonoseGuiAlertBlocksController> uiLoader = new UILoader<>("cryptonoseGuiAlertBlocks.fxml");
+        uiLoader.getController().init(exchangeSpecs, cryptonoseGuiAlertChecker.getBlocksObservableList(), alertBlock -> cryptonoseGuiAlertChecker.blockAlerts(alertBlock));
+        alertBlocksButton.setDisable(true);
+        uiLoader.stageShowAndWait("Alerts blocks: " + exchangeSpecs.getName());
+        alertBlocksButton.setDisable(false);
     }
 
     private void setConnectionStatus(CryptonoseGuiConnectionStatus newConnectionStatus, boolean notify) {

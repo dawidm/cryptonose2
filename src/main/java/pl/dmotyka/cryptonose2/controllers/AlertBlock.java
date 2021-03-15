@@ -34,6 +34,10 @@ public class AlertBlock {
         jvmTimeMillis = System.nanoTime() / (1000 * 1000);
     }
 
+    public AlertBlock withDifferentBlockTime(AlertBlockTime blockTime) {
+        return new AlertBlock(getExchangeSpecs(), getPairApiSymbol(), blockTime);
+    }
+
     public ExchangeSpecs getExchangeSpecs() {
         return exchangeSpecs;
     }

@@ -71,6 +71,7 @@
                   <CheckBox fx:id="showLogCheckBox" mnemonicParsing="false" text="Show Log" />
                   <Button fx:id="pairsButton" mnemonicParsing="false" text="Pairs..." />
                   <Button fx:id="alertSettingsButton" mnemonicParsing="false" text="Alert conditions..." />
+                  <Button fx:id="alertBlocksButton" mnemonicParsing="false" text="Alert blocks..." />
                </children>
             </HBox>
          </content>
