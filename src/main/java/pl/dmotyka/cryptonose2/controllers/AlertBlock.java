@@ -24,11 +24,14 @@ public class AlertBlock {
     private final ExchangeSpecs exchangeSpecs;
     private final String pairApiSymbol;
     private final AlertBlockTime blockTime;
+    // jvm time (from System.nanoTime()) when alert block was created
+    private final long jvmTimeMillis;
 
     public AlertBlock(ExchangeSpecs exchangeSpecs, String pairApiSymbol, AlertBlockTime blockTime) {
         this.exchangeSpecs = exchangeSpecs;
         this.pairApiSymbol = pairApiSymbol;
         this.blockTime = blockTime;
+        jvmTimeMillis = System.nanoTime() / (1000 * 1000);
     }
 
     public ExchangeSpecs getExchangeSpecs() {
@@ -41,6 +44,11 @@ public class AlertBlock {
 
     public AlertBlockTime getBlockTime() {
         return blockTime;
+    }
+
+    // jvm time (System.nanoTime()) when the block becomes inactive
+    public long getEndingJvmTimestampMs() {
+        return jvmTimeMillis + blockTime.getTimeSeconds() * 1000;
     }
 
     public boolean isSamePair(AlertBlock other) {

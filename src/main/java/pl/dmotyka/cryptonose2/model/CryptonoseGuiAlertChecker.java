@@ -13,12 +13,15 @@
 
 package pl.dmotyka.cryptonose2.model;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import pl.dmotyka.cryptonose2.controllers.AlertBlock;
 import pl.dmotyka.cryptonose2.dataobj.AlertBlockTime;
@@ -43,7 +46,7 @@ public class CryptonoseGuiAlertChecker {
     private final Map<Long, PriceAlertThresholds> priceAlertThresholdsMap;
     private final long[] sortedTimePeriods;
     // value - milliseconds time (from System.nanoTime()) when alert ends
-    private final Map<AlertBlock, Long> alertBlocksMap = new HashMap<>();
+    private final ObservableList<AlertBlock> alertBlocksList = FXCollections.observableList(new LinkedList<>());
 
     public CryptonoseGuiAlertChecker(ExchangeSpecs exchangeSpecs, Map<Long, PriceAlertThresholds> priceAlertThresholdsMap) {
         this.exchangeSpecs = exchangeSpecs;
@@ -51,9 +54,7 @@ public class CryptonoseGuiAlertChecker {
         this.priceAlertThresholdsMap = priceAlertThresholdsMap;
         sortedTimePeriods = priceAlertThresholdsMap.keySet().stream().mapToLong(val -> val).sorted().toArray();
         priceAlertsMap = new HashMap<>();
-        for (var block : CryptonoseSettings.getPermanentAlertBlocks(exchangeSpecs)) {
-            alertBlocksMap.put(block, Long.MAX_VALUE);
-        }
+        alertBlocksList.addAll(Arrays.asList(CryptonoseSettings.getPermanentAlertBlocks(exchangeSpecs)));
     }
 
     public List<PriceAlert> checkAlerts(List<PriceChanges> changesList) {
@@ -98,27 +99,27 @@ public class CryptonoseGuiAlertChecker {
     }
 
     public synchronized void blockAlerts(AlertBlock alertBlock) {
-        logger.fine("alertBlock(..) called for %s, %d blocks active before processing new block".formatted(exchangeSpecs.getName(), alertBlocksMap.size()));
+        logger.fine("alertBlock(..) called for %s, %d blocks active before processing new block".formatted(exchangeSpecs.getName(), alertBlocksList.size()));
         if (alertBlock.getBlockTime() == AlertBlockTime.BLOCK_PERMANENTLY) {
             logger.fine("blocking alerts for %s permanently".formatted(alertBlock.getPairApiSymbol()));
             CryptonoseSettings.addPermanentAlertBlock(exchangeSpecs, alertBlock.getPairApiSymbol());
-            alertBlocksMap.entrySet().removeIf(alertBlockLongEntry -> alertBlockLongEntry.getKey().isSamePair(alertBlock));
-            alertBlocksMap.put(alertBlock, Long.MAX_VALUE);
+            alertBlocksList.removeIf(b -> b.isSamePair(alertBlock));
+            alertBlocksList.add(alertBlock);
         } else if (alertBlock.getBlockTime() == AlertBlockTime.UNBLOCK) {
             logger.fine("unblocking alerts for %s".formatted(alertBlock.getPairApiSymbol()));
             CryptonoseSettings.removePermanentAlertBlock(exchangeSpecs, alertBlock.getPairApiSymbol());
-            alertBlocksMap.entrySet().removeIf(alertBlockLongEntry -> alertBlockLongEntry.getKey().isSamePair(alertBlock));
+            alertBlocksList.removeIf(b -> b.isSamePair(alertBlock));
         } else {
             if (alertBlock.getBlockTime().getTimeSeconds() < 1) {
                 throw new IllegalArgumentException("expected block time greater than 0");
             }
             boolean longerBlockExists = false;
             long newAlertEndTimeMillis = millisTime() + alertBlock.getBlockTime().getTimeSeconds()*1000;
-            var alertBlockIt = alertBlocksMap.entrySet().iterator();
+            var alertBlockIt = alertBlocksList.iterator();
             while (alertBlockIt.hasNext()) {
-                var currentBlockData = alertBlockIt.next();
-                if (currentBlockData.getKey().isSamePair(alertBlock)) {
-                    if (newAlertEndTimeMillis < currentBlockData.getValue() || currentBlockData.getKey().getBlockTime() == AlertBlockTime.BLOCK_PERMANENTLY) {
+                var currentBlock = alertBlockIt.next();
+                if (currentBlock.isSamePair(alertBlock)) {
+                    if (newAlertEndTimeMillis < currentBlock.getEndingJvmTimestampMs() || currentBlock.getBlockTime() == AlertBlockTime.BLOCK_PERMANENTLY) {
                         logger.fine("longer alert block for %s already exists".formatted(alertBlock.getPairApiSymbol()));
                         longerBlockExists = true;
                     } else {
@@ -129,9 +130,13 @@ public class CryptonoseGuiAlertChecker {
             }
             if (!longerBlockExists) {
                 logger.fine("adding new alert block %s %s".formatted(alertBlock.getPairApiSymbol(), alertBlock.getBlockTime().getLabel()));
-                alertBlocksMap.put(alertBlock, newAlertEndTimeMillis);
+                alertBlocksList.add(alertBlock);
             }
         }
+    }
+
+    public ObservableList<AlertBlock> getBlocksObservableList() {
+        return FXCollections.unmodifiableObservableList(alertBlocksList);
     }
 
     // check whether there were previous alerts that should block this alert
@@ -165,16 +170,14 @@ public class CryptonoseGuiAlertChecker {
     }
 
     private boolean checkIsBlocked(PriceAlert priceAlert) {
-        for (Iterator<Map.Entry<AlertBlock, Long>> iterator = alertBlocksMap.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<AlertBlock, Long> entry = iterator.next();
-            AlertBlock alertBlock = entry.getKey();
-            Long timeEndMs = entry.getValue();
+        for (var iterator = alertBlocksList.iterator(); iterator.hasNext(); ) {
+            AlertBlock alertBlock = iterator.next();
             if (alertBlock.isForAlert(priceAlert)) {
-                if (millisTime() < timeEndMs) {
-                    logger.fine("%s alert blocked, block ends in: %.1f hours".formatted(priceAlert.getPair(), msToHours(timeEndMs - millisTime())));
+                if (millisTime() < alertBlock.getEndingJvmTimestampMs()) {
+                    logger.fine("%s alert blocked, block ends in: %.1f hours".formatted(priceAlert.getPair(), msToHours(alertBlock.getEndingJvmTimestampMs() - millisTime())));
                     return true;
                 } else {
-                    logger.fine("removing outdated alert for %s, end time: %s".formatted(priceAlert.getPair(), msToHours(timeEndMs - millisTime())));
+                    logger.fine("removing outdated alert for %s, end time: %s".formatted(priceAlert.getPair(), msToHours(alertBlock.getEndingJvmTimestampMs() - millisTime())));
                     iterator.remove();
                     return false;
                 }
