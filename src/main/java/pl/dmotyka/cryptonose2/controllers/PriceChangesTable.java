@@ -44,6 +44,7 @@ public class PriceChangesTable {
     private boolean enableShowExchange = false;
     private boolean pinnedCheckboxes = false;
     private boolean buttonsFocusTraversable = true;
+    private boolean autoSort = false;
 
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -178,7 +179,9 @@ public class PriceChangesTable {
                 CryptonoseGuiBrowser.runBrowser(cnPairData.getPairName(), cnPairData.getExchangeSpecs());
             }
         });
-        scheduledExecutorService.scheduleWithFixedDelay(() -> Platform.runLater(() -> tableView.sort()), TABLE_SORT_FREQUENCY_MILLIS, TABLE_SORT_FREQUENCY_MILLIS, TimeUnit.MILLISECONDS);
+        if (autoSort) {
+            scheduledExecutorService.scheduleWithFixedDelay(() -> Platform.runLater(tableView::sort), TABLE_SORT_FREQUENCY_MILLIS, TABLE_SORT_FREQUENCY_MILLIS, TimeUnit.MILLISECONDS);
+        }
     }
 
     public void enableShowExchange() {
@@ -191,6 +194,11 @@ public class PriceChangesTable {
 
     public void enablePinnedCheckboxes() {
         pinnedCheckboxes = true;
+    }
+
+    // resort table every specified interval (TABLE_SORT_FREQUENCY_MILLIS)
+    public void enableAutoSort() {
+        autoSort = true;
     }
 
 }

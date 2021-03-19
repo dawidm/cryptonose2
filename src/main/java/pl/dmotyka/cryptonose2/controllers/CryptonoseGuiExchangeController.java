@@ -152,6 +152,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         pairsDataModel = new ExchangePairsDataModel(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable = new PriceChangesTable(currenciesTableView, pairsDataModel.getItems(), CryptonoseSettings.TIME_PERIODS);
+        priceChangesTable.enableAutoSort();
         priceChangesTable.init();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());
         startEngine();
