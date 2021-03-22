@@ -43,8 +43,8 @@ public class ObservableListAggregate<T> {
     public synchronized void addList(ObservableList<T> list) {
         lists.add(list);
         ListChangeListener<T> listener = c -> {
-            refreshAggregate();
             if (aggregateChangeListener != null) {
+                aggregateChangeListener.onChange(FXCollections.unmodifiableObservableList(aggregate));
                 List<T> added = new LinkedList<>();
                 List<T> removed = new LinkedList<>();
                 while (c.next()) {
@@ -55,18 +55,19 @@ public class ObservableListAggregate<T> {
                         removed.addAll(c.getRemoved());
                     }
                 }
-                aggregateChangeListener.onChange(FXCollections.unmodifiableObservableList(aggregate));
                 if (added.size() != 0) {
+                    aggregate.addAll(added);
                     aggregateChangeListener.added(added);
                 }
                 if (removed.size() != 0) {
+                    aggregate.removeAll(removed);
                     aggregateChangeListener.removed(removed);
                 }
             }
         };
         list.addListener(listener);
         listListenersMap.put(list, listener);
-        refreshAggregate();
+        aggregate.addAll(list);
         if (aggregateChangeListener != null) {
             aggregateChangeListener.added(FXCollections.unmodifiableObservableList(list));
         }
@@ -81,10 +82,10 @@ public class ObservableListAggregate<T> {
         }
         listListenersMap.remove(list);
         lists.remove(list);
+        aggregate.removeAll(list);
         if (aggregateChangeListener != null) {
             aggregateChangeListener.removed(FXCollections.unmodifiableObservableList(list));
         }
-        refreshAggregate();
     }
 
     // get aggregate which is updated when base lists change
@@ -100,19 +101,5 @@ public class ObservableListAggregate<T> {
     public void setListener(AggregateChangeListener<T> listener) {
         this.aggregateChangeListener = listener;
     }
-
-    private void refreshAggregate() {
-        aggregate.clear();
-        aggregate.addAll(concatLists());
-    }
-
-    private ObservableList<T> concatLists() {
-        ObservableList<T> allPairsObservableList = FXCollections.emptyObservableList();
-        for (var list : lists) {
-            allPairsObservableList = FXCollections.concat(allPairsObservableList, list);
-        }
-        return allPairsObservableList;
-    }
-
 
 }
