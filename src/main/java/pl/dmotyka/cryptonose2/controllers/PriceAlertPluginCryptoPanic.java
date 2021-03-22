@@ -87,7 +87,7 @@ public class PriceAlertPluginCryptoPanic extends PriceAlertPlugin implements Ini
         String cpLink = formatCpHyperlink(currencySymbol);
         cpHyperlink.setText(cpLink);
         cpHyperlink.setOnMouseClicked(e -> CryptonoseGuiBrowser.runBrowser(cpLink));
-        popup.show(anchor, location.getX(), location.getY());
+        popup.show(anchor.getScene().getWindow(), location.getX(), location.getY());
         popup.setAutoFix(false); // workaround because popup was moving to unexpected location after adding news
         new Thread(() -> {
             try {

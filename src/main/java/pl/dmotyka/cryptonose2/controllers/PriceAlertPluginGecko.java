@@ -95,7 +95,7 @@ public class PriceAlertPluginGecko extends PriceAlertPlugin implements Initializ
         showingProperty.bind(popup.showingProperty());
         titleLabel.setText(currencySymbol + titleLabel.getText());
         Point2D location = anchor.localToScreen(0,0);
-        popup.show(anchor, location.getX(), location.getY());
+        popup.show(anchor.getScene().getWindow(), location.getX(), location.getY());
         new Thread(() -> {
             try {
                 GeckoCurrencyInfo info = GeckoApi.getInfoBySymbol(currencySymbol);
