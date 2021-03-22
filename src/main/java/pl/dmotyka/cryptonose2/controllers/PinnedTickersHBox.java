@@ -52,20 +52,15 @@ public class PinnedTickersHBox {
     }
 
     private void handleAdded(List<? extends CryptonosePairData> added) {
-        for (var tablePriceChanges : added) {
-            long pinTime = CryptonoseSettings.getPinnedTimestampMs(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
-            if (pinTime != 0) {
-                tablePriceChanges.setPinned(true);
-                tablePriceChanges.setPinnedTimestampMs(pinTime);
-            }
-            tablePriceChanges.pinnedProperty().addListener((observable, oldValue, newValue) -> {
+        for (var cnPairData : added) {
+            cnPairData.pinnedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    long timestampMs = CryptonoseSettings.pinTicker(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
-                    tablePriceChanges.setPinnedTimestampMs(timestampMs);
-                    addPinnedTickers(List.of(tablePriceChanges));
+                    long timestampMs = CryptonoseSettings.pinTicker(cnPairData.getExchangeSpecs(), cnPairData.getPairName());
+                    cnPairData.setPinnedTimestampMs(timestampMs);
+                    addPinnedTickers(List.of(cnPairData));
                 } else {
-                    CryptonoseSettings.unpinTicker(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName());
-                    removePinnedTickers(List.of(tablePriceChanges));
+                    CryptonoseSettings.unpinTicker(cnPairData.getExchangeSpecs(), cnPairData.getPairName());
+                    removePinnedTickers(List.of(cnPairData));
                 }
             });
         }

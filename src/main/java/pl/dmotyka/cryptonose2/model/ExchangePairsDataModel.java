@@ -53,6 +53,11 @@ public class ExchangePairsDataModel {
             CryptonosePairData cnPairData = cnPairDataMap.get(priceChanges.getCurrencyPair());
             if (cnPairData == null) {
                 cnPairData = new CryptonosePairData(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
+                long pinTime = CryptonoseSettings.getPinnedTimestampMs(cnPairData.getExchangeSpecs(), cnPairData.getPairName());
+                if (pinTime != 0) {
+                    cnPairData.setPinned(true);
+                    cnPairData.setPinnedTimestampMs(pinTime);
+                }
                 ChartCandle[] candles = candlesMap.get(new CurrencyPairTimePeriod(priceChanges.getCurrencyPair(), CryptonoseSettings.TIME_PERIODS[0]));
                 if (candles != null) {
                     cnPairData.chartCandlesProperty().set(candles);
