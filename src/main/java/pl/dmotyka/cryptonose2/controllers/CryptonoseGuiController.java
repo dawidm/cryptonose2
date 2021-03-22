@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -58,10 +58,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
+import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonose2.updatechecker.GetVersionException;
 import pl.dmotyka.cryptonose2.updatechecker.UpdateChecker;
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
@@ -387,14 +387,14 @@ public class CryptonoseGuiController extends Application {
 
     private void showFindPane() {
         ObservableList<CryptonosePairData> allPairsObservableList = cnPairDataAggregate.getObservableAggregate();
-        FXCollections.sort(allPairsObservableList, Comparator.comparing(item -> {
+        FilteredList<CryptonosePairData> filteredPairsList = new FilteredList<>(allPairsObservableList);
+        SortedList<CryptonosePairData> sortedPairsList = new SortedList<>(filteredPairsList, Comparator.comparing(item -> {
             if (item.pinnedProperty().get()) {
-                return "a" + item.getFormattedPairName();
+                return "a" + item.getFormattedPairName() + item.getExchangeSpecs().getName();
             } else {
-                return "b" + item.getFormattedPairName();
+                return "b" + item.getFormattedPairName() + item.getExchangeSpecs().getName();
             }
         }));
-        FilteredList<CryptonosePairData> filteredPairsList = new FilteredList<>(allPairsObservableList);
         findTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(item -> item.getFormattedPairName().toLowerCase().contains(newValue.toLowerCase())));
         findTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE)
@@ -430,7 +430,7 @@ public class CryptonoseGuiController extends Application {
         });
         findTextField.requestFocus();
         findTextField.setText("");
-        PriceChangesTable priceChangesTable = new PriceChangesTable(findTableView, filteredPairsList, CryptonoseSettings.TIME_PERIODS);
+        PriceChangesTable priceChangesTable = new PriceChangesTable(findTableView, sortedPairsList, CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableShowExchange();
         priceChangesTable.enablePinnedCheckboxes();
         priceChangesTable.disablePluginButtonsFocusTraversable();
