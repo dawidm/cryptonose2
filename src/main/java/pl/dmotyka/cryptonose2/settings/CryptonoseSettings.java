@@ -15,8 +15,10 @@ package pl.dmotyka.cryptonose2.settings;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import pl.dmotyka.cryptonose2.controllers.AlertBlock;
 import pl.dmotyka.cryptonose2.controllers.CryptonoseGuiController;
@@ -167,6 +169,8 @@ public class CryptonoseSettings {
     }
 
     public static class Alert {
+        public static String PERMANENT_BLOCKS_KEY = "permanentAlertBlocks";
+
         private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredFallingValue", 3.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M5);
@@ -348,16 +352,20 @@ public class CryptonoseSettings {
         if (pairApiSymbol.strip().length() < 1) {
             throw new IllegalArgumentException("pairApiSymbol is empty");
         } else {
+            Set<String> storedPairs = Arrays.stream(getPermanentAlertBlocks(exchangeSpecs)).map(AlertBlock::getPairApiSymbol).collect(Collectors.toSet());
+            if (storedPairs.contains(pairApiSymbol.strip())) {
+                logger.fine("permanent block for %s %s is already saved".formatted(exchangeSpecs.getName(), pairApiSymbol));
+                return;
+            }
+            storedPairs.add(pairApiSymbol);
             Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs);
-            String blocksString = prefs.get("permanentAlertBlocks", "");
-            String oldBlocks = blocksString.strip().equals("") ? "" : (blocksString + ",");
-            prefs.put("permanentAlertBlocks", oldBlocks + pairApiSymbol);
+            prefs.put(Alert.PERMANENT_BLOCKS_KEY, String.join(",", storedPairs));
         }
     }
 
     public static void removePermanentAlertBlock(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
         Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs);
-        String blocksString = prefs.get("permanentAlertBlocks", "");
+        String blocksString = prefs.get(Alert.PERMANENT_BLOCKS_KEY, "");
         String[] blockSplit = blocksString.split(",");
         if (blockSplit.length == 1 && blockSplit[0].strip().length()==0) {
             logger.warning("remove permanent alert: no such alert");
@@ -366,12 +374,12 @@ public class CryptonoseSettings {
         if (!blocksList.removeIf(item -> item.strip().equals(pairApiSymbol.strip()))) {
             logger.warning("remove permanent alert: no such alert");
         }
-        prefs.put("permanentAlertBlocks", String.join(",", blocksList));
+        prefs.put(Alert.PERMANENT_BLOCKS_KEY, String.join(",", blocksList));
     }
 
     public static AlertBlock[] getPermanentAlertBlocks(ExchangeSpecs exchangeSpecs) {
         Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs);
-        String blocksString = prefs.get("permanentAlertBlocks", "");
+        String blocksString = prefs.get(Alert.PERMANENT_BLOCKS_KEY, "");
         if (blocksString.strip().isEmpty())
             return new AlertBlock[] {};
         String[] blockSplit = blocksString.split(",");
