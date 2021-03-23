@@ -39,7 +39,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxListCell;
@@ -107,9 +106,9 @@ public class CryptonoseGuiPairsController implements Initializable {
         }
     }
 
-    public class PairListItem {
+    public static class PairListItem {
         private final BooleanProperty selectedBooleanProperty=new SimpleBooleanProperty(false);
-        private CurrencyPair currencyPair;
+        private final CurrencyPair currencyPair;
 
         public PairListItem(boolean selected, CurrencyPair currencyPair) {
             selectedBooleanProperty.setValue(selected);
@@ -146,7 +145,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     @FXML
     public GridPane loadingGridPane;
     @FXML
-    public TableView minVolumeTableView;
+    public TableView<MarketTableItem> minVolumeTableView;
     @FXML
     public VBox choosePairsVBox;
     @FXML
@@ -159,7 +158,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     private ExchangeSpecs exchangeSpecs;
     private ObservableList<MarketTableItem> marketsObservableList;
     private ObservableList<PairListItem> pairsObservableList;
-    private Future loadPairsFuture;
+    private Future<?> loadPairsFuture;
     private SettingsChangedListener settingsChangedListener;
 
     @Override
@@ -179,7 +178,7 @@ public class CryptonoseGuiPairsController implements Initializable {
             final PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
             PairDataProvider pairDataProvider = exchangeSpecs.getPairDataProvider();
             List<CurrencyPair> currencyPairList= Arrays.stream(pairDataProvider.getPairsApiSymbols()).
-                    map(pairSymbol -> pairSymbolConverter.apiSymbolToXchangeCurrencyPair(pairSymbol)).
+                    map(pairSymbolConverter::apiSymbolToXchangeCurrencyPair).
                                                                collect(Collectors.toList());
 
             if(Thread.interrupted())
@@ -216,17 +215,17 @@ public class CryptonoseGuiPairsController implements Initializable {
             marketsObservableList.add(new MarketTableItem(false,currency.getCurrencyCode(),DEFAULT_MIN_VOLUME));
         }
         minVolumeTableView.getColumns().clear();
-        TableColumn<MarketTableItem,Boolean>  activeTableColumn = new TableColumn("Active");
+        TableColumn<MarketTableItem,Boolean> activeTableColumn = new TableColumn<>("Active");
         activeTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.2)); // because max width determines column sizes in CONSTRAINED_RESIZE_POLICY
         activeTableColumn.setEditable(true);
         activeTableColumn.setCellValueFactory(tableItem->tableItem.getValue().activeProperty());
         activeTableColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
         activeTableColumn.setOnEditCommit(event -> event.getRowValue().setActive(event.getNewValue()));
-        TableColumn<MarketTableItem,String> marketTableColumn = new TableColumn("Market");
+        TableColumn<MarketTableItem,String> marketTableColumn = new TableColumn<>("Market");
         marketTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.3));
         marketTableColumn.setCellValueFactory(tableItem->tableItem.getValue().nameProperty());
         marketTableColumn.setEditable(false);
-        TableColumn<MarketTableItem,String> minVolTableColumn = new TableColumn("Min 24h volume");
+        TableColumn<MarketTableItem,String> minVolTableColumn = new TableColumn<>("Min 24h volume");
         minVolTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.5));
         minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().minVolumeProperty().asString());
         minVolTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -247,8 +246,9 @@ public class CryptonoseGuiPairsController implements Initializable {
         minVolumeTableView.setEditable(true);
         minVolumeTableView.getFocusModel().focusedCellProperty().addListener((observable, oldPos, newPos) -> {
             if (newPos != null) {
-                TablePosition tablePosition = (TablePosition) newPos;
-                Platform.runLater(() -> minVolumeTableView.edit(tablePosition.getRow(), tablePosition.getTableColumn()));
+                if (newPos.getTableColumn().isEditable()) {
+                    Platform.runLater(() -> minVolumeTableView.edit(newPos.getRow(), minVolumeTableView.getColumns().get(newPos.getColumn())));
+                }
             }
         });
     }
@@ -284,18 +284,18 @@ public class CryptonoseGuiPairsController implements Initializable {
     public void savePreferences() {
         final PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         String markets = marketsObservableList.stream().
-                filter(marketTableItem -> marketTableItem.isActive()).
-                map(marketTableItem -> marketTableItem.getName()).
+                filter(MarketTableItem::isActive).
+                map(MarketTableItem::getName).
                 collect(Collectors.joining(","));
         CryptonoseSettings.putString(CryptonoseSettings.Pairs.MARKETS, markets, exchangeSpecs);
 
         marketsObservableList.stream().
-                filter(marketTableItem -> marketTableItem.isActive()).
+                filter(MarketTableItem::isActive).
                 forEach(marketTableItem -> {
                     CryptonoseSettings.putDouble(new CryptonoseSettings.MarketVolumePreference(marketTableItem.getName()), marketTableItem.getMinVolume(), exchangeSpecs);
                 });
         String apiSymbols = pairsObservableList.stream().
-                filter(pairListItem -> pairListItem.isSelected()).
+                filter(PairListItem::isSelected).
                 map(pairListItem -> pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())).
                 collect(Collectors.joining(","));
         CryptonoseSettings.putString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, apiSymbols, exchangeSpecs);
@@ -308,7 +308,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     }
 
     public void deselectAllClick() {
-        for(PairListItem pairListItem : (ObservableList<PairListItem>)((FilteredList)currencyPairsListView.getItems()).getSource()) {
+        for(PairListItem pairListItem : ((FilteredList<PairListItem>)currencyPairsListView.getItems()).getSource()) {
             pairListItem.setSelected(false);
         }
     }
