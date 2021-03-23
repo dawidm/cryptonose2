@@ -202,9 +202,8 @@ public class CryptonoseGuiController extends Application {
         UILoader<CryptonoseGuiPriceAlertsTabController> uiLoaderAlerts = new UILoader<>("cryptonoseGuiPriceAlertsTab.fxml");
         Node priceAlertsPane = uiLoaderAlerts.getRoot();
         priceAlertsTabController = uiLoaderAlerts.getController();
-        priceAlertsTabController.setAlertBlockListener(alertBlock -> {
-            activeExchangesControllersMap.get(alertBlock.getExchangeSpecs()).blockAlert(alertBlock);
-        });
+        priceAlertsTabController.setAlertBlockListener(alertBlock -> activeExchangesControllersMap.get(alertBlock.getExchangeSpecs()).blockAlert(alertBlock));
+        priceAlertsTabController.setBlocksSettingsListener(exchangeSpecs -> activeExchangesControllersMap.get(exchangeSpecs).showAlertBlocksDialog());
         Tab priceAlertsTab = new Tab("Price alerts",priceAlertsPane);
         priceAlertsTab.setClosable(false);
         mainTabPane.getTabs().add(priceAlertsTab);

@@ -63,11 +63,11 @@ public class CryptonoseGuiPriceAlertNodeController {
     @FXML
     public FontIcon blockIcon;
 
-    public void fillPane(PriceAlert priceAlert, ChartCandle[] chartCandles, AlertBlockListener blockListener) {
+    public void fillPane(PriceAlert priceAlert, ChartCandle[] chartCandles, AlertBlockListener blockListener, BlocksSettingsListener blocksSettingsListener) {
         blockButton.setPrefWidth(blockButton.getPrefHeight());
         blockIcon.iconColorProperty().bind(finalPriceLabel.textFillProperty());
         blockButton.setOnAction(event -> {
-            ContextMenu menu = new BlockAlertsMenu(priceAlert.getExchangeSpecs(), priceAlert.getPair(), blockListener);
+            ContextMenu menu = new BlockAlertsMenu(priceAlert.getExchangeSpecs(), priceAlert.getPair(), blockListener, blocksSettingsListener);
             menu.show(blockButton, Side.BOTTOM, 0, 0);
         });
         String arrowString;

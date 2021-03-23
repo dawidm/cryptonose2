@@ -15,23 +15,29 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 
 import pl.dmotyka.cryptonose2.dataobj.AlertBlockTime;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 
 public class BlockAlertsMenu extends ContextMenu {
 
-    public BlockAlertsMenu(ExchangeSpecs exchangeSpecs, String pairApiSymbol, AlertBlockListener blockListener) {
+    public BlockAlertsMenu(ExchangeSpecs exchangeSpecs, String pairApiSymbol, AlertBlockListener blockListener, BlocksSettingsListener blocksSettingsListener) {
         super();
         for (AlertBlockTime blockTime : AlertBlockTime.values()) {
             if (blockTime == AlertBlockTime.BLOCK_PERMANENTLY || blockTime == AlertBlockTime.UNBLOCK)
                 continue;
-            MenuItem currentItem = new MenuItem("Block %s alerts for %s".formatted(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol), blockTime.getLabel()));
+            MenuItem currentItem = new MenuItem("Block %s %s alerts for %s".formatted(exchangeSpecs.getName(), exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol), blockTime.getLabel()));
             currentItem.setOnAction(event -> blockListener.block(new AlertBlock(exchangeSpecs, pairApiSymbol, blockTime)));
             this.getItems().add(currentItem);
         }
-        MenuItem permBlockItem = new MenuItem("Block permanently (could be undone in the settings)");
+        this.getItems().add(new SeparatorMenuItem());
+        MenuItem permBlockItem = new MenuItem("Block until unblocked");
         permBlockItem.setOnAction(event -> blockListener.block(new AlertBlock(exchangeSpecs, pairApiSymbol, AlertBlockTime.BLOCK_PERMANENTLY)));
         this.getItems().add(permBlockItem);
+        this.getItems().add(new SeparatorMenuItem());
+        MenuItem hintItem = new MenuItem("Manage %s blocks".formatted(exchangeSpecs.getName()));
+        hintItem.setOnAction(event -> blocksSettingsListener.blockSettings(exchangeSpecs));
+        this.getItems().add(hintItem);
     }
 }

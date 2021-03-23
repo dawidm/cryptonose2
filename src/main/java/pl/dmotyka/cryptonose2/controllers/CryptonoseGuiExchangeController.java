@@ -136,7 +136,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         this.exchangeSpecs = exchangeSpecs;
         pairsButton.setOnAction(event -> pairsClick());
         alertSettingsButton.setOnAction(event -> alertSettingsClick());
-        alertBlocksButton.setOnAction(event -> alertBlocksClick());
+        alertBlocksButton.setOnAction(event -> showAlertBlocksDialog());
         currenciesTableView.managedProperty().bind(currenciesTableView.visibleProperty());
         tableDisabledHbox.managedProperty().bind(tableDisabledHbox.visibleProperty());
         logTitledPane.managedProperty().bind(logTitledPane.visibleProperty());
@@ -237,12 +237,15 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         alertSettingsButton.setDisable(false);
     }
 
-    public void alertBlocksClick() {
-        UILoader<CryptonoseGuiAlertBlocksController> uiLoader = new UILoader<>("cryptonoseGuiAlertBlocks.fxml");
-        uiLoader.getController().init(exchangeSpecs, cryptonoseGuiAlertChecker.getBlocksObservableList(), alertBlock -> cryptonoseGuiAlertChecker.blockAlerts(alertBlock));
-        alertBlocksButton.setDisable(true);
-        uiLoader.stageShowAndWait("Alerts blocks: " + exchangeSpecs.getName());
-        alertBlocksButton.setDisable(false);
+    // if alert blocks button is enabled, show alert blocks dialog for this excahnge
+    public void showAlertBlocksDialog() {
+        if (!alertBlocksButton.isDisabled()) {
+            UILoader<CryptonoseGuiAlertBlocksController> uiLoader = new UILoader<>("cryptonoseGuiAlertBlocks.fxml");
+            uiLoader.getController().init(exchangeSpecs, cryptonoseGuiAlertChecker.getBlocksObservableList(), alertBlock -> cryptonoseGuiAlertChecker.blockAlerts(alertBlock));
+            alertBlocksButton.setDisable(true);
+            uiLoader.stageShowAndWait("Alerts blocks: " + exchangeSpecs.getName());
+            alertBlocksButton.setDisable(false);
+        }
     }
 
     private void setConnectionStatus(CryptonoseGuiConnectionStatus newConnectionStatus, boolean notify) {
