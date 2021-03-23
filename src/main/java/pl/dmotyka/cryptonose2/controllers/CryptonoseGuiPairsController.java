@@ -227,7 +227,7 @@ public class CryptonoseGuiPairsController implements Initializable {
         marketTableColumn.setEditable(false);
         TableColumn<MarketTableItem,String> minVolTableColumn = new TableColumn<>("Min 24h volume");
         minVolTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.5));
-        minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().minVolumeProperty().asString());
+        minVolTableColumn.setCellValueFactory(tableItem -> tableItem.getValue().minVolumeProperty().asString("%.2f"));
         minVolTableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         minVolTableColumn.setOnEditCommit(value -> {
             try {
