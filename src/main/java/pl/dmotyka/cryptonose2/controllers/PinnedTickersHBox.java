@@ -67,7 +67,6 @@ public class PinnedTickersHBox {
         addPinnedTickers(added.stream().filter(tablePairPriceChanges -> tablePairPriceChanges.pinnedProperty().get()).collect(Collectors.toList()));
     }
 
-    // pinnedStateChanged - whether tickers are added because their pinned state changed from false to true
     private void addPinnedTickers(List<? extends CryptonosePairData> newItems) {
         for (var tablePriceChanges : newItems) {
             UILoader<CryptonoseGuiPinnedNodeController> pinnedLoader = new UILoader<>("cryptonoseGuiPinnedNode.fxml");
