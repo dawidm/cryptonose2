@@ -52,7 +52,11 @@ public class AlertBlock {
 
     // jvm time (System.nanoTime()) when the block becomes inactive
     public long getEndingJvmTimestampMs() {
-        return jvmTimeMillis + blockTime.getTimeSeconds() * 1000;
+        long endingTime = jvmTimeMillis + blockTime.getTimeSeconds() * 1000;
+        if (endingTime < jvmTimeMillis) { //overflow
+            endingTime = Long.MAX_VALUE;
+        }
+        return endingTime;
     }
 
     public boolean isSamePair(AlertBlock other) {
