@@ -32,7 +32,7 @@ public class BlockAlertsMenu extends ContextMenu {
             this.getItems().add(currentItem);
         }
         this.getItems().add(new SeparatorMenuItem());
-        MenuItem permBlockItem = new MenuItem("Block until unblocked");
+        MenuItem permBlockItem = new MenuItem("Block %s %s alerts until unblocked".formatted(exchangeSpecs.getName(), exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol)));
         permBlockItem.setOnAction(event -> blockListener.block(new AlertBlock(exchangeSpecs, pairApiSymbol, AlertBlockTime.BLOCK_PERMANENTLY)));
         this.getItems().add(permBlockItem);
         this.getItems().add(new SeparatorMenuItem());
