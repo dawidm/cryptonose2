@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -47,6 +48,9 @@ public class CryptonoseGuiPinnedNodeController {
     private SimpleDoubleProperty priceProperty; // to keep reference
     private SimpleObjectProperty<ChartCandle[]> chartCandlesProperty; // to keep reference
 
+    private ChangeListener<? super ChartCandle[]> candlesListener;
+    private ChangeListener<? super Number> priceListener;
+
     private long lastChartUpdateMs;
 
     @FXML
@@ -64,6 +68,7 @@ public class CryptonoseGuiPinnedNodeController {
         lastChartUpdateMs = milliTime();
     }
 
+    // listeners are set on priceProperty and chartCandlesProperty, if these properties will exist longer than this object use removeListeners()
     public synchronized void init(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
         this.exchangeSpecs = exchangeSpecs;
         this.pairName = pairName;
@@ -83,7 +88,7 @@ public class CryptonoseGuiPinnedNodeController {
                 updateChart();
             });
         }
-        chartCandlesProperty.addListener(((observable, oldValue, newValue) -> {
+        candlesListener = ((observable, oldValue, newValue) -> {
             updateChartValues(newValue);
             Platform.runLater(() -> {
                 if (!mainHBox.isVisible()) {
@@ -92,8 +97,9 @@ public class CryptonoseGuiPinnedNodeController {
                 }
                 updateChart();
             });
-        }));
-        priceProperty.addListener((observable, oldValue, newValue) -> {
+        });
+        chartCandlesProperty.addListener(candlesListener);
+        priceListener = (observable, oldValue, newValue) -> {
             if (!mainHBox.isVisible()) {
                 Platform.runLater(() -> mainHBox.setVisible(true));
             }
@@ -102,7 +108,8 @@ public class CryptonoseGuiPinnedNodeController {
                 updateChartLastVal(newValue.doubleValue());
                 lastChartUpdateMs = milliTime();
             }
-        });
+        };
+        priceProperty.addListener(priceListener);
         mainHBox.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
                 CryptonoseGuiBrowser.runBrowser(pairName, exchangeSpecs);
@@ -110,6 +117,16 @@ public class CryptonoseGuiPinnedNodeController {
         });
         mainHBox.managedProperty().bind(mainHBox.visibleProperty());
         mainHBox.setVisible(false);
+    }
+
+    // remove listeners on priceProperty and chartCandlesProperty, set on init()
+    public synchronized void removeListeners() {
+        if (priceProperty != null) {
+            priceProperty.removeListener(priceListener);
+        }
+        if (chartCandlesProperty != null) {
+            chartCandlesProperty.removeListener(candlesListener);
+        }
     }
 
     private synchronized void updateChartValues(ChartCandle[] chartCandles) {
