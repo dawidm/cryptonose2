@@ -45,7 +45,7 @@
       </HBox>
       <TableView fx:id="currenciesTableView" focusTraversable="false" maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" styleClass="prices-table" VBox.vgrow="ALWAYS">
          <placeholder>
-            <Label text="Connecting..." />
+            <Label fx:id="tablePlaceholderLabel" text="" />
          </placeholder>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -108,6 +108,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public Button alertSettingsButton;
     @FXML
     public Button alertBlocksButton;
+    @FXML
+    public Label tablePlaceholderLabel;
 
     private ColorIndicatorBox indicatorBox;
     private CryptonoseGuiController cryptonoseGuiController;
@@ -255,6 +257,11 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         javafx.application.Platform.runLater(() -> {
             connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
             indicatorBox.switchColor(newConnectionStatus.getCssClass());
+            if (newConnectionStatus == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED) {
+                tablePlaceholderLabel.setText("No data");
+            } else {
+                tablePlaceholderLabel.setText("Not connected yet");
+            }
         });
         if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS))
             CryptonoseGuiNotification.notifyConnectionState(CryptonoseSettings.NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
