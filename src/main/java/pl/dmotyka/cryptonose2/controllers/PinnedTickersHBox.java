@@ -81,9 +81,15 @@ public class PinnedTickersHBox {
     }
 
     private void removePinnedTickers(List<? extends CryptonosePairData> removed) {
-        for (var cnPairData : removed) {
-            pinnedTickers.removeIf(pt -> pt.getCnPairData().isSamePair(cnPairData));
-        }
+        removed.forEach(cnPairData -> {
+            for (var it = pinnedTickers.iterator(); it.hasNext(); ) {
+                PinnedTicker pt = it.next();
+                if (pt.getCnPairData().isSamePair(cnPairData)) {
+                    pt.getController().removeListeners();
+                    it.remove();
+                }
+            }
+        });
         refreshHBox();
     }
 
