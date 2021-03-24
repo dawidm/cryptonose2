@@ -13,10 +13,12 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.HBox;
 
@@ -30,7 +32,7 @@ public class PinnedTickersHBox {
     private final HBox pinnedHBox;
     private final ObservableListAggregate<CryptonosePairData> items;
 
-    private final TreeSet<PinnedTicker> pinnedTickers = new TreeSet<>();
+    private final TreeSet<PinnedTicker> pinnedTickers = new TreeSet<>(Comparator.comparingLong(pt -> pt.getCnPairData().getPinnedTimestampMs()));
 
     public PinnedTickersHBox(HBox pinnedHBox, ObservableListAggregate<CryptonosePairData> items) {
         this.pinnedHBox = pinnedHBox;
@@ -73,29 +75,28 @@ public class PinnedTickersHBox {
             CryptonoseGuiPinnedNodeController pnCtrl = pinnedLoader.getController();
             pnCtrl.init(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName(), tablePriceChanges.lastPriceProperty(), tablePriceChanges.chartCandlesProperty());
             PinnedTicker newPt = new PinnedTicker(tablePriceChanges, pnCtrl, pinnedLoader.getRoot());
-            if (pinnedTickers.add(newPt)) {
-                PinnedTicker lowerPt = pinnedTickers.lower(newPt);
-                if (lowerPt != null) {
-                    pinnedHBox.getChildren().add(pinnedHBox.getChildren().indexOf(lowerPt.getRoot())+1, newPt.getRoot());
-                } else {
-                    pinnedHBox.getChildren().add(0,newPt.getRoot());
-                }
-            }
+            pinnedTickers.add(newPt);
         }
+        refreshHBox();
     }
 
     private void removePinnedTickers(List<? extends CryptonosePairData> removed) {
-        for (var tablePairPriceChanges : removed) {
-            var pinnedIt = pinnedTickers.iterator();
-            while (pinnedIt.hasNext()) {
-                PinnedTicker pinned = pinnedIt.next();
-                if (pinned.getTablePairPriceChanges() == tablePairPriceChanges) {
-                    pinnedHBox.getChildren().removeIf(node -> node == pinned.getRoot());
-                    pinnedIt.remove();
-                }
-            }
+        for (var cnPairData : removed) {
+            pinnedTickers.removeIf(pt -> pt.getCnPairData().isSamePair(cnPairData));
         }
+        refreshHBox();
     }
 
+    private void refreshHBox() {
+        Platform.runLater(() -> {
+            pinnedHBox.getChildren().clear();
+            for (var it = pinnedTickers.iterator(); it.hasNext();) {
+                PinnedTicker pt = it.next();
+                if (pinnedHBox.getChildren().size() < CryptonoseSettings.MAX_PINNED_TICKERS) {
+                    pinnedHBox.getChildren().add(pt.getRoot());
+                }
+            }
+        });
+    }
 
 }

@@ -119,4 +119,9 @@ public class CryptonosePairData {
     public ExchangeSpecs getExchangeSpecs() {
         return exchangeSpecs;
     }
+
+    // return true exchange and pair api symbol are equal
+    public boolean isSamePair(CryptonosePairData other) {
+        return exchangeSpecs.equals(other.getExchangeSpecs()) && pairName.equals(other.getPairName());
+    }
 }

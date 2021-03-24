@@ -17,7 +17,7 @@ import javafx.scene.Parent;
 
 import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 
-public class PinnedTicker implements Comparable<PinnedTicker> {
+public class PinnedTicker {
 
     private final CryptonosePairData cnPairData;
     private final CryptonoseGuiPinnedNodeController controller;
@@ -29,7 +29,7 @@ public class PinnedTicker implements Comparable<PinnedTicker> {
         this.root = root;
     }
 
-    public CryptonosePairData getTablePairPriceChanges() {
+    public CryptonosePairData getCnPairData() {
         return cnPairData;
     }
 
@@ -41,8 +41,4 @@ public class PinnedTicker implements Comparable<PinnedTicker> {
         return root;
     }
 
-    @Override
-    public int compareTo(PinnedTicker o) {
-        return Long.compare(this.getTablePairPriceChanges().getPinnedTimestampMs(), o.cnPairData.getPinnedTimestampMs());
-    }
 }
