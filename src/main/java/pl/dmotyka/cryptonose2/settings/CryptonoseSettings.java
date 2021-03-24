@@ -185,8 +185,8 @@ public class CryptonoseSettings {
         private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M30);
         private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M30);
         private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", false, TimePeriod.ANY);
-        public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.5, TimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", true, TimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.25, TimePeriod.ANY);
         public static final AlertPreferenceSpecs<Boolean> ENABLE_BLOCK_SUBSEQUENT_ALERTS = new AlertPreferenceSpecs<>("enableBlockSubsequentAlerts", false, TimePeriod.ANY);
         public static final AlertPreferenceSpecs<Boolean> ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS = new AlertPreferenceSpecs<>("enableAllowSubsequent2xAlerts", true, TimePeriod.ANY);
     }
