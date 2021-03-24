@@ -15,6 +15,7 @@ package pl.dmotyka.cryptonose2.controllers;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -256,12 +258,13 @@ public class CryptonoseGuiPairsController implements Initializable {
     public void fillList(List<CurrencyPair> currencyPairList) {
         pairsObservableList = FXCollections.observableArrayList();
         FilteredList<PairListItem> filteredPairsList = new FilteredList<>(pairsObservableList);
+        SortedList<PairListItem> sortedPairsList = new SortedList<>(filteredPairsList, Comparator.comparing(PairListItem::toString));
         filterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(pairListItem -> pairListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
         for(CurrencyPair currentCurrencyPair : currencyPairList) {
             pairsObservableList.add(new PairListItem(false,currentCurrencyPair));
         }
         currencyPairsListView.setCellFactory(CheckBoxListCell.forListView(param -> param.selectedBooleanProperty));
-        currencyPairsListView.setItems(filteredPairsList);
+        currencyPairsListView.setItems(sortedPairsList);
     }
 
     public void fillPreferencesData(MarketAndVolume[] marketAndVolumes, String[] selectedPairs) {
@@ -308,7 +311,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     }
 
     public void deselectAllClick() {
-        for(PairListItem pairListItem : ((FilteredList<PairListItem>)currencyPairsListView.getItems()).getSource()) {
+        for(PairListItem pairListItem : pairsObservableList) {
             pairListItem.setSelected(false);
         }
     }
