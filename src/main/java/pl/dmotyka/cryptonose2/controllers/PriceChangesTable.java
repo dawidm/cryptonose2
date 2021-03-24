@@ -48,7 +48,7 @@ public class PriceChangesTable {
 
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    class PriceChangesTableCell extends TableCell<CryptonosePairData,Number> {
+    static class PriceChangesTableCell extends TableCell<CryptonosePairData,Number> {
 
         boolean firstUpdate = true;
 
@@ -73,7 +73,7 @@ public class PriceChangesTable {
             }
         }
     }
-    class PriceTableCell extends TableCell<CryptonosePairData,Number> {
+    static class PriceTableCell extends TableCell<CryptonosePairData,Number> {
         @Override
         protected void updateItem(Number item, boolean empty) {
             super.updateItem(item, empty);
@@ -81,8 +81,13 @@ public class PriceChangesTable {
                 setText(null);
             if(item==null)
                 setText(null);
-            else
-                setText(DecimalFormatter.formatDecimalPrice(item.doubleValue()));
+            else {
+                if (item.doubleValue() == 0) {
+                    setText("no data");
+                } else {
+                    setText(DecimalFormatter.formatDecimalPrice(item.doubleValue()));
+                }
+            }
         }
     }
 
