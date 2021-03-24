@@ -40,13 +40,12 @@ public class CryptonoseGuiPinnedNodeController {
     private static final long MIN_UPDATE_PERIOD_MS = 1000;
 
     private ExchangeSpecs exchangeSpecs;
-
-    private String pairName;
-    private MinimalFxChart minimalFxChart;
-    private double[] lastChartValues;
-
+    private String pairApiSymbol;
     private SimpleDoubleProperty priceProperty; // to keep reference
     private SimpleObjectProperty<ChartCandle[]> chartCandlesProperty; // to keep reference
+
+    private MinimalFxChart minimalFxChart;
+    private double[] lastChartValues;
 
     private ChangeListener<? super ChartCandle[]> candlesListener;
     private ChangeListener<? super Number> priceListener;
@@ -71,7 +70,7 @@ public class CryptonoseGuiPinnedNodeController {
     // listeners are set on priceProperty and chartCandlesProperty, if these properties will exist longer than this object use removeListeners()
     public synchronized void init(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
         this.exchangeSpecs = exchangeSpecs;
-        this.pairName = pairName;
+        this.pairApiSymbol = pairName;
         this.priceProperty = priceProperty;
         this.chartCandlesProperty = chartCandlesProperty;
         mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
@@ -122,9 +121,11 @@ public class CryptonoseGuiPinnedNodeController {
     // remove listeners on priceProperty and chartCandlesProperty, set on init()
     public synchronized void removeListeners() {
         if (priceProperty != null) {
+            logger.fine("removing price listener %s %s".formatted(exchangeSpecs.getName(), pairApiSymbol));
             priceProperty.removeListener(priceListener);
         }
         if (chartCandlesProperty != null) {
+            logger.fine("removing candles listener %s %s".formatted(exchangeSpecs.getName(), pairApiSymbol));
             chartCandlesProperty.removeListener(candlesListener);
         }
     }
