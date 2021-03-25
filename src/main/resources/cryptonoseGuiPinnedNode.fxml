@@ -23,7 +23,10 @@
 
 <HBox fx:id="mainHBox" spacing="3.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.dmotyka.cryptonose2.controllers.CryptonoseGuiPinnedNodeController">
    <children>
-      <StackPane fx:id="chartPane" styleClass="pinned-mini-chart" />
+      <StackPane fx:id="chartPane" styleClass="pinned-mini-chart">
+         <children>
+            <Label text="(no data)" />
+         </children></StackPane>
       <VBox>
          <children>
             <Label fx:id="pairLabel" text="(pair)">
@@ -31,12 +34,12 @@
                   <String fx:value="pinned-price" />
                   <String fx:value="pinned-font" />
                </styleClass></Label>
-            <Label fx:id="priceLabel" text="(price)">
+            <Label fx:id="priceLabel" text="(no data)">
                <styleClass>
                   <String fx:value="pinned-price" />
                   <String fx:value="pinned-font" />
                </styleClass></Label>
-            <Label fx:id="changeLabel" text="(change)">
+            <Label fx:id="changeLabel" text="(no data)">
                <styleClass>
                   <String fx:value="pinned-price" />
                   <String fx:value="pinned-font" />
