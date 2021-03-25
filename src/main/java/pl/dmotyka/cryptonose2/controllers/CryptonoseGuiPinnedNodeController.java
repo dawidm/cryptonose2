@@ -134,14 +134,15 @@ public class CryptonoseGuiPinnedNodeController {
         if (chartCandles == null)
             return;
         int numCandles = (int)(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC / CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
+        ChartCandle[] newChartCandles;
         if (chartCandles.length < numCandles)
-            chartCandles = null;
+            newChartCandles = null;
         else
-            chartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length-numCandles, chartCandles.length);
-        if (chartCandles != null) {
-            lastChartValues = Arrays.stream(chartCandles).mapToDouble(ChartCandle::getClose).toArray();
+            newChartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length-numCandles, chartCandles.length);
+        if (newChartCandles != null) {
+            lastChartValues = Arrays.stream(newChartCandles).mapToDouble(ChartCandle::getClose).toArray();
         } else {
-            logger.warning("chartCandles is null");
+            logger.warning("chartCandles is null %s %s, provided number of candles: %d".formatted(exchangeSpecs.getName(), pairApiSymbol, chartCandles.length));
         }
     }
 
