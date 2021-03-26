@@ -9,7 +9,7 @@ After first run, you will see main application window with price alerts tab. No 
 
 Cryptonose needs to know on which currency pairs it should track price changes. This is not configured so far so you will be asked to do it. There are two sections in pairs selection window:
 
-* ***Choose markets***. Most of exchanges provide markets with more than one quote currency. Example of BTC markets (BTC as quote currency): ETH/BTC, LTC/BTC, XMR/BTC. You can use this option to track all pairs with significant volume. Select one one or more markets, then click on _Min 24h volume_ table cell to set volume and press Enter co confirm.
+* ***Choose markets***. Most of the exchanges provide markets with more than one quote currency. Example of BTC markets (BTC as quote currency): ETH/BTC, LTC/BTC, XMR/BTC. You can use this option to track all pairs with significant volume. Select one one or more markets, then click on _Min 24h volume_ table cell to set volume and press Enter co confirm.
 * ***Select additional pairs***. Manually choose currency pairs. You can use only this option or combine it with _Choose markets_ filter.
 
 ![cryptonose paris configuration]({{ site.baseurl }}/images/pairs-settings.png "Pairs configuration window")
@@ -39,11 +39,17 @@ To visualize, example values of relative price change:
 ### Price alert
 ![cryptonose price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")
 * ***Price change*** - percent change in the price in given period. In parentheses - relative price change.
-* ***Chart*** - minimalistic graph showing short (2 hours) price history. Just to illustrate recent trend.
-* ***Pair*** - currency pair name in format _base/quote_. The color is different for every exchange.
+* ***Chart*** - minimalistic graph showing short (2 hours) price history. Just to illustrate a recent trend.
+/* ***Pair*** - currency pair name in format _base/quote_. The color is specific for the exchange. Next to a name you can see button for blocking alerts described in the next paragraph.
 * ***Final price***. Example: if price alert is triggered by price drop from 0.15 to 0.14, the final price is 0.14
 * ***Period***. In parentheses - the real duration of price change in seconds.
 * ***More*** - you can see buttons for ["Coins plugins"](#coins-plugins). They provide additional data about given coin.
+
+### Blocking alerts
+
+You can block subsequent alerts for currency pairs using a block button that's next to the pair name in the alerts tab. Blocked means that you will not see or hear any price alert on given currency pair. Blocks for specified time (1 hour, 2 hours etc.) will not persist if you close Cryptonose and run it again, but block for an unspecified time will.
+
+You can see and remove alert blocks using clicking on _Manage blocks_ button. You can also do the same using _Alert blocks..._ button in the exchange tab.   
 
 ## Exchange tab
 ![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
@@ -59,10 +65,18 @@ To visualize, example values of relative price change:
 
 A button to show search interface (_Find (press F)..._) is always visible at the top of the Cryptonose window. You can click on it or just press F key to start typing, to find desired currency pair. It's designed to let you access exchange page quickly - just press enter to go to the page for the top pair in the search results or use arrow keys to select another pair before pressing enter. You can also do use a double-click.
 
-When you've finished your search, press ESC or click on (_Find (press F)..._) button to hide the interface. Also it will be hidden automatically if you start interacting with the rest of the Cryptonose interface. 
+When you've finished your search, press ESC or click on (_Find (press F)..._) button to hide the interface. Also, it will be hidden automatically if you start interacting with the rest of the Cryptonose interface. 
+
+## Pinned tickers
+
+In currency pairs search table you can see a _Pin_ option. If you pin currency pair, you will see a small box with real-time price and mini-chart - that's a _pinned ticker_. Tickers will appear in the same order as their currency pairs were pinned. Pinned currency pairs will also be placed at the top in search table.
+
+There's a limit of a 10 visible pinned tickers. If you pin more - the most recent ones just won't be shown.
+
+Keep in mind that pinned ticker will be visible only when connection to adequate exchange is active it's and currency is on the list of paris (meets pairs selection criteria described at the beginning of this page).     
 
 ## Coins plugins
-You can find small buttons with colored text on the price alerts tab and currency pairs tables. Currently there are 2 buttons - plugins:
+You can find small buttons with colored text on the price alerts tab and currency pairs tables. Currently, there are 2 buttons - plugins:
 
 * **CoinGecko plugin (_CG_)** - show additional data about coin's price, market cap and usually a short description. All the data are from CoinGecko website. The data are downloaded using coin's symbol (BTC, ETH, DOGE etc.). If there's a situation when there are multiple coins with the same symbol (which is not very likely), data for a coin with highest market cap will be shown. So keep in mind there's a minimal chance that data for wrong coin will be shown. 
 * **CryptoPanic plugin (_CG_)** - show latest news about a coin from CryptoPanic website. Precisely, news for all coins with given symbol are shown in rare cases when multiple coins use this symbol.
@@ -92,11 +106,11 @@ These settings are quite flexible. If you're only interested in percent changes,
 
 #### Alerts logic settings
 
-* ***After an alert block subsequent alerts for the same pair for 30 minutes***. You can use this to make alerts less frequent, but keep in mind that during this time something interesting could happen and you won't be notified. 
+* ***After an alert block subsequent alerts for the same pair for 30 minutes***. You can use this to make alerts less frequent, but keep in mind that during this time something interesting could happen, and you won't be notified. 
 * ***Allow a subsequent alert if the price change value is more than 2x higher than in the previous one***. For example if you get alert for a significant price rise and after a feq seconds the price rises even more, more than 2x than the previous change - you'll get a second alert.
 
 #### Cryptonose liquidity factor
-Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency pairs that are not liquid (and because of that - usually volatile in undesirable way). For given period of time (5m, 30m) liquidity factor is:
+Cryptonose liquidity factor is a very simple indicator that could help filter out alerts on currency pairs that are not liquid (and because of that - usually volatile in undesirable way). For given period (5m, 30m) liquidity factor is:
 
 (number-of-periods-where-price-changed) / (number-of-periods)
 
