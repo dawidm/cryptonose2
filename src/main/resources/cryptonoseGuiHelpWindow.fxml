@@ -53,7 +53,10 @@
                         <Label text="Cryptonose homepage:" />
                     </children>
                 </VBox>
-                <Hyperlink fx:id="downloadsLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://dawidm.github.io/cryptonose2/" />
+                <Hyperlink fx:id="downloadsLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://dawidm.github.io/cryptonose2/">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin></Hyperlink>
             </children>
         </HBox>
         <HBox>
@@ -63,9 +66,31 @@
                         <Label text="Help page:" />
                     </children>
                 </VBox>
-                <Hyperlink fx:id="releaseLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://dawidm.github.io/cryptonose2/manual/" />
+                <Hyperlink fx:id="releaseLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://dawidm.github.io/cryptonose2/manual/">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin></Hyperlink>
             </children>
         </HBox>
+      <HBox>
+         <children>
+            <VBox alignment="CENTER_LEFT">
+               <children>
+                  <Label text="Github:" />
+               </children>
+            </VBox>
+            <Hyperlink fx:id="releaseLinkLabel1" focusTraversable="false" style="-fx-padding: 0;" text="https://github.com/dawidm/cryptonose2">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin>
+            </Hyperlink>
+         </children>
+      </HBox>
+      <Label prefWidth="500.0" text="Bug reports and ideas for improvements are much welcome through GitHub or directly to the e-mail address." wrapText="true">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Label>
       <HBox alignment="TOP_RIGHT" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Close" />
