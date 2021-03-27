@@ -30,6 +30,8 @@ public class CryptonoseGuiHelpWindowController implements Initializable {
     @FXML
     public Hyperlink releaseLinkLabel;
     @FXML
+    public Hyperlink githubLinkLabel;
+    @FXML
     public Label titleLabel;
     @FXML
     public Button closeButton;
@@ -38,6 +40,7 @@ public class CryptonoseGuiHelpWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         downloadsLinkLabel.setOnAction(e -> CryptonoseGuiBrowser.runBrowser(downloadsLinkLabel.getText()));
         releaseLinkLabel.setOnAction(e -> CryptonoseGuiBrowser.runBrowser(releaseLinkLabel.getText()));
+        githubLinkLabel.setOnAction(e -> CryptonoseGuiBrowser.runBrowser(githubLinkLabel.getText()));
         closeButton.setOnAction(e -> ((Stage)((Button)e.getSource()).getScene().getWindow()).close());
     }
 

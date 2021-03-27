@@ -79,7 +79,7 @@
                   <Label text="Github:" />
                </children>
             </VBox>
-            <Hyperlink fx:id="releaseLinkLabel1" focusTraversable="false" style="-fx-padding: 0;" text="https://github.com/dawidm/cryptonose2">
+            <Hyperlink fx:id="githubLinkLabel" focusTraversable="false" style="-fx-padding: 0;" text="https://github.com/dawidm/cryptonose2">
                <HBox.margin>
                   <Insets left="3.0" />
                </HBox.margin>
