@@ -216,6 +216,7 @@ public class CryptonoseGuiPairsController implements Initializable {
         for(Currency currency : baseCurrencies) {
             marketsObservableList.add(new MarketTableItem(false,currency.getCurrencyCode(),DEFAULT_MIN_VOLUME));
         }
+        marketsObservableList.sort(Comparator.comparing(MarketTableItem::getName));
         minVolumeTableView.getColumns().clear();
         TableColumn<MarketTableItem,Boolean> activeTableColumn = new TableColumn<>("Active");
         activeTableColumn.maxWidthProperty().bind(minVolumeTableView.widthProperty().multiply(0.2)); // because max width determines column sizes in CONSTRAINED_RESIZE_POLICY
