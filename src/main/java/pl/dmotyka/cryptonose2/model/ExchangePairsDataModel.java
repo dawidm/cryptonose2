@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -32,6 +33,8 @@ import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 public class ExchangePairsDataModel {
+
+    private static final Logger logger = Logger.getLogger(ExchangePairsDataModel.class.getName());
 
     private final ExchangeSpecs exchangeSpecs;
     private final PairSymbolConverter pairSymbolConverter;
@@ -92,7 +95,7 @@ public class ExchangePairsDataModel {
         }
     }
 
-    // clears a table
+    // clears all pair data (returned by getItems and getReadonlyItems)
     public synchronized void clear() {
         Platform.runLater(() -> cnPairDataObservableList.clear());
         cnPairDataMap.clear();
