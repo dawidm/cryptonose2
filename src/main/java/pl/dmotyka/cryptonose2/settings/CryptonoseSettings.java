@@ -37,6 +37,9 @@ public class CryptonoseSettings {
 
     public static final int MAX_PINNED_TICKERS = 10;
 
+    // number of pairs to show warning about long connection time for a big number of pairs
+    public static final int LOT_OF_PAIRS_WARNING_THRESHOLD = 50;
+
     public static final long[] TIME_PERIODS = {300,1800}; // keep it sorted
     public static final long ALERTS_PAUSE_SECONDS = 1800; // how long to block subsequent alerts for the same pair (if the option is active)
     public static final long NO_TRADES_WARNING_SECONDS = 300;
@@ -168,6 +171,7 @@ public class CryptonoseSettings {
         public static final GeneralPreferenceSpecs<Integer> FONT_SIZE_PX = new GeneralPreferenceSpecs<>("fontSizePt", 12);
         public static final GeneralPreferenceSpecs<Boolean> DARK_MODE = new GeneralPreferenceSpecs<>("darkMode", false);
         public static final GeneralPreferenceSpecs<Boolean> CONNECTION_STATUS_NOTIFICATIONS = new GeneralPreferenceSpecs<>("connectionStatusNotif", true);
+        public static final GeneralPreferenceSpecs<Boolean> LOT_OF_PAIRS_ALERT_SHOWN = new GeneralPreferenceSpecs<>("lotOfPairsAlertShown", false);
     }
 
     public static class Alert {

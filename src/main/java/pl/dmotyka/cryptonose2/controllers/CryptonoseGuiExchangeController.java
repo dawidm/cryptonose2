@@ -64,6 +64,7 @@ import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;
 import pl.dmotyka.cryptonoseengine.EngineMessage;
 import pl.dmotyka.cryptonoseengine.EngineMessageReceiver;
+import pl.dmotyka.cryptonoseengine.EngineMessageSelectedPairs;
 import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
 import pl.dmotyka.cryptonoseengine.PriceChanges;
 import pl.dmotyka.exchangeutils.chartdataprovider.CurrencyPairTimePeriod;
@@ -250,6 +251,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
     }
 
+    private void lotOfPairsWarning(int numPairs) {
+        CryptonoseAlert alert = new CryptonoseAlert(Alert.AlertType.INFORMATION, "With specified pair selection criteria for %s, lot of pairs (%d) for price checking were chosen. It wouldn't cause any problems, but keep in mind that connection could take a long time to be established.".formatted(exchangeSpecs.getName(), numPairs), ButtonType.OK);
+        alert.getDialogPane().setPrefWidth(500);
+        alert.setTitle("Lot of pairs chosen");
+        alert.showAndWait();
+        CryptonoseSettings.putBool(CryptonoseSettings.General.LOT_OF_PAIRS_ALERT_SHOWN, true);
+    }
+
     private void setConnectionStatus(CryptonoseGuiConnectionStatus newConnectionStatus, boolean notify) {
         if (connectionStatus.get() != null && newConnectionStatus.equals(connectionStatus.get()))
             return;
@@ -269,6 +278,12 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void message(EngineMessage msg) {
+        if (msg instanceof EngineMessageSelectedPairs) {
+            int numPairs = ((EngineMessageSelectedPairs)msg).getNumSelectedPairs();
+            if (numPairs > CryptonoseSettings.LOT_OF_PAIRS_WARNING_THRESHOLD && !CryptonoseSettings.getBool(CryptonoseSettings.General.LOT_OF_PAIRS_ALERT_SHOWN)) {
+                Platform.runLater(() -> lotOfPairsWarning(numPairs));
+            }
+        }
         if(msg.getCode()==EngineMessage.Type.ERROR)
             consoleLog("Error: " + msg.getMessage());
         else
