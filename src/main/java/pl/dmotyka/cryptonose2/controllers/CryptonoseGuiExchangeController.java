@@ -171,7 +171,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private void startEngine() {
-        pairsDataModel.clear();
         lastUpdateTimeMillis.set(0);
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
@@ -191,6 +190,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         new Thread(() -> {
             if (engine!=null)
                 engine.stop();
+            pairsDataModel.clear();
             engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
                     this,
                     CryptonoseSettings.TIME_PERIODS,
