@@ -39,8 +39,8 @@ repositories {
 dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'pl.dmotyka:dmutils:1.1.0'
-    implementation 'pl.dmotyka:exchangeutils:1.15.6'
-    implementation 'pl.dmotyka:cryptonoseengine:1.8.0'
+    implementation 'pl.dmotyka:exchangeutils:1.15.7'
+    implementation 'pl.dmotyka:cryptonoseengine:1.8.1'
     implementation 'pl.dmotyka:minimal-fx-charts:1.1.0'
     implementation 'com.dorkbox:Notify:3.7'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
