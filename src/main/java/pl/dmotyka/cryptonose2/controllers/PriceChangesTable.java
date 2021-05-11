@@ -183,6 +183,10 @@ public class PriceChangesTable {
                 CryptonosePairData cnPairData = tableView.getSelectionModel().getSelectedItem();
                 CryptonoseGuiBrowser.runBrowser(cnPairData.getPairName(), cnPairData.getExchangeSpecs());
             }
+            if (event.getCode() == KeyCode.SPACE) {
+                CryptonosePairData cnPairData = tableView.getSelectionModel().getSelectedItem();
+                cnPairData.setPinned(!cnPairData.pinnedProperty().get());
+            }
         });
         if (autoSort) {
             scheduledExecutorService.scheduleWithFixedDelay(() -> Platform.runLater(tableView::sort), TABLE_SORT_FREQUENCY_MILLIS, TABLE_SORT_FREQUENCY_MILLIS, TimeUnit.MILLISECONDS);
