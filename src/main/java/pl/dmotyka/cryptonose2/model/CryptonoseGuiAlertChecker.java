@@ -64,13 +64,13 @@ public class CryptonoseGuiAlertChecker {
                 continue;
             }
             PriceAlertThresholds priceAlertThresholds = priceAlertThresholdsMap.get(currentPriceChanges.getTimePeriodSeconds());
-            if (currentPriceChanges.getRelativePriceChange() != null) {
-                double relativeChangeValue = currentPriceChanges.getRelativePriceChange();
-                if ((currentPriceChanges.getPercentChange() > priceAlertThresholds.getRequiredRisingValue()
-                        && (relativeChangeValue >= priceAlertThresholds.getRequiredRelativeRisingValue() || relativeChangeValue==0.0)
+            if (currentPriceChanges.getRelativeLastPriceChange() != null) {
+                double relativeChangeValue = currentPriceChanges.getRelativeLastPriceChange();
+                if ((currentPriceChanges.getLastPercentChange() > priceAlertThresholds.getRequiredRisingValue()
+                        && (relativeChangeValue >= priceAlertThresholds.getRequiredRelativeRisingValue())
                         || relativeChangeValue >= priceAlertThresholds.getSufficientRelativeRisingValue()) ||
-                        (currentPriceChanges.getPercentChange() < -priceAlertThresholds.getRequiredFallingValue()
-                                && (relativeChangeValue <= -priceAlertThresholds.getRequiredRelativeFallingValue() || relativeChangeValue==0.0)
+                        (currentPriceChanges.getLastPercentChange() < -priceAlertThresholds.getRequiredFallingValue()
+                                && (relativeChangeValue <= -priceAlertThresholds.getRequiredRelativeFallingValue())
                                 || relativeChangeValue <= -priceAlertThresholds.getSufficientRelativeFallingValue()))
                 {
                     PriceAlert priceAlert = new PriceAlert(
@@ -78,14 +78,14 @@ public class CryptonoseGuiAlertChecker {
                             currentPriceChanges.getCurrencyPair(),
                             pairSymbolConverter.toFormattedString(currentPriceChanges.getCurrencyPair()),
                             currentPriceChanges.getTimePeriodSeconds(),
-                            System.currentTimeMillis() / 1000,
-                            currentPriceChanges.getPercentChange(),
-                            currentPriceChanges.getRelativePriceChange(),
+                            currentPriceChanges.getFinalPriceTimestampSec(),
+                            currentPriceChanges.getLastPercentChange(),
+                            relativeChangeValue,
                             currentPriceChanges.getMinPrice(),
                             currentPriceChanges.getMaxPrice(),
                             currentPriceChanges.getChangeTimeSeconds(),
-                            currentPriceChanges.getFinalPriceTimestamp(),
-                            currentPriceChanges.getReferencePriceTimestamp());
+                            currentPriceChanges.getLastPriceTimestampSec(),
+                            currentPriceChanges.getReferencePriceTimestampSec());
                     if(!checkPreviousAlerts(priceAlert)) {
                         if (!checkIsBlocked(priceAlert)) {
                             priceAlertList.add(priceAlert);
