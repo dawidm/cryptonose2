@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
@@ -352,6 +353,15 @@ public class CryptonoseSettings {
     public static void unpinTicker(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
         Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_GENERAL_PREFS, exchangeSpecs).node(General.PINNED_NODE_KEY);
         prefs.remove(pairApiSymbol);
+    }
+
+    public static String[] getPinnedTickersSymbols(ExchangeSpecs exchangeSpecs) {
+        Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_GENERAL_PREFS, exchangeSpecs).node(General.PINNED_NODE_KEY);
+        try {
+            return Arrays.stream(prefs.keys()).filter(key -> prefs.getLong(key,0) != 0).toArray(String[]::new);
+        } catch (BackingStoreException e) {
+            return new String[] {};
+        }
     }
 
     public static void addPermanentAlertBlock(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
