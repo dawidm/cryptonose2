@@ -400,7 +400,7 @@ public class CryptonoseGuiController extends Application {
                 findTitledPane.setExpanded(false);
             if (event.getCode() == KeyCode.DOWN) {
                 if (!findTableView.getItems().isEmpty()) {
-                    findTableView.getSelectionModel().select(0);
+                    findTableView.getSelectionModel().select(0, findTableView.getColumns().get(0));
                     findTableView.scrollTo(0);
                     findTableView.requestFocus();
                 }
