@@ -22,11 +22,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -52,14 +54,14 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import pl.dmotyka.cryptonose2.model.CryptonoseGuiAlertChecker;
-import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonose2.dataobj.CryptonoseGuiConnectionStatus;
 import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
+import pl.dmotyka.cryptonose2.model.CryptonoseGuiAlertChecker;
 import pl.dmotyka.cryptonose2.model.ExchangePairsDataModel;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
+import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;
 import pl.dmotyka.cryptonoseengine.EngineMessage;
@@ -188,6 +190,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             additionalPairs = new String[0];
         else
             additionalPairs=pairs.split(",");
+        Set<String> additionalPairsSet = new HashSet<>(Arrays.asList(additionalPairs));
+        additionalPairsSet.addAll(Arrays.asList(CryptonoseSettings.getPinnedTickersSymbols(exchangeSpecs)));
+        String[] allAdditionalPairs = additionalPairsSet.toArray(String[]::new);
         new Thread(() -> {
             if (engine!=null)
                 engine.stop();
@@ -197,7 +202,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     CryptonoseSettings.TIME_PERIODS,
                     CryptonoseSettings.RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(PairSelectionCriteria[]::new),
-                    additionalPairs);
+                    allAdditionalPairs);
             engine.enableInitEngineWithLowerPeriodChartData();
             engine.autoRefreshPairData(CryptonoseSettings.AUTO_REFRESH_INTERVAL_MINUTES);
             engine.setCheckChangesDelayMs(100);
