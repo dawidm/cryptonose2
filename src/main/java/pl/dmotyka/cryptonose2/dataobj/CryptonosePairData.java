@@ -102,11 +102,11 @@ public class CryptonosePairData {
         switch(period) {
             case PERIOD1:
                 p1PercentChange.setValue(priceChanges.getPercentChange());
-                p1RelativeChange.setValue(priceChanges.getRelativeLastPriceChange()!=null?priceChanges.getRelativePriceChange():0);
+                p1RelativeChange.setValue(priceChanges.getRelativePriceChange()!=null?priceChanges.getRelativePriceChange():0);
                 break;
             case PERIOD2:
                 p2PercentChange.setValue(priceChanges.getPercentChange());
-                p2RelativeChange.setValue(priceChanges.getRelativeLastPriceChange()!=null?priceChanges.getRelativePriceChange():0);
+                p2RelativeChange.setValue(priceChanges.getRelativePriceChange()!=null?priceChanges.getRelativePriceChange():0);
                 break;
         }
         lastPrice.set(priceChanges.getLastPrice());
