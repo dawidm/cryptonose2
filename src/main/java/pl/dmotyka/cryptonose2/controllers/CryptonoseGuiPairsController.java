@@ -14,6 +14,7 @@
 package pl.dmotyka.cryptonose2.controllers;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -179,9 +180,14 @@ public class CryptonoseGuiPairsController implements Initializable {
         try {
             final PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
             PairDataProvider pairDataProvider = exchangeSpecs.getPairDataProvider();
-            List<CurrencyPair> currencyPairList= Arrays.stream(pairDataProvider.getPairsApiSymbols()).
-                    map(pairSymbolConverter::apiSymbolToXchangeCurrencyPair).
-                                                               collect(Collectors.toList());
+            List<CurrencyPair> currencyPairList = new ArrayList<>();
+            for (String apiSymbol : pairDataProvider.getPairsApiSymbols()) {
+                try {
+                    currencyPairList.add(pairSymbolConverter.apiSymbolToXchangeCurrencyPair(apiSymbol));
+                } catch (IllegalArgumentException e) {
+                    logger.log(Level.WARNING, "when loading currency pairs", e);
+                }
+            }
 
             if(Thread.interrupted())
                 return;
