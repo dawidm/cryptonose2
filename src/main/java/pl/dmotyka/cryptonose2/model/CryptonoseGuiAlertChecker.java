@@ -85,7 +85,7 @@ public class CryptonoseGuiAlertChecker {
                             currentPriceChanges.getMaxPrice(),
                             currentPriceChanges.getChangeTimeSeconds(),
                             currentPriceChanges.getLastPriceTimestampSec(),
-                            currentPriceChanges.getReferencePriceTimestampSec());
+                            currentPriceChanges.getReferenceToLastPriceTimestampSec());
                     if(!checkPreviousAlerts(priceAlert)) {
                         if (!checkIsBlocked(priceAlert)) {
                             priceAlertList.add(priceAlert);
