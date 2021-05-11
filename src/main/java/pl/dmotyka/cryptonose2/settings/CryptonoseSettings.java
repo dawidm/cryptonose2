@@ -351,7 +351,7 @@ public class CryptonoseSettings {
 
     public static void unpinTicker(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
         Preferences prefs = getPrefsNode(PreferenceCategory.CATEGORY_GENERAL_PREFS, exchangeSpecs).node(General.PINNED_NODE_KEY);
-        prefs.putInt(pairApiSymbol, 0);
+        prefs.remove(pairApiSymbol);
     }
 
     public static void addPermanentAlertBlock(ExchangeSpecs exchangeSpecs, String pairApiSymbol) {
