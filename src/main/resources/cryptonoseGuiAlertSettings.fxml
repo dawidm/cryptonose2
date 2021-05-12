@@ -207,7 +207,7 @@
                         <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
                      </padding>
                      <children>
-                        <CheckBox fx:id="blockSubsequentCheckBox" mnemonicParsing="false" text="After an alert block subsequent alerts for the same pair for 30 minutes" />
+                        <CheckBox fx:id="blockSubsequentCheckBox" mnemonicParsing="false" text="After an alert, block subsequent alerts for the same pair for 30 minutes" />
                         <CheckBox fx:id="allowSubsequentCheckBox" mnemonicParsing="false" text="Allow a subsequent alert if the price change value is more than 2x higher than in the previous one" />
                      </children>
                   </VBox>
