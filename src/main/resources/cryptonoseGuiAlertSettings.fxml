@@ -32,7 +32,7 @@
          <children>
             <TitledPane fx:id="p1periodSettingsTitledPane" animated="false" collapsible="false" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox spacing="7.0">
+                  <VBox fx:id="p1SettingsVBox" spacing="7.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
@@ -84,7 +84,17 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label fx:id="p1titleLabel" styleClass="h2" text="Title" />
+                  <HBox fx:id="p1TitleHBox" alignment="CENTER_LEFT">
+                     <children>
+                        <Label fx:id="p1titleLabel" styleClass="h2" text="Title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="p1EnabledCheckBox" mnemonicParsing="false" text="enabled">
+                           <HBox.margin>
+                              <Insets left="7.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
@@ -93,7 +103,7 @@
             <Region VBox.vgrow="ALWAYS" />
             <TitledPane fx:id="p2periodSettingsTitledPane" animated="false" collapsible="false" VBox.vgrow="ALWAYS">
                <content>
-                  <VBox spacing="7.0">
+                  <VBox fx:id="p2SettingsVBox" spacing="7.0">
                      <children>
                         <HBox alignment="CENTER_LEFT" spacing="7.0" VBox.vgrow="NEVER">
                            <children>
@@ -149,7 +159,17 @@
                   </VBox>
                </content>
                <graphic>
-                  <Label fx:id="p2titleLabel" styleClass="h2" text="Title" />
+                  <HBox fx:id="p2TitleHBox" alignment="CENTER_LEFT">
+                     <children>
+                        <Label fx:id="p2titleLabel" styleClass="h2" text="Title" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <CheckBox fx:id="p2EnabledCheckBox" mnemonicParsing="false" text="enabled">
+                           <HBox.margin>
+                              <Insets left="7.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
                </graphic>
                <VBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />

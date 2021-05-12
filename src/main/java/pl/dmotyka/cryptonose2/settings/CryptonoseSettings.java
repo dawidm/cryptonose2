@@ -178,12 +178,14 @@ public class CryptonoseSettings {
     public static class Alert {
         public static String PERMANENT_BLOCKS_KEY = "permanentAlertBlocks";
 
+        public static final AlertPreferenceSpecs<Boolean> M5_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM5Alerts", true, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredFallingValue", 3.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M5);
+        public static final AlertPreferenceSpecs<Boolean> M30_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM30Alerts", true, TimePeriod.M30);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRisingValue", 5.0, TimePeriod.M30);
         private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredFallingValue", 5.0, TimePeriod.M30);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M30);

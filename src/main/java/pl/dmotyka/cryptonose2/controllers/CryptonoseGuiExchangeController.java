@@ -239,7 +239,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public void alertSettingsClick() {
         UILoader<CryptonoseGuiAlertSettingsController> uiLoader = new UILoader<>("cryptonoseGuiAlertSettings.fxml");
-        uiLoader.getController().init(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
+        uiLoader.getController().init(exchangeSpecs, CryptonoseSettings.TIME_PERIODS[0], CryptonoseSettings.TIME_PERIODS[1]);
         alertSettingsButton.setDisable(true);
         uiLoader.stageShowAndWait("Alerts conditions: " + exchangeSpecs.getName());
         alertSettingsButton.setDisable(false);

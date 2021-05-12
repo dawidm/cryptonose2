@@ -32,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
@@ -126,8 +127,21 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     public Button p2ExampleButtonMed;
     @FXML
     public Button p2ExampleButtonHigh;
+    @FXML
+    public CheckBox p1EnabledCheckBox;
+    @FXML
+    public CheckBox p2EnabledCheckBox;
+    @FXML
+    public VBox p1SettingsVBox;
+    @FXML
+    public VBox p2SettingsVBox;
+    @FXML
+    public HBox p1TitleHBox;
+    @FXML
+    public HBox p2TitleHBox;
 
-    private long[] timePeriods;
+    private long p1TimePeriod;
+    private long p2TimePeriod;
     private ExchangeSpecs exchangeSpecs;
 
     @Override
@@ -150,6 +164,10 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         p2ExampleButtonHigh.setOnAction(e -> {
             fillP2ThresholdFields(ExampleAlertThresholds.getThresholds(ExampleAlertThresholds.ThresholdValuesType.HIGH, CryptonoseSettings.TimePeriod.M30));
         });
+        p1SettingsVBox.disableProperty().bind(p1EnabledCheckBox.selectedProperty().not());
+        p2SettingsVBox.disableProperty().bind(p2EnabledCheckBox.selectedProperty().not());
+        p1EnabledCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> fillP1ThresholdFields(p1TimePeriod));
+        p2EnabledCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> fillP2ThresholdFields(p2TimePeriod));
         addFormatters();
     }
 
@@ -169,21 +187,22 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     }
 
     private void fillFields() {
-            long p1timePeriod=timePeriods[0];
-            PriceAlertThresholds p1PriceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1timePeriod));
-            fillP1ThresholdFields(p1PriceAlertThresholds);
-            p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1timePeriod)+" period alerts thresholds");
-            long p2timePeriod=timePeriods[1];
-            PriceAlertThresholds p2PriceAlertThresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p2timePeriod));
-            fillP2ThresholdFields(p2PriceAlertThresholds);
-            p2titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p2timePeriod)+" period alerts thresholds");
+            fillP1ThresholdFields(p1TimePeriod, null);
+            p1titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p1TimePeriod)+" period alerts thresholds");
+            fillP2ThresholdFields(p2TimePeriod, null);
+            p2titleLabel.setText(TimeConverter.secondsToFullMinutesHoursDays(p2TimePeriod)+" period alerts thresholds");
+            p1EnabledCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, exchangeSpecs));
+            p2EnabledCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, exchangeSpecs));
             cnLiquidityCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, exchangeSpecs));
             cnLiquiditySlider.setValue(CryptonoseSettings.getDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, exchangeSpecs));
             blockSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, exchangeSpecs));
             allowSubsequentCheckBox.setSelected(CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS, exchangeSpecs));
     }
 
-    private void fillP1ThresholdFields(PriceAlertThresholds thresholds) {
+    private void fillP1ThresholdFields(long timePeriod, PriceAlertThresholds thresholds) {
+        if (thresholds == null) {
+            thresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriod));
+        }
         String format = "%.2f";
         p1requiredRisingTextField.setText(String.format(format,thresholds.getRequiredRisingValue()));
         p1requiredDroppingTextField.setText(String.format(format,thresholds.getRequiredFallingValue()));
@@ -193,7 +212,21 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         p1sufficientRelativeDroppingTextField.setText(String.format(format,thresholds.getSufficientRelativeFallingValue()));
     }
 
-    private void fillP2ThresholdFields(PriceAlertThresholds thresholds) {
+    private void fillP1ThresholdFields(PriceAlertThresholds thresholds) {
+        if (thresholds == null) {
+            throw new IllegalArgumentException("thresholds can't be null");
+        }
+        fillP1ThresholdFields(0, thresholds);
+    }
+
+    private void fillP1ThresholdFields(long timePeriod) {
+        fillP1ThresholdFields(timePeriod, null);
+    }
+
+    private void fillP2ThresholdFields(long timePeriod, PriceAlertThresholds thresholds) {
+        if (thresholds == null) {
+            thresholds = CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriod));
+        }
         String format = "%.2f";
         p2requiredRisingTextField.setText(String.format(format,thresholds.getRequiredRisingValue()));
         p2requiredDroppingTextField.setText(String.format(format,thresholds.getRequiredFallingValue()));
@@ -201,6 +234,17 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         p2requiredRelativeDroppingTextField.setText(String.format(format,thresholds.getRequiredRelativeFallingValue()));
         p2sufficientRelativeRisingTextField.setText(String.format(format,thresholds.getSufficientRelativeRisingValue()));
         p2sufficientRelativeDroppingTextField.setText(String.format(format,thresholds.getSufficientRelativeFallingValue()));
+    }
+
+    private void fillP2ThresholdFields(PriceAlertThresholds thresholds) {
+        if (thresholds == null) {
+            throw new IllegalArgumentException("thresholds can't be null");
+        }
+        fillP2ThresholdFields(0, thresholds);
+    }
+
+    private void fillP2ThresholdFields(long timePeriod) {
+        fillP2ThresholdFields(timePeriod, null);
     }
 
     private PriceAlertThresholds[] readTextFields() throws NumberFormatException {
@@ -229,12 +273,10 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         }
     }
 
-    public void init(ExchangeSpecs exchangeSpecs, long[] timePeriods) {
-        if(timePeriods.length<2) {
-            throw new IllegalArgumentException("timePeriods array should have at least 2 elements");
-        }
+    public void init(ExchangeSpecs exchangeSpecs, long p1TimePeriod, long p2TimePeriod) {
         this.exchangeSpecs = exchangeSpecs;
-        this.timePeriods = timePeriods;
+        this.p1TimePeriod = p1TimePeriod;
+        this.p2TimePeriod = p2TimePeriod;
         saveButton.setText(saveButton.getText() + String.format(" for %s", exchangeSpecs.getName()));
         fillFields();
         cnLiquiditySlider.disableProperty().bind(cnLiquidityCheckBox.selectedProperty().not());
@@ -254,8 +296,10 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             for(ExchangeSpecs currentExchangeSpecs : CryptonoseGuiController.exchangeSpecss) {
-                CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
-                CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
+                CryptonoseSettings.putBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, p1EnabledCheckBox.isSelected(), currentExchangeSpecs);
+                CryptonoseSettings.putBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, p2EnabledCheckBox.isSelected(), currentExchangeSpecs);
+                CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1TimePeriod));
+                CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], currentExchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p2TimePeriod));
                 CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), currentExchangeSpecs);
                 CryptonoseSettings.putDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, cnLiquiditySlider.getValue(), currentExchangeSpecs);
                 CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, blockSubsequentCheckBox.isSelected(), currentExchangeSpecs);
@@ -268,8 +312,10 @@ public class CryptonoseGuiAlertSettingsController implements Initializable {
     public void saveClick() {
         PriceAlertThresholds[] priceAlertThresholds = readTextFields();
         if (priceAlertThresholds != null) {
-            CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[0]));
-            CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(timePeriods[1]));
+            CryptonoseSettings.putBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, p1EnabledCheckBox.isSelected(), exchangeSpecs);
+            CryptonoseSettings.putBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, p2EnabledCheckBox.isSelected(), exchangeSpecs);
+            CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[0], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p1TimePeriod));
+            CryptonoseSettings.putPriceAlertThresholds(priceAlertThresholds[1], exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(p2TimePeriod));
             CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, cnLiquidityCheckBox.isSelected(), exchangeSpecs);
             CryptonoseSettings.putDouble(CryptonoseSettings.Alert.MIN_CN_LIQUIDITY, cnLiquiditySlider.getValue(), exchangeSpecs);
             CryptonoseSettings.putBool(CryptonoseSettings.Alert.ENABLE_BLOCK_SUBSEQUENT_ALERTS, blockSubsequentCheckBox.isSelected(), exchangeSpecs);
