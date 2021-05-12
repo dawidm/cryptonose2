@@ -57,9 +57,16 @@ public class CryptonoseGuiAlertChecker {
         alertBlocksList.addAll(Arrays.asList(CryptonoseSettings.getPermanentAlertBlocks(exchangeSpecs)));
     }
 
+    // returns list of alerts or null if no alerts
     public List<PriceAlert> checkAlerts(List<PriceChanges> changesList) {
-        List<PriceAlert> priceAlertList = new LinkedList<>();
+        List<PriceAlert> priceAlertList = null;
         for (PriceChanges currentPriceChanges : changesList) {
+            if (currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[0] && !CryptonoseSettings.getBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, exchangeSpecs)) {
+                continue;
+            }
+            if (currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1] && !CryptonoseSettings.getBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, exchangeSpecs)) {
+                continue;
+            }
             if (currentPriceChanges.getChangeTimeSeconds() <= sortedTimePeriods[0] && currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1]) {
                 continue;
             }
@@ -88,6 +95,9 @@ public class CryptonoseGuiAlertChecker {
                             currentPriceChanges.getReferenceToLastPriceTimestampSec());
                     if(!checkPreviousAlerts(priceAlert)) {
                         if (!checkIsBlocked(priceAlert)) {
+                            if (priceAlertList == null) {
+                                priceAlertList = new LinkedList<>();
+                            }
                             priceAlertList.add(priceAlert);
                         }
                     }
