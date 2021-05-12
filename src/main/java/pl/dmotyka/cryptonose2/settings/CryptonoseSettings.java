@@ -160,7 +160,7 @@ public class CryptonoseSettings {
     }
 
     public static class General {
-        public static String PINNED_NODE_KEY = "pinned";
+        private static final String PINNED_NODE_KEY = "pinned";
 
         public static final GeneralPreferenceSpecs<Boolean> USE_DEF_BROWSER = new GeneralPreferenceSpecs<>("tryUseDefBrowser", true);
         public static final GeneralPreferenceSpecs<String> BROWSER_PATH = new GeneralPreferenceSpecs<>("browserPath", "");
@@ -176,7 +176,7 @@ public class CryptonoseSettings {
     }
 
     public static class Alert {
-        public static String PERMANENT_BLOCKS_KEY = "permanentAlertBlocks";
+        private static final String PERMANENT_BLOCKS_KEY = "permanentAlertBlocks";
 
         public static final AlertPreferenceSpecs<Boolean> M5_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM5Alerts", true, TimePeriod.M5);
         private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, TimePeriod.M5);
