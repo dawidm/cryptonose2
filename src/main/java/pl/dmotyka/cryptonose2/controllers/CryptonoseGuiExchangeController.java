@@ -349,7 +349,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void receiveChanges(List<PriceChanges> priceChangesList) {
+        if(currenciesTableView.isVisible()) {
+            Platform.runLater(() -> pairsDataModel.updateData(priceChangesList));
+        }
         List<PriceAlert> priceAlerts = cryptonoseGuiAlertChecker.checkAlerts(priceChangesList);
+        if (priceAlerts == null) {
+            return;
+        }
         Iterator<PriceAlert> it = priceAlerts.iterator();
         // check cn liquidity
         if (CryptonoseSettings.getBool(CryptonoseSettings.Alert.ENABLE_MIN_CN_LIQUIDITY, exchangeSpecs)) {
@@ -369,9 +375,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         }
         for(PriceAlert priceAlert : priceAlerts)
             handlePriceAlert(priceAlert);
-        if(currenciesTableView.isVisible()) {
-            Platform.runLater(() -> pairsDataModel.updateData(priceChangesList));
-        }
     }
 
     private void handlePriceAlert(PriceAlert priceAlert) {
