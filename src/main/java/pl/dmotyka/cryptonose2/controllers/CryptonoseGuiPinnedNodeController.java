@@ -14,6 +14,7 @@
 package pl.dmotyka.cryptonose2.controllers;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
@@ -38,6 +39,8 @@ public class CryptonoseGuiPinnedNodeController {
     private static final Logger logger = Logger.getLogger(CryptonoseGuiPinnedNodeController.class.getName());
 
     private static final long MIN_UPDATE_PERIOD_MS = 1000;
+    public static final long MINI_CHART_TIMEFRAME_SEC = CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC;
+    public static final long MINI_CHART_TIME_PERIOD_SEC = CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC;
 
     private ExchangeSpecs exchangeSpecs;
     private String pairApiSymbol;
@@ -45,7 +48,7 @@ public class CryptonoseGuiPinnedNodeController {
     private SimpleObjectProperty<ChartCandle[]> chartCandlesProperty; // to keep reference
 
     private MinimalFxChart minimalFxChart;
-    private double[] lastChartValues;
+    private final AtomicReference<double[]> lastChartValues = new AtomicReference<>();
 
     private ChangeListener<? super ChartCandle[]> candlesListener;
     private ChangeListener<? super Number> priceListener;
@@ -77,25 +80,30 @@ public class CryptonoseGuiPinnedNodeController {
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
         Tooltip.install(chartPane, new Tooltip(String.format("Chart time frame: %s", TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC))));
-        if (chartCandlesProperty.get() != null) {
-            updateChartValues(chartCandlesProperty.get());
-            Platform.runLater(() -> {
-                if (!mainHBox.isVisible()) {
-                    mainHBox.setVisible(true);
-                }
-                priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length - 1]));
-                updateChart();
-            });
+        final ChartCandle[] finalChartCandles = chartCandlesProperty.get();
+        if (finalChartCandles != null) {
+            final double[] finalLastChartValues = createChartValues(finalChartCandles);
+            if(finalLastChartValues != null) {
+                Platform.runLater(() -> {
+                    if (!mainHBox.isVisible()) {
+                        mainHBox.setVisible(true);
+                    }
+                    priceLabel.setText(DecimalFormatter.formatDecimalPrice(finalLastChartValues[finalLastChartValues.length - 1]));
+                    updateChart(finalLastChartValues);
+                });
+            }
         }
         candlesListener = ((observable, oldValue, newValue) -> {
-            updateChartValues(newValue);
-            Platform.runLater(() -> {
-                if (!mainHBox.isVisible()) {
-                    mainHBox.setVisible(true);
-                    priceLabel.setText(DecimalFormatter.formatDecimalPrice(lastChartValues[lastChartValues.length-1]));
-                }
-                updateChart();
-            });
+            final double[] finalLastChartValues = createChartValues(newValue);
+            if(finalLastChartValues != null) {
+                Platform.runLater(() -> {
+                    if (!mainHBox.isVisible()) {
+                        mainHBox.setVisible(true);
+                        priceLabel.setText(DecimalFormatter.formatDecimalPrice(finalLastChartValues[finalLastChartValues.length - 1]));
+                    }
+                    updateChart(finalLastChartValues);
+                });
+            }
         });
         chartCandlesProperty.addListener(candlesListener);
         priceListener = (observable, oldValue, newValue) -> {
@@ -130,30 +138,39 @@ public class CryptonoseGuiPinnedNodeController {
         }
     }
 
-    private synchronized void updateChartValues(ChartCandle[] chartCandles) {
-        if (chartCandles == null)
-            return;
-        int numCandles = (int)(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC / CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC);
+    // returns close price values for the time specified by MINI_CHART_TIMEFRAME_SEC using the most recent values of chartCandles
+    //  chartCandles should be for the period MINI_CHART_TIME_PERIOD_SEC
+    private double[] createChartValues(ChartCandle[] chartCandles) {
+        if (chartCandles == null) {
+            logger.warning("%s %s, chartCandles is null".formatted(exchangeSpecs.getName(), pairApiSymbol));
+            return null;
+        }
+        int numCandles = (int)(MINI_CHART_TIMEFRAME_SEC / MINI_CHART_TIME_PERIOD_SEC);
         ChartCandle[] newChartCandles;
-        if (chartCandles.length < numCandles)
-            newChartCandles = null;
-        else
-            newChartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length-numCandles, chartCandles.length);
-        if (newChartCandles != null) {
-            lastChartValues = Arrays.stream(newChartCandles).mapToDouble(ChartCandle::getClose).toArray();
+        if (chartCandles.length < numCandles) {
+            logger.warning("%s %s, provided number of candles: %d, expected>%s".formatted(exchangeSpecs.getName(), pairApiSymbol, chartCandles.length, numCandles));
+            return null;
         } else {
-            logger.warning("chartCandles is null %s %s, provided number of candles: %d".formatted(exchangeSpecs.getName(), pairApiSymbol, chartCandles.length));
+            newChartCandles = Arrays.copyOfRange(chartCandles, chartCandles.length - numCandles, chartCandles.length);
+            lastChartValues.set(Arrays.stream(newChartCandles).mapToDouble(ChartCandle::getClose).toArray());
+            return lastChartValues.get();
         }
     }
 
+    // paint data saved in lastChartValues on minimalFxChart
     private void updateChart() {
-        if (mainHBox.getWidth() == 0 || lastChartValues == null)
+        updateChart(lastChartValues.get());
+    }
+
+    // paint provided data on minimalFxChart
+    private void updateChart(double[] values) {
+        if (mainHBox.getWidth() == 0 || values == null)
             return;
-        updateChangeLabel();
+        updateChangeLabel(values);
         if (minimalFxChart != null) {
-            Platform.runLater(() -> minimalFxChart.repaint(lastChartValues));
+            Platform.runLater(() -> minimalFxChart.repaint(values));
         } else {
-            minimalFxChart = new MinimalFxChart(lastChartValues);
+            minimalFxChart = new MinimalFxChart(values);
             minimalFxChart.setMarginsHorizontalPercent(0.01);
             minimalFxChart.setMarginsVerticalPercent(0.15);
             minimalFxChart.setChartPaint(priceLabel.getTextFill());
@@ -164,20 +181,20 @@ public class CryptonoseGuiPinnedNodeController {
         }
     }
 
-    private synchronized void updateChartLastVal(double val) {
-        if (minimalFxChart != null && lastChartValues.length > 0) {
-            lastChartValues[lastChartValues.length-1] = val;
-            Platform.runLater(() -> {
-                updateChangeLabel();
-                minimalFxChart.repaint(lastChartValues);
-            });
+    // update lastChartValues data with new last value, update chart and change label
+    private void updateChartLastVal(double val) {
+        final double[] finalLastChartValues = lastChartValues.get();
+        if (minimalFxChart != null && finalLastChartValues != null && finalLastChartValues.length > 0) {
+            finalLastChartValues[finalLastChartValues.length-1] = val;
+            updateChart(finalLastChartValues);
         } else {
             logger.warning("nothing to update");
         }
     }
 
-    private void updateChangeLabel() {
-        double change = 100 * (lastChartValues[lastChartValues.length-1] - lastChartValues[0]) / lastChartValues[0];
+    // updates change label with value calculated using values
+    private void updateChangeLabel(double[] values) {
+        double change = 100 * (values[values.length-1] - values[0]) / values[0];
         changeLabel.setText(String.format("%.1f%% (%s)", change, TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC)));
     }
 
