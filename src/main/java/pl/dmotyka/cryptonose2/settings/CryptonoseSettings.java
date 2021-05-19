@@ -405,7 +405,7 @@ public class CryptonoseSettings {
     }
 
     // run provided runnable when preferences node for specified category and exchangeSpecs triggers PreferenceChangeListener
-    private void runOnPreferenceChange(PreferenceCategory preferenceCategory, ExchangeSpecs exchangeSpecs, Runnable runnable) {
+    public static void runOnPreferenceChange(PreferenceCategory preferenceCategory, ExchangeSpecs exchangeSpecs, Runnable runnable) {
         getPrefsNode(preferenceCategory, exchangeSpecs).addPreferenceChangeListener(evt -> runnable.run());
     }
 
