@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
@@ -47,6 +48,8 @@ public class CryptonoseGuiAlertChecker {
     private final long[] sortedTimePeriods;
     // value - milliseconds time (from System.nanoTime()) when alert ends
     private final ObservableList<AlertBlock> alertBlocksList = FXCollections.observableList(new LinkedList<>());
+    private final AtomicBoolean p1AlertsEnabled = new AtomicBoolean();
+    private final AtomicBoolean p2AlertsEnabled = new AtomicBoolean();
 
     public CryptonoseGuiAlertChecker(ExchangeSpecs exchangeSpecs, Map<Long, PriceAlertThresholds> priceAlertThresholdsMap) {
         this.exchangeSpecs = exchangeSpecs;
@@ -55,28 +58,39 @@ public class CryptonoseGuiAlertChecker {
         sortedTimePeriods = priceAlertThresholdsMap.keySet().stream().mapToLong(val -> val).sorted().toArray();
         priceAlertsMap = new HashMap<>();
         alertBlocksList.addAll(Arrays.asList(CryptonoseSettings.getPermanentAlertBlocks(exchangeSpecs)));
+        p1AlertsEnabled.set(CryptonoseSettings.getBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, exchangeSpecs));
+        p2AlertsEnabled.set(CryptonoseSettings.getBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, exchangeSpecs));
+        CryptonoseSettings.runOnPreferenceChange(exchangeSpecs, CryptonoseSettings.Alert.M5_ALERTS_ENABLED, () -> {
+            logger.fine("%s m5 alerts enabled changed".formatted(exchangeSpecs.getName()));
+            p1AlertsEnabled.set(CryptonoseSettings.getBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, exchangeSpecs));
+        });
+        CryptonoseSettings.runOnPreferenceChange(exchangeSpecs, CryptonoseSettings.Alert.M30_ALERTS_ENABLED, () -> {
+            logger.fine("%s m30 alerts enabled changed".formatted(exchangeSpecs.getName()));
+            p2AlertsEnabled.set(CryptonoseSettings.getBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, exchangeSpecs));
+        });
     }
 
     // returns list of alerts or null if no alerts
     public List<PriceAlert> checkAlerts(List<PriceChanges> changesList) {
         List<PriceAlert> priceAlertList = null;
         for (PriceChanges currentPriceChanges : changesList) {
-            if (currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[0] && !CryptonoseSettings.getBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, exchangeSpecs)) {
+            if (currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[0] && !p1AlertsEnabled.get()) {
                 continue;
             }
-            if (currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1] && !CryptonoseSettings.getBool(CryptonoseSettings.Alert.M30_ALERTS_ENABLED, exchangeSpecs)) {
+            if (currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1] && !p2AlertsEnabled.get()) {
                 continue;
             }
-            if (currentPriceChanges.getChangeTimeSeconds() <= sortedTimePeriods[0] && currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1] && CryptonoseSettings.getBool(CryptonoseSettings.Alert.M5_ALERTS_ENABLED, exchangeSpecs)) {
+            if (currentPriceChanges.getChangeTimeSeconds() <= sortedTimePeriods[0] && currentPriceChanges.getTimePeriodSeconds() == sortedTimePeriods[1] && p1AlertsEnabled.get()) {
                 continue;
             }
             PriceAlertThresholds priceAlertThresholds = priceAlertThresholdsMap.get(currentPriceChanges.getTimePeriodSeconds());
             if (currentPriceChanges.getRelativeLastPriceChange() != null) {
                 double relativeChangeValue = currentPriceChanges.getRelativeLastPriceChange();
-                if ((currentPriceChanges.getLastPercentChange() > priceAlertThresholds.getRequiredRisingValue()
+                double percentChangeValue = currentPriceChanges.getLastPercentChange();
+                if ((percentChangeValue > priceAlertThresholds.getRequiredRisingValue()
                         && (relativeChangeValue >= priceAlertThresholds.getRequiredRelativeRisingValue())
                         || relativeChangeValue >= priceAlertThresholds.getSufficientRelativeRisingValue()) ||
-                        (currentPriceChanges.getLastPercentChange() < -priceAlertThresholds.getRequiredFallingValue()
+                        (percentChangeValue < -priceAlertThresholds.getRequiredFallingValue()
                                 && (relativeChangeValue <= -priceAlertThresholds.getRequiredRelativeFallingValue())
                                 || relativeChangeValue <= -priceAlertThresholds.getSufficientRelativeFallingValue()))
                 {
