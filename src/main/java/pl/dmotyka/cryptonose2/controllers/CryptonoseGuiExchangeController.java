@@ -207,7 +207,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                     allAdditionalPairs);
             engine.enableInitEngineWithLowerPeriodChartData();
             engine.autoRefreshPairData(CryptonoseSettings.AUTO_REFRESH_INTERVAL_MINUTES);
-            engine.setCheckChangesDelayMs(100);
+            engine.setCheckChangesDelayMs(250);
             engine.setEngineMessageReceiver(this);
             engine.setEngineUpdateHeartbeatReceiver(this);
             engine.useMedianRelativeChanges();
