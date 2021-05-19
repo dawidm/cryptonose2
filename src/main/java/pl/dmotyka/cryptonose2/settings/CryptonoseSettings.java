@@ -404,4 +404,9 @@ public class CryptonoseSettings {
         return Arrays.stream(blockSplit).map(pair -> new AlertBlock(exchangeSpecs, pair, AlertBlockTime.BLOCK_PERMANENTLY)).toArray(AlertBlock[]::new);
     }
 
+    // run provided runnable when preferences node for specified category and exchangeSpecs triggers PreferenceChangeListener
+    private void runOnPreferenceChange(PreferenceCategory preferenceCategory, ExchangeSpecs exchangeSpecs, Runnable runnable) {
+        getPrefsNode(preferenceCategory, exchangeSpecs).addPreferenceChangeListener(evt -> runnable.run());
+    }
+
 }
