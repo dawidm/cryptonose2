@@ -72,15 +72,16 @@ public class CryptonoseGuiPinnedNodeController {
     }
 
     // listeners are set on priceProperty and chartCandlesProperty, if these properties will exist longer than this object use removeListeners()
-    public synchronized void init(ExchangeSpecs exchangeSpecs, String pairName, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
+    public synchronized void init(ExchangeSpecs exchangeSpecs, String pairApiSymbol, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
         this.exchangeSpecs = exchangeSpecs;
-        this.pairApiSymbol = pairName;
+        this.pairApiSymbol = pairApiSymbol;
         this.priceProperty = priceProperty;
         this.chartCandlesProperty = chartCandlesProperty;
         mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
-        pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairName));
+        pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol));
         pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
         Tooltip.install(chartPane, new Tooltip(String.format("Chart time frame: %s", TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC))));
+        Tooltip.install(pairLabel, new Tooltip("%s on %s".formatted(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol), exchangeSpecs.getName())));
         final ChartCandle[] finalChartCandles = chartCandlesProperty.get();
         if (finalChartCandles != null) {
             final double[] finalLastChartValues = createChartValues(finalChartCandles);
@@ -120,7 +121,7 @@ public class CryptonoseGuiPinnedNodeController {
         priceProperty.addListener(priceListener);
         mainHBox.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
-                CryptonoseGuiBrowser.runBrowser(pairName, exchangeSpecs);
+                CryptonoseGuiBrowser.runBrowser(pairApiSymbol, exchangeSpecs);
             }
         });
         mainHBox.managedProperty().bind(mainHBox.visibleProperty());
