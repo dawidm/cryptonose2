@@ -14,6 +14,7 @@
 package pl.dmotyka.cryptonose2.controllers;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
@@ -53,7 +54,7 @@ public class CryptonoseGuiPinnedNodeController {
     private ChangeListener<? super ChartCandle[]> candlesListener;
     private ChangeListener<? super Number> priceListener;
 
-    private long lastChartUpdateMs;
+    private AtomicLong lastChartUpdateMs = new AtomicLong();
 
     @FXML
     public HBox mainHBox;
@@ -67,7 +68,7 @@ public class CryptonoseGuiPinnedNodeController {
     public Pane chartPane;
 
     public CryptonoseGuiPinnedNodeController() {
-        lastChartUpdateMs = milliTime();
+        lastChartUpdateMs.set(milliTime());
     }
 
     // listeners are set on priceProperty and chartCandlesProperty, if these properties will exist longer than this object use removeListeners()
@@ -110,10 +111,10 @@ public class CryptonoseGuiPinnedNodeController {
             if (!mainHBox.isVisible()) {
                 Platform.runLater(() -> mainHBox.setVisible(true));
             }
-            if (milliTime() - lastChartUpdateMs > MIN_UPDATE_PERIOD_MS) {
+            if (milliTime() - lastChartUpdateMs.get() > MIN_UPDATE_PERIOD_MS) {
                 Platform.runLater(() -> priceLabel.setText(DecimalFormatter.formatDecimalPrice(newValue.doubleValue())));
                 updateChartLastVal(newValue.doubleValue());
-                lastChartUpdateMs = milliTime();
+                lastChartUpdateMs.set(milliTime());
             }
         };
         priceProperty.addListener(priceListener);
