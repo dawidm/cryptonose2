@@ -82,6 +82,7 @@ import pl.dmotyka.exchangeutils.tools.TimeConverter;
 public class CryptonoseGuiExchangeController implements Initializable, EngineMessageReceiver, EngineTransactionHeartbeatReceiver, EngineChangesReceiver {
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiExchangeController.class.getName());
+    public static final String TEXT_NO_UPDATES_YET = "no updates yet";
 
     @FXML
     public VBox mainVBox;
@@ -175,6 +176,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void startEngine() {
         lastUpdateTimeMillis.set(0);
+        javafx.application.Platform.runLater(() -> lastTradeLabel.setText(TEXT_NO_UPDATES_YET));
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
         if(!markets.equals("")) {
@@ -446,7 +448,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void reconnectEngine() {
         lastUpdateTimeMillis.set(0);
         pairsDataModel.clear();
-        javafx.application.Platform.runLater(() -> lastTradeLabel.setText("no updates yet"));
+        javafx.application.Platform.runLater(() -> lastTradeLabel.setText(TEXT_NO_UPDATES_YET));
         new Thread(() -> engine.reconnect()).start();
     }
 
