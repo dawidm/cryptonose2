@@ -41,7 +41,7 @@ public class CryptonoseSettings {
     // number of pairs to show warning about long connection time for a big number of pairs
     public static final int LOT_OF_PAIRS_WARNING_THRESHOLD = 50;
 
-    public static final long[] TIME_PERIODS = {300,1800}; // keep it sorted
+    public static final long[] TIME_PERIODS = {TimePeriod.M5.periodSec, TimePeriod.M30.periodSec}; // keep it sorted
     public static final long ALERTS_PAUSE_SECONDS = 1800; // how long to block subsequent alerts for the same pair (if the option is active)
     public static final long NO_TRADES_WARNING_SECONDS = 300;
     public static final long NO_TRADES_RECONNECT_SECONDS = 900;
