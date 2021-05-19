@@ -14,7 +14,7 @@ Cryptonose needs to know on which currency pairs it should track price changes. 
 
 ![cryptonose paris configuration]({{ site.baseurl }}/images/pairs-settings.png "Pairs configuration window")
 
-**Note that choosing a lot of currency pairs will cause longer initialization** (Cryptonose needs to get chart data from exchange). Bitfinex has quite strict limits for downloading chart data - getting data for one currency pair will take at least 18 seconds.  
+**Note that choosing a lot of currency pairs will cause longer initialization** (Cryptonose needs to get chart data from the exchange). Bitfinex has quite strict limits for downloading chart data - getting data for one currency pair will take at least 18 seconds.  
 Very low volume (so with low liquidity) currency pairs could trigger a lot of undesirable price alerts. You should choose currency pairs carefully.
 
 ## Main window
@@ -40,7 +40,7 @@ To visualize, example values of relative price change:
 ![cryptonose price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")
 * ***Price change*** - percent change in the price in given period. In parentheses - relative price change.
 * ***Chart*** - minimalistic graph showing short (2 hours) price history. Just to illustrate a recent trend.
-/* ***Pair*** - currency pair name in format _base/quote_. The color is specific for the exchange. Next to a name you can see button for blocking alerts described in the next paragraph.
+* ***Pair*** - currency pair name in format _base/quote_. The color is specific for the exchange. Next to a name you can see button for blocking alerts described in the next paragraph.
 * ***Final price***. Example: if price alert is triggered by price drop from 0.15 to 0.14, the final price is 0.14
 * ***Period***. In parentheses - the real duration of price change in seconds.
 * ***More*** - you can see buttons for ["Coins plugins"](#coins-plugins). They provide additional data about given coin.
@@ -58,6 +58,9 @@ You can see and remove alert blocks using clicking on _Manage blocks_ button. Yo
 * **Table** - Visible table may increase resources (CPU) usage. Column names are self-explanatory, with one exception. There was not enough place for the word "change" in relative change columns ;) You can open web browser with market web page by double-clicking on a row.
 * ***Log*** - (disabled by default) describes what is happening. You can enable log by clicking ***Show log***.
 * ***Sound, Browser*** and ***Notification*** - same as is _Global options_ but only for given exchange.
+
+### What exactly are price changes in Cryptonose?
+Price change in Cryptonose is based on maximum (positive or negative) change during recent time period (5 minutes or 30 minutes). You should not confuse it with a change between beginning and ending of the period. For example if price 5 minutes ago was 2.0, then it went up to 4.0 and now it dropped slightly to 3.7, 5m price change values will be calculated for biggest rise - from 2.0 to 4.0 - in percents it's +100%.
 
 ## Search for a currency pair
 
