@@ -170,7 +170,7 @@ public class CryptonoseSettings {
         public static final GeneralPreferenceSpecs<String> SOUND_DROPPING_FILE_PATH = new GeneralPreferenceSpecs<>("soundDroppingPath", "");
         public static final GeneralPreferenceSpecs<Boolean> USE_DEF_FONT_SIZE = new GeneralPreferenceSpecs<>("defaultFontSize", true);
         public static final GeneralPreferenceSpecs<Integer> FONT_SIZE_PX = new GeneralPreferenceSpecs<>("fontSizePt", 12);
-        public static final GeneralPreferenceSpecs<Boolean> DARK_MODE = new GeneralPreferenceSpecs<>("darkMode", false);
+        public static final GeneralPreferenceSpecs<Boolean> DARK_MODE = new GeneralPreferenceSpecs<>("darkMode", true);
         public static final GeneralPreferenceSpecs<Boolean> CONNECTION_STATUS_NOTIFICATIONS = new GeneralPreferenceSpecs<>("connectionStatusNotif", true);
         public static final GeneralPreferenceSpecs<Boolean> LOT_OF_PAIRS_ALERT_SHOWN = new GeneralPreferenceSpecs<>("lotOfPairsAlertShown", false);
     }
