@@ -51,23 +51,28 @@ public class PriceChangesTable {
     static class PriceChangesTableCell extends TableCell<CryptonosePairData,Number> {
 
         boolean firstUpdate = true;
+        double lastVal = 0.0;
 
         @Override
         protected void updateItem(Number item, boolean empty) {
             super.updateItem(item, empty);
-            if(empty)
+            if(empty) {
                 setText(null);
+            }
             if (firstUpdate) {
                 getStyleClass().add("price-rising");
                 firstUpdate = false;
             }
             if(item!=null) {
-                getStyleClass().remove(getStyleClass().size()-1);
-                if (item.doubleValue() >= 0)
-                    getStyleClass().add("price-rising");
-                else
-                    getStyleClass().add("price-falling");
+                if (lastVal*item.doubleValue() <= 0) {
+                    getStyleClass().remove(getStyleClass().size()-1);
+                    if (item.doubleValue() >= 0)
+                        getStyleClass().add("price-rising");
+                    else
+                        getStyleClass().add("price-falling");
+                }
                 setText(String.format("%.2f", item));
+                lastVal = item.doubleValue();
             } else {
                 setText(null);
             }
