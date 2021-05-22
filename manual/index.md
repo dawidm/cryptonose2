@@ -77,8 +77,6 @@ In currency pairs search table you can see a _Pin_ option. If you pin currency p
 
 There's a limit of a 10 visible pinned tickers. If you pin more - the most recent ones just won't be shown.
 
-Keep in mind that pinned ticker will be visible only when connection to adequate exchange is active it's and currency is on the list of paris (meets pairs selection criteria described at the beginning of this page).     
-
 ## Coins plugins
 You can find small buttons with colored text on the price alerts tab and currency pairs tables. Currently, there are 2 buttons - plugins:
 
