@@ -38,6 +38,7 @@ To visualize, example values of relative price change:
 
 ### Price alert
 ![cryptonose price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")
+
 * ***Price change*** - percent change in the price in given period. In parentheses - relative price change.
 * ***Chart*** - minimalistic graph showing short (2 hours) price history. Just to illustrate a recent trend.
 * ***Pair*** - currency pair name in format _base/quote_. The color is specific for the exchange. Next to a name you can see button for blocking alerts described in the next paragraph.
@@ -52,7 +53,7 @@ You can block subsequent alerts for currency pairs using a block button that's n
 You can see and remove alert blocks using clicking on _Manage blocks_ button. You can also do the same using _Alert blocks..._ button in the exchange tab.   
 
 ## Exchange tab
-![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")
+[![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")]({{ site.baseurl }}/images/cryptonose-exchange.png)
 
 * ***Tab header***. On the tab header, near the exchange name, you can see a square indicating connection status. Red - disconnected, yellow - connecting, green - connected.
 * **Table** - Visible table may increase resources (CPU) usage. Column names are self-explanatory, with one exception. There was not enough place for the word "change" in relative change columns ;) You can open web browser with market web page by double-clicking on a row.
