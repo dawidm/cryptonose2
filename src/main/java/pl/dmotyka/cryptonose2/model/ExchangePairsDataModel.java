@@ -65,8 +65,11 @@ public class ExchangePairsDataModel {
                 if (candles != null) {
                     cnPairData.chartCandlesProperty().set(candles);
                 }
-                cnPairDataMap.put(priceChanges.getCurrencyPair(), cnPairData);
-                cnPairDataObservableList.add(cnPairData);
+                CryptonosePairData finalCnPairData = cnPairData;
+                Platform.runLater(()-> {
+                    cnPairDataMap.put(priceChanges.getCurrencyPair(), finalCnPairData);
+                    cnPairDataObservableList.add(finalCnPairData);
+                });
             }
             int period = (priceChanges.getTimePeriodSeconds() == timePeriods[0]) ? CryptonosePairData.PERIOD1 : CryptonosePairData.PERIOD2;
             cnPairData.setPriceChanges(priceChanges, period);
@@ -89,16 +92,20 @@ public class ExchangePairsDataModel {
         Set<String> newPairs = Set.of(pairs);
         Set<String> outdatedPairs = new HashSet<>(cnPairDataMap.keySet());
         outdatedPairs.removeAll(newPairs);
-        for (String pair : outdatedPairs) {
-            cnPairDataObservableList.remove(cnPairDataMap.get(pair));
-            cnPairDataMap.remove(pair);
-        }
+        Platform.runLater(() -> {
+            for (String pair : outdatedPairs) {
+                cnPairDataObservableList.remove(cnPairDataMap.get(pair));
+                cnPairDataMap.remove(pair);
+            }
+        });
     }
 
     // clears all pair data (returned by getItems and getReadonlyItems)
     public synchronized void clear() {
-        Platform.runLater(() -> cnPairDataObservableList.clear());
-        cnPairDataMap.clear();
+        Platform.runLater(() -> {
+            cnPairDataObservableList.clear();
+            cnPairDataMap.clear();
+        });
     }
 
     public synchronized ObservableList<CryptonosePairData> getReadonlyItems() {
