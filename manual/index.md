@@ -28,7 +28,7 @@ Very low volume (so with low liquidity) currency pairs could trigger a lot of un
   * _Power Save_ - disable tables in exchange tabs - saving CPU and battery, especially when prices are very volatile.
 
 ## Price alerts tab
-![cryptonose price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")
+[![cryptonose price alerts tab]({{ site.baseurl }}/images/cryptonose-price-alerts.png "Main window, price alerts")]({{ site.baseurl }}/images/cryptonose-price-alerts.png)
 ### What is relative price change?
 Relative price change is an indicator reflecting price change in given period in comparison to the average price change in the same time periods in past. The "past" is set to 50 periods. More technically this average is a median of absolute differences between high and low of past periods (candles).
 To visualize, example values of relative price change:
@@ -37,7 +37,7 @@ To visualize, example values of relative price change:
 * 8 is very much - almost surely something interesting is happening with the price
 
 ### Price alert
-![cryptonose price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")
+[![cryptonose price alert]({{ site.baseurl }}/images/cryptonose-price-alert.png "Price alert node")]({{ site.baseurl }}/images/cryptonose-price-alert.png)
 
 * ***Price change*** - percent change in the price in given period. In parentheses - relative price change.
 * ***Chart*** - minimalistic graph showing short (2 hours) price history. Just to illustrate a recent trend.
@@ -65,7 +65,7 @@ Price change in Cryptonose is based on maximum (positive or negative) change dur
 
 ## Search for a currency pair
 
-![cryptonose search]({{ site.baseurl }}/images/cryptonose-search.png "Cryptonose search interface")
+[![cryptonose search]({{ site.baseurl }}/images/cryptonose-search.png "Cryptonose search interface")]({{ site.baseurl }}/images/cryptonose-search.png)
 
 A button to show search interface (_Find (press F)..._) is always visible at the top of the Cryptonose window. You can click on it or just press F key to start typing, to find desired currency pair. It's designed to let you access exchange page quickly - just press enter to go to the page for the top pair in the search results or use arrow keys to select another pair before pressing enter. You can also do use a double-click.
 
