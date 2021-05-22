@@ -17,3 +17,19 @@ https://github.com/TooTallNate/Java-WebSocket
 
 Apache Commons Math, license: Apache v2
 http://commons.apache.org/
+
+Jackson, Apache v2
+https://github.com/FasterXML/jackson
+
+Ikonli icons pack, Apache v2
+https://kordamp.org/ikonli/
+
+The Badass JLink Plugin, Apache v2
+https://badass-jlink-plugin.beryx.org/releases/latest/
+
+JavaFX Gradle Plugin, BSD 3-Clause
+https://github.com/openjfx/javafx-gradle-plugin
+
+Eclipse Tyrus, Eclipse Public License - v 2.0
+https://eclipse-ee4j.github.io/tyrus/
+
