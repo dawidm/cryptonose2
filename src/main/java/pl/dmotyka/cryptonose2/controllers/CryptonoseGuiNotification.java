@@ -51,8 +51,8 @@ public class CryptonoseGuiNotification {
 
     public static void notifyConnectionState(NotificationLibrary notificationLibrary,ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
         String statusText;
-        if (cryptonoseGuiConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT))
-            statusText = String.format("No price updates for %d seconds, reconnecting", CryptonoseSettings.NO_TRADES_RECONNECT_SECONDS);
+        if (cryptonoseGuiConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATED_RECONNECT))
+            statusText = String.format("No price updates for %d seconds, reconnecting", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS);
         else
             statusText = cryptonoseGuiConnectionStatus.getText();
         switch (notificationLibrary) {

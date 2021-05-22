@@ -31,7 +31,7 @@
             <Label styleClass="h2" text="Connection status" />
             <Label fx:id="connectionStatusLabel" text="disconnected" />
             <Label layoutX="10.0" layoutY="10.0" styleClass="h2" text="Last update" />
-            <Label fx:id="lastTradeLabel" layoutX="282.0" layoutY="10.0" text="no updates yet" />
+            <Label fx:id="lastUpdateLabel" layoutX="282.0" layoutY="10.0" text="no updates yet" />
             <Region HBox.hgrow="ALWAYS" />
          </children>
          <VBox.margin>

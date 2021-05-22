@@ -89,7 +89,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public TextArea consoleTextArea;
     @FXML
-    public Label lastTradeLabel;
+    public Label lastUpdateLabel;
     @FXML
     public Label connectionStatusLabel;
     @FXML
@@ -131,7 +131,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private ExchangePairsDataModel pairsDataModel;
     private PriceChangesTable priceChangesTable;
-    private final AtomicInteger numTradesPerSecondAtomicInteger = new AtomicInteger(0);
+    private final AtomicInteger numUpdatesPerSecondAtomicInteger = new AtomicInteger(0);
     private final AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
     private boolean noPairsAlertShown = false;
 
@@ -176,7 +176,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     private void startEngine() {
         lastUpdateTimeMillis.set(0);
-        javafx.application.Platform.runLater(() -> lastTradeLabel.setText(TEXT_NO_UPDATES_YET));
+        javafx.application.Platform.runLater(() -> lastUpdateLabel.setText(TEXT_NO_UPDATES_YET));
         String markets = CryptonoseSettings.getString(CryptonoseSettings.Pairs.MARKETS, exchangeSpecs);
         ArrayList<PairSelectionCriteria> pairSelectionCriteria = new ArrayList<>(10);
         if(!markets.equals("")) {
@@ -338,7 +338,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @Override
     public void receiveTransactionHeartbeat() {
         lastUpdateTimeMillis.set(System.currentTimeMillis());
-        numTradesPerSecondAtomicInteger.getAndIncrement();
+        numUpdatesPerSecondAtomicInteger.getAndIncrement();
     }
 
     @Override
@@ -428,18 +428,18 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void startLastTransactionTimer() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (lastUpdateTimeMillis.get() !=0) {
-                long lastTradeSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
-                javafx.application.Platform.runLater(() -> lastTradeLabel.setText(lastTradeSecondsAgo + " seconds ago"));
-                if (lastTradeSecondsAgo > CryptonoseSettings.NO_TRADES_RECONNECT_SECONDS) {
-                    consoleLog(String.format("No trades for %d seconds. Reconnecting...", CryptonoseSettings.NO_TRADES_RECONNECT_SECONDS));
-                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES_RECONNECT, true);
+                long lastUpdateSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
+                javafx.application.Platform.runLater(() -> lastUpdateLabel.setText(lastUpdateSecondsAgo + " seconds ago"));
+                if (lastUpdateSecondsAgo > CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS) {
+                    consoleLog(String.format("No updates for %d seconds. Reconnecting...", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS));
+                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATED_RECONNECT, true);
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING, false);
                     reconnectEngine();
-                } else if (lastTradeSecondsAgo > CryptonoseSettings.NO_TRADES_WARNING_SECONDS) {
-                    if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
-                        consoleLog(String.format("No trades for %d seconds.", CryptonoseSettings.NO_TRADES_WARNING_SECONDS));
-                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES, false);
-                } else if (connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_TRADES))
+                } else if (lastUpdateSecondsAgo > CryptonoseSettings.NO_UPDATES_WARNING_SECONDS) {
+                    if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATES))
+                        consoleLog(String.format("No updates for %d seconds.", CryptonoseSettings.NO_UPDATES_WARNING_SECONDS));
+                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATES, false);
+                } else if (connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATES))
                     setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, false);
             }
         },1,1, TimeUnit.SECONDS);
@@ -448,7 +448,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void reconnectEngine() {
         lastUpdateTimeMillis.set(0);
         pairsDataModel.clear();
-        javafx.application.Platform.runLater(() -> lastTradeLabel.setText(TEXT_NO_UPDATES_YET));
+        javafx.application.Platform.runLater(() -> lastUpdateLabel.setText(TEXT_NO_UPDATES_YET));
         new Thread(() -> engine.reconnect()).start();
     }
 
