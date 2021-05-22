@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2.controllers;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -28,6 +29,8 @@ import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.ObservableListAggregate;
 
 public class PinnedTickersHBox {
+
+    public static final Logger logger = Logger.getLogger(PinnedTickersHBox.class.getName());
 
     private final HBox pinnedHBox;
     private final ObservableListAggregate<CryptonosePairData> items;
@@ -55,6 +58,7 @@ public class PinnedTickersHBox {
 
     private void handleAdded(List<? extends CryptonosePairData> added) {
         for (var cnPairData : added) {
+            logger.fine("ticker for %s added".formatted(cnPairData.getPairName()));
             cnPairData.pinnedProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     long timestampMs = CryptonoseSettings.pinTicker(cnPairData.getExchangeSpecs(), cnPairData.getPairName());
@@ -70,11 +74,12 @@ public class PinnedTickersHBox {
     }
 
     private void addPinnedTickers(List<? extends CryptonosePairData> newItems) {
-        for (var tablePriceChanges : newItems) {
+        for (var cnPairData : newItems) {
+            logger.fine("adding %s pinned ticker".formatted(cnPairData.getPairName()));
             UILoader<CryptonoseGuiPinnedNodeController> pinnedLoader = new UILoader<>("cryptonoseGuiPinnedNode.fxml");
             CryptonoseGuiPinnedNodeController pnCtrl = pinnedLoader.getController();
-            pnCtrl.init(tablePriceChanges.getExchangeSpecs(), tablePriceChanges.getPairName(), tablePriceChanges.lastPriceProperty(), tablePriceChanges.chartCandlesProperty());
-            PinnedTicker newPt = new PinnedTicker(tablePriceChanges, pnCtrl, pinnedLoader.getRoot());
+            pnCtrl.init(cnPairData.getExchangeSpecs(), cnPairData.getPairName(), cnPairData.lastPriceProperty(), cnPairData.chartCandlesProperty());
+            PinnedTicker newPt = new PinnedTicker(cnPairData, pnCtrl, pinnedLoader.getRoot());
             pinnedTickers.add(newPt);
         }
         refreshHBox();
@@ -84,6 +89,7 @@ public class PinnedTickersHBox {
         removed.forEach(cnPairData -> {
             for (var it = pinnedTickers.iterator(); it.hasNext(); ) {
                 PinnedTicker pt = it.next();
+                logger.fine("removing %s pinned ticker".formatted(pt.getCnPairData().getPairName()));
                 if (pt.getCnPairData().isSamePair(cnPairData)) {
                     pt.getController().removeListeners();
                     it.remove();

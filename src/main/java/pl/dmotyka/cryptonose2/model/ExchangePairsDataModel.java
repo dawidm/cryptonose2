@@ -55,6 +55,7 @@ public class ExchangePairsDataModel {
         for (PriceChanges priceChanges : priceChangesList) {
             CryptonosePairData cnPairData = cnPairDataMap.get(priceChanges.getCurrencyPair());
             if (cnPairData == null) {
+                logger.fine("creating pair data entry for: " + priceChanges.getCurrencyPair());
                 cnPairData = new CryptonosePairData(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
                 long pinTime = CryptonoseSettings.getPinnedTimestampMs(cnPairData.getExchangeSpecs(), cnPairData.getPairName());
                 if (pinTime != 0) {
