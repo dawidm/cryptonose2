@@ -113,7 +113,4 @@ public class ExchangePairsDataModel {
         return FXCollections.unmodifiableObservableList(cnPairDataObservableList);
     }
 
-    public synchronized ObservableList<CryptonosePairData> getItems() {
-        return cnPairDataObservableList;
-    }
 }

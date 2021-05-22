@@ -157,7 +157,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         pairsDataModel = new ExchangePairsDataModel(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
-        priceChangesTable = new PriceChangesTable(currenciesTableView, pairsDataModel.getItems(), CryptonoseSettings.TIME_PERIODS);
+        priceChangesTable = new PriceChangesTable(currenciesTableView, pairsDataModel.getReadonlyItems(), CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableAutoSort();
         priceChangesTable.init();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());
@@ -492,7 +492,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     public ObservableList<CryptonosePairData> getPairsData() {
-        return pairsDataModel.getItems();
+        return pairsDataModel.getReadonlyItems();
     }
 
     public void blockAlert(AlertBlock alertBlock) {
