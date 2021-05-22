@@ -67,8 +67,8 @@ public class ExchangePairsDataModel {
                     cnPairData.chartCandlesProperty().set(candles);
                 }
                 CryptonosePairData finalCnPairData = cnPairData;
+                cnPairDataMap.put(priceChanges.getCurrencyPair(), finalCnPairData);
                 Platform.runLater(()-> {
-                    cnPairDataMap.put(priceChanges.getCurrencyPair(), finalCnPairData);
                     cnPairDataObservableList.add(finalCnPairData);
                 });
             }
@@ -93,19 +93,19 @@ public class ExchangePairsDataModel {
         Set<String> newPairs = Set.of(pairs);
         Set<String> outdatedPairs = new HashSet<>(cnPairDataMap.keySet());
         outdatedPairs.removeAll(newPairs);
-        Platform.runLater(() -> {
-            for (String pair : outdatedPairs) {
+        for (String pair : outdatedPairs) {
+            cnPairDataMap.remove(pair);
+            Platform.runLater(() -> {
                 cnPairDataObservableList.remove(cnPairDataMap.get(pair));
-                cnPairDataMap.remove(pair);
-            }
-        });
+            });
+        }
     }
 
     // clears all pair data (returned by getItems and getReadonlyItems)
     public synchronized void clear() {
+        cnPairDataMap.clear();
         Platform.runLater(() -> {
             cnPairDataObservableList.clear();
-            cnPairDataMap.clear();
         });
     }
 
