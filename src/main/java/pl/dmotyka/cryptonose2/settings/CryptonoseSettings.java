@@ -43,8 +43,8 @@ public class CryptonoseSettings {
 
     public static final long[] TIME_PERIODS = {TimePeriod.M5.periodSec, TimePeriod.M30.periodSec}; // keep it sorted
     public static final long ALERTS_PAUSE_SECONDS = 1800; // how long to block subsequent alerts for the same pair (if the option is active)
-    public static final long NO_TRADES_WARNING_SECONDS = 300;
-    public static final long NO_TRADES_RECONNECT_SECONDS = 900;
+    public static final long NO_UPDATES_WARNING_SECONDS = 300;
+    public static final long NO_UPDATES_RECONNECT_SECONDS = 900;
     public static final long MINI_CHART_TIME_PERIOD_SEC = 300;
     public static final long MINI_CHART_TIMEFRAME_SEC = 14400;
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
