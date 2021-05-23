@@ -88,10 +88,9 @@ public class CryptonoseGuiPriceAlertNodeController {
             changeLabel.getStyleClass().add("price-rising");
         }
         if (chartCandles != null) {
-            MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles));
+            MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles), Color.BLACK, null);
             minimalFxChart.setMarginsHorizontalPercent(0.01);
             minimalFxChart.setMarginsVerticalPercent(0.01);
-            minimalFxChart.setChartPaint(Color.BLACK);
             finalPriceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(finalPriceLabel.getTextFill()));
             chartPane.getChildren().add(minimalFxChart);
         } else {
