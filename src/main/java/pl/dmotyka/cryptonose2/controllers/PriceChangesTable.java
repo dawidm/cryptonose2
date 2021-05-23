@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.TableCell;
@@ -39,7 +39,7 @@ public class PriceChangesTable {
 
     private final long[] timePeriods;
     private final TableView<CryptonosePairData> tableView;
-    private final ObservableList<CryptonosePairData> items;
+    private final SortedList<CryptonosePairData> items;
 
     private boolean enableShowExchange = false;
     private boolean pinnedCheckboxes = false;
@@ -96,7 +96,7 @@ public class PriceChangesTable {
         }
     }
 
-    public PriceChangesTable(TableView<CryptonosePairData> tableView, ObservableList<CryptonosePairData> items, long[] timePeriods) {
+    public PriceChangesTable(TableView<CryptonosePairData> tableView, SortedList<CryptonosePairData> items, long[] timePeriods) {
         this.tableView = tableView;
         this.items = items;
         this.timePeriods = timePeriods;
@@ -198,6 +198,12 @@ public class PriceChangesTable {
         }
     }
 
+    // allow changing table order manually by using gui sorting functionality
+    public void enableGuiSorting() {
+        items.comparatorProperty().bind(tableView.comparatorProperty());
+    }
+
+    // show column with exchange name
     public void enableShowExchange() {
         enableShowExchange = true;
     }

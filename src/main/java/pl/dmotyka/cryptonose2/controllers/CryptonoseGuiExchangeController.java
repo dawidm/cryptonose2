@@ -41,6 +41,7 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -157,7 +158,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         pairsDataModel = new ExchangePairsDataModel(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
-        priceChangesTable = new PriceChangesTable(currenciesTableView, pairsDataModel.getReadonlyItems(), CryptonoseSettings.TIME_PERIODS);
+        priceChangesTable = new PriceChangesTable(currenciesTableView, new SortedList<>(pairsDataModel.getReadonlyItems()), CryptonoseSettings.TIME_PERIODS);
+        priceChangesTable.enableGuiSorting();
         priceChangesTable.enableAutoSort();
         priceChangesTable.init();
         indicatorBox.switchColor(connectionStatus.get().getCssClass());

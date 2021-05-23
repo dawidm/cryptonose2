@@ -41,7 +41,7 @@ public class ExchangePairsDataModel {
     private final long[] timePeriods;
 
     private Map<String, CryptonosePairData> cnPairDataMap = new HashMap<>();
-    private ObservableList<CryptonosePairData> cnPairDataObservableList = FXCollections.observableArrayList();
+    private ObservableList<CryptonosePairData> cnPairDataObservableList = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 
     private Map<CurrencyPairTimePeriod, ChartCandle[]> candlesMap;
 
