@@ -89,8 +89,8 @@ public class CryptonoseGuiPriceAlertNodeController {
         }
         if (chartCandles != null) {
             MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles), Color.BLACK, null);
-            minimalFxChart.setMarginsHorizontalPercent(0.01);
-            minimalFxChart.setMarginsVerticalPercent(0.01);
+            minimalFxChart.setMarginsHorizontalPercent(1);
+            minimalFxChart.setMarginsVerticalPercent(1);
             finalPriceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(finalPriceLabel.getTextFill()));
             chartPane.getChildren().add(minimalFxChart);
         } else {
