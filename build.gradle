@@ -92,8 +92,6 @@ jlink {
             installerOptions += [
                     '--resource-dir', "build/jpackage/Cryptonose/lib",
                     '--linux-menu-group', 'Network',
-                    '--description', project.description,
-                    '--app-version', version,
                     '--linux-shortcut',
                     '--linux-deb-maintainer', 'cryptonose2@gmail.com',
                     '--linux-rpm-license-type', 'MIT'
