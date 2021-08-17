@@ -22,6 +22,10 @@
     -fx-text-fill: #0074D9
 }
 
+.kucoin-color {
+    -fx-text-fill: #5758BB;
+}
+
 .status-connecting {
     -fx-background-color: #FFDC00
 }
