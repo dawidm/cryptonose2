@@ -83,7 +83,7 @@ jlink {
         installerOptions += [
                 '--description', project.description,
                 '--app-version', version,
-                '--copyright', 'Copyrigtht 2020 Dawid Motyka',
+                '--copyright', 'Copyrigtht 2021 Dawid Motyka',
                 '--license-file', 'LICENSE.txt',
                 '--vendor', 'Dawid Motyka'
         ]
