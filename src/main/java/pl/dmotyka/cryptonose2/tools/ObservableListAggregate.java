@@ -45,24 +45,24 @@ public class ObservableListAggregate<T> {
         ListChangeListener<T> listener = c -> {
             if (aggregateChangeListener != null) {
                 aggregateChangeListener.onChange(FXCollections.unmodifiableObservableList(aggregate));
-                List<T> added = new LinkedList<>();
-                List<T> removed = new LinkedList<>();
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        added.addAll(c.getAddedSubList());
-                    }
-                    if (c.wasRemoved()) {
-                        removed.addAll(c.getRemoved());
-                    }
+            }
+            List<T> added = new LinkedList<>();
+            List<T> removed = new LinkedList<>();
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    added.addAll(c.getAddedSubList());
                 }
-                if (added.size() != 0) {
-                    aggregate.addAll(added);
-                    aggregateChangeListener.added(added);
+                if (c.wasRemoved()) {
+                    removed.addAll(c.getRemoved());
                 }
-                if (removed.size() != 0) {
-                    aggregate.removeAll(removed);
-                    aggregateChangeListener.removed(removed);
-                }
+            }
+            if (added.size() != 0) {
+                aggregate.addAll(added);
+                aggregateChangeListener.added(added);
+            }
+            if (removed.size() != 0) {
+                aggregate.removeAll(removed);
+                aggregateChangeListener.removed(removed);
             }
         };
         list.addListener(listener);
