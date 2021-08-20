@@ -180,6 +180,7 @@ jobs:
           draft: true
           files: |
             build/jpackage/*.exe
+            build/jpackage/*.msi
 
   jpackage-macos:
     # The type of runner that the job will run on
