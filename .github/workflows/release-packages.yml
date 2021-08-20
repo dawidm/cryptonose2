@@ -1,0 +1,266 @@
+name: Create Linux/MacOS/Windows release using jpackage
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  jpackage-linux:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+
+    defaults:
+      run:
+        shell: bash
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '15'
+
+      - name: Get dependencies versions
+        run: >
+          echo dmutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:dmutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo exchangeutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:exchangeutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo cryptonoseengine_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:cryptonoseengine: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo minimalfxcharts_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:minimal-fx-charts: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/dmutils'
+          ref: 'v${{ env.dmutils_version }}'
+          path: 'dmutils'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/exchangeutils'
+          ref: 'v${{ env.exchangeutils_version }}'
+          path: 'exchangeutils'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/cryptonoseengine'
+          ref: 'v${{ env.cryptonoseengine_version }}'
+          path: 'cryptonoseengine'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/minimal-fx-charts'
+          ref: 'v${{ env.minimalfxcharts_version }}'
+          path: 'minimal-fx-charts'
+
+      - name: Build dmutils
+        run: >
+          cd dmutils;
+          mvn install;
+
+      - name: Build exchangeutils
+        run: >
+          cd exchangeutils;
+          mvn install;
+
+      - name: Build cryptonoseengine
+        run: >
+          cd cryptonoseengine;
+          mvn install;
+
+      - name: Build minimal-fx-charts
+        run: >
+          cd minimal-fx-charts;
+          mvn install
+      - name: jpackage
+        run: ./gradlew jpackage
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        #if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          files: |
+            build/jpackage/*.zip
+            build/jpackage/*.deb
+            build/jpackage/*.rpm
+            LICENSE.txt
+            LICENSE-3RD-PARTY.txt
+
+  jpackage-windows:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '15'
+
+      - name: Get dependencies versions
+        run: >
+          echo dmutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:dmutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo exchangeutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:exchangeutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo cryptonoseengine_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:cryptonoseengine: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo minimalfxcharts_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:minimal-fx-charts: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/dmutils'
+          ref: 'v${{ env.dmutils_version }}'
+          path: 'dmutils'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/exchangeutils'
+          ref: 'v${{ env.exchangeutils_version }}'
+          path: 'exchangeutils'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/cryptonoseengine'
+          ref: 'v${{ env.cryptonoseengine_version }}'
+          path: 'cryptonoseengine'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/minimal-fx-charts'
+          ref: 'v${{ env.minimalfxcharts_version }}'
+          path: 'minimal-fx-charts'
+
+      - name: Build dmutils
+        run: >
+          cd dmutils;
+          mvn install;
+
+      - name: Build exchangeutils
+        run: >
+          cd exchangeutils;
+          mvn install;
+
+      - name: Build cryptonoseengine
+        run: >
+          cd cryptonoseengine;
+          mvn install;
+
+      - name: Build minimal-fx-charts
+        run: >
+          cd minimal-fx-charts;
+          mvn install
+      - name: jpackage
+        run: ./gradlew.bat jpackage
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        #if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          files: |
+            build/jpackage/*.exe
+
+  jpackage-macos:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt' # See 'Supported distributions' for available options
+          java-version: '15'
+
+      - name: Get dependencies versions
+        run: >
+          echo dmutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:dmutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo exchangeutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:exchangeutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo cryptonoseengine_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:cryptonoseengine: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+          echo minimalfxcharts_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:minimal-fx-charts: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/dmutils'
+          ref: 'v${{ env.dmutils_version }}'
+          path: 'dmutils'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/exchangeutils'
+          ref: 'v${{ env.exchangeutils_version }}'
+          path: 'exchangeutils'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/cryptonoseengine'
+          ref: 'v${{ env.cryptonoseengine_version }}'
+          path: 'cryptonoseengine'
+
+      - uses: actions/checkout@v2
+        with:
+          repository: 'dawidm/minimal-fx-charts'
+          ref: 'v${{ env.minimalfxcharts_version }}'
+          path: 'minimal-fx-charts'
+
+      - name: Build dmutils
+        run: >
+          cd dmutils;
+          mvn install;
+
+      - name: Build exchangeutils
+        run: >
+          cd exchangeutils;
+          mvn install;
+
+      - name: Build cryptonoseengine
+        run: >
+          cd cryptonoseengine;
+          mvn install;
+
+      - name: Build minimal-fx-charts
+        run: >
+          cd minimal-fx-charts;
+          mvn install
+      - name: jpackage
+        run: ./gradlew jpackage
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        #if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          files: |
+            build/jpackage/*.dmg
