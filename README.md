@@ -18,6 +18,6 @@ You may want to try Cryptonose if you are day trader on cryptocurrency markets. 
 * When price change meets price alert conditions Cryptonose can: send **desktop notification**, play **sound**, **run web browser** with exchagne website.
 
 ## Supported exchanges
-Currently supported exchanges: **Binance, Bitfinex, Huobi, Poloniex**. Another exchanges may be added in the future, but existing ones provide data for most of popular markets, so you can use Cryptonose even if you trade on another exchange.
+Currently supported exchanges: **Binance, Bitfinex, Huobi, KuCoin, Poloniex**. Another exchanges may be added in the future, but existing ones provide data for most of popular markets, so you can use Cryptonose even if you trade on another exchange.
 
 [![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")]({{ site.baseurl }}/images/cryptonose-exchange.png)
