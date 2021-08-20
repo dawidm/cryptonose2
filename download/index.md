@@ -20,6 +20,14 @@ To fix this I would have to pay for a special certificate every year but still W
 
 &nbsp;
 
+## MacOS packages
+
+<a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.20.2/Cryptonose-2.20.2.dmg">Download MacOS DMG (Cryptonose-2.20.2.dmg)</a>
+
+<a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.20.2/Cryptonose-2.20.2.pkg">Download MacOS PKG (Cryptonose-2.20.2.pkg)</a>
+
+&nbsp;
+
 ## Linux packages
 
 DEB package (for Debian, Ubuntu, Mint, elementary OS, MX Linux and other using DEBs):
