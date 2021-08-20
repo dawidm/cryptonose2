@@ -43,7 +43,7 @@ dependencies {
         exclude group: 'javax.annotation', module: 'javax.annotation-api' // conflict with jsr305
         exclude group: 'jakarta.ws.rs', module: 'jakarta.ws.rs-api' // conflict with javax.ws.rs
     }
-    implementation ('pl.dmotyka:cryptonoseengine:1.9.2')  {
+    implementation ('pl.dmotyka:cryptonoseengine:1.9.3')  {
         exclude group: 'javax.annotation', module: 'javax.annotation-api' // conflict with jsr305
         exclude group: 'jakarta.ws.rs', module: 'jakarta.ws.rs-api' // conflict with javax.ws.rs
     }
