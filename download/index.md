@@ -22,7 +22,7 @@ To fix this I would have to pay for a special certificate every year but still W
 
 ## MacOS packages
 
-<a class="download-button" style="margin-bottom: 1em" href="https://github.com/dawidm/cryptonose2/releases/download/v2.20.2/Cryptonose-2.20.2.dmg">Download MacOS DMG (Cryptonose-2.20.2.dmg)</a>
+<a class="download-button" style="padding-bottom: 1em" href="https://github.com/dawidm/cryptonose2/releases/download/v2.20.2/Cryptonose-2.20.2.dmg">Download MacOS DMG (Cryptonose-2.20.2.dmg)</a>
 
 
 <a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.20.2/Cryptonose-2.20.2.pkg">Download MacOS PKG (Cryptonose-2.20.2.pkg)</a>
