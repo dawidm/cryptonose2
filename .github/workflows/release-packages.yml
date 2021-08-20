@@ -68,22 +68,22 @@ jobs:
       - name: Build dmutils
         run: >
           cd dmutils;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build exchangeutils
         run: >
           cd exchangeutils;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build cryptonoseengine
         run: >
           cd cryptonoseengine;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build minimal-fx-charts
         run: >
           cd minimal-fx-charts;
-          mvn install
+          mvn install -DskipTests;
       - name: jpackage
         run: ./gradlew jpackage
 
@@ -154,22 +154,22 @@ jobs:
       - name: Build dmutils
         run: >
           cd dmutils;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build exchangeutils
         run: >
           cd exchangeutils;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build cryptonoseengine
         run: >
           cd cryptonoseengine;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build minimal-fx-charts
         run: >
           cd minimal-fx-charts;
-          mvn install
+          mvn install -DskipTests;
       - name: jpackage
         run: ./gradlew.bat jpackage
 
@@ -237,22 +237,22 @@ jobs:
       - name: Build dmutils
         run: >
           cd dmutils;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build exchangeutils
         run: >
           cd exchangeutils;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build cryptonoseengine
         run: >
           cd cryptonoseengine;
-          mvn install;
+          mvn install -DskipTests;
 
       - name: Build minimal-fx-charts
         run: >
           cd minimal-fx-charts;
-          mvn install
+          mvn install -DskipTests;
       - name: jpackage
         run: ./gradlew jpackage
 
