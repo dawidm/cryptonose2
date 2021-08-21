@@ -17,6 +17,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -47,6 +48,12 @@
                 <Hyperlink fx:id="releaseLinkLabel" focusTraversable="false" text="(link)" />
             </children>
         </HBox>
+      <Label text="Description:">
+         <VBox.margin>
+            <Insets bottom="4.0" top="4.0" />
+         </VBox.margin>
+      </Label>
+      <TextArea fx:id="descriptionTextArea" editable="false" prefHeight="200.0" wrapText="true" />
       <HBox alignment="TOP_RIGHT" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="closeButton" cancelButton="true" mnemonicParsing="false" text="Close" />

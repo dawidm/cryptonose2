@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import pl.dmotyka.cryptonose2.updatechecker.VersionInfo;
@@ -31,6 +32,8 @@ public class CryptonoseGuiVersionWindowController implements Initializable {
     public Hyperlink downloadsLinkLabel;
     @FXML
     public Hyperlink releaseLinkLabel;
+    @FXML
+    public TextArea descriptionTextArea;
     @FXML
     public Label titleLabel;
     @FXML
@@ -46,6 +49,7 @@ public class CryptonoseGuiVersionWindowController implements Initializable {
     public void init(VersionInfo versionInfo) {
         titleLabel.setText(titleLabel.getText()+versionInfo.getVersionString());
         releaseLinkLabel.setText(versionInfo.getDownloadUrl());
+        descriptionTextArea.setText(versionInfo.getDescription().split("\\[")[0]); // if there are links/images use only the text before them (markdown language)
     }
 
 }
