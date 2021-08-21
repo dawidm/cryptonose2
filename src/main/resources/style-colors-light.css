@@ -45,3 +45,7 @@
 .text-coingecko {
     -fx-text-fill: #2ECC40
 }
+
+.new-version-text {
+    -fx-text-fill: #FF4136
+}
