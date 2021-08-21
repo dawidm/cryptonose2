@@ -32,4 +32,8 @@ public class VersionInfo {
     public String getDownloadUrl() {
         return downloadUrl;
     }
+
+    public String getDescription() {
+        return description;
+    }
 }
