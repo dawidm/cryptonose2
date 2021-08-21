@@ -42,7 +42,7 @@
                </styleClass></Label>
             <Label fx:id="newVersionShowLabel" text="show" underline="true">
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="7.0" />
                </HBox.margin>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -50,7 +50,7 @@
             </Label>
             <Label fx:id="newVersionHideLabel" text="hide" underline="true">
                <HBox.margin>
-                  <Insets left="5.0" />
+                  <Insets left="7.0" />
                </HBox.margin>
                <cursor>
                   <Cursor fx:constant="HAND" />
