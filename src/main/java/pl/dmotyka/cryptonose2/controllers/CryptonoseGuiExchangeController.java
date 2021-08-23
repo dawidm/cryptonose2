@@ -116,6 +116,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public Label tablePlaceholderLabel;
 
+    private CryptonoseGuiNotification cryptonoseGuiNotification;
     private ColorIndicatorBox indicatorBox;
     private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
@@ -221,6 +222,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        mainVBox.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                cryptonoseGuiNotification = new CryptonoseGuiNotification(newScene.getWindow());
+                newScene.windowProperty().addListener((observable1, oldWindow, newWindow) -> {
+                    cryptonoseGuiNotification = new CryptonoseGuiNotification(newWindow);
+                });
+            }
+        });
         scheduledExecutorService = Executors.newScheduledThreadPool(4);
         startLastTransactionTimer();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
@@ -282,8 +291,9 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 tablePlaceholderLabel.setText("Not connected yet");
             }
         });
-        if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS))
-            CryptonoseGuiNotification.notifyConnectionState(CryptonoseSettings.NOTIFICATION_LIBRARY,exchangeSpecs, newConnectionStatus);
+        if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS)) {
+            cryptonoseGuiNotification.notifyConnectionState(CryptonoseSettings.NOTIFICATION_LIBRARY, exchangeSpecs, newConnectionStatus);
+        }
     }
 
     @Override
@@ -412,7 +422,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         }
         if(notificationCheckBox.isSelected()) {
-            CryptonoseGuiNotification.notifyPriceAlert(CryptonoseSettings.NOTIFICATION_LIBRARY,priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
+            cryptonoseGuiNotification.notifyPriceAlert(CryptonoseSettings.NOTIFICATION_LIBRARY,priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
         }
         if (soundCheckBox.isSelected()) {
             cryptonoseGuiSoundAlerts.soundAlert(priceAlert);

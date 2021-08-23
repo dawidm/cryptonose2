@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 import dorkbox.notify.Notify;
@@ -34,8 +35,16 @@ public class CryptonoseGuiNotification {
 
     public enum NotificationLibrary {CONTROLSFX,DORKBOX};
 
-    public static void notifyPriceAlert(NotificationLibrary notificationLibrary, PriceAlert priceAlert, Runnable action) {
-        String notifyText = String.format("%.2f%% (rel %.2f), %s (%ds), final price: %s",
+    private final Window ownerWindow;
+
+    public CryptonoseGuiNotification(Window ownerWindow) {
+        this.ownerWindow = ownerWindow;
+    }
+
+    public void notifyPriceAlert(NotificationLibrary notificationLibrary, PriceAlert priceAlert, Runnable action) {
+        String notifyText = String.format("Change: %.2f%% (rel %.2f)\n" +
+                        "Time: %s (%ds)\n" +
+                        "Final price: %s",
                 priceAlert.getPriceChange(),
                 priceAlert.getRelativePriceChange(),
                 priceAlert.getFormattedTimePeriod(),
@@ -52,7 +61,7 @@ public class CryptonoseGuiNotification {
         }
     }
 
-    public static void notifyConnectionState(NotificationLibrary notificationLibrary,ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
+    public void notifyConnectionState(NotificationLibrary notificationLibrary,ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
         String statusText;
         if (cryptonoseGuiConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATED_RECONNECT))
             statusText = String.format("No price updates for %d seconds, reconnecting", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS);
@@ -68,21 +77,23 @@ public class CryptonoseGuiNotification {
         }
     }
 
-    private static void notifyControlsFx(String title, String text, Runnable action) {
+    private void notifyControlsFx(String title, String text, Runnable action) {
         Platform.runLater(() -> {
             Notifications notifications = Notifications.
                 create().
+                owner(ownerWindow).
                 darkStyle().
                 title(title).
                 text(text).
                 hideAfter(Duration.millis(HIDE_AFTER));
-            if(action!=null)
+            if(action!=null) {
                 notifications.onAction((actionEvent) -> action.run());
+            }
             notifications.show();
         });
     }
 
-    private static void notifyDorkbox(String title, String text, Runnable action) {
+    private void notifyDorkbox(String title, String text, Runnable action) {
         Screen screen = Screen.getPrimary();
         double scaleX = screen.getOutputScaleX();
         double fontSize;
