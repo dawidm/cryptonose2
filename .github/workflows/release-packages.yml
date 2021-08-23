@@ -26,8 +26,6 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with:
-          ref: master
 
       - uses: actions/setup-java@v2
         with:
@@ -112,8 +110,6 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with:
-          ref: master
 
       - uses: actions/setup-java@v2
         with:
@@ -195,8 +191,6 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with:
-          ref: master
 
       - uses: actions/setup-java@v2
         with:
