@@ -14,7 +14,6 @@
 package pl.dmotyka.cryptonose2.controllers;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
@@ -39,7 +38,6 @@ public class CryptonoseGuiPinnedNodeController {
 
     private static final Logger logger = Logger.getLogger(CryptonoseGuiPinnedNodeController.class.getName());
 
-    private static final long MIN_UPDATE_PERIOD_MS = 1000;
     public static final long MINI_CHART_TIMEFRAME_SEC = CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC;
     public static final long MINI_CHART_TIME_PERIOD_SEC = CryptonoseSettings.MINI_CHART_TIME_PERIOD_SEC;
 
@@ -54,8 +52,6 @@ public class CryptonoseGuiPinnedNodeController {
     private ChangeListener<? super ChartCandle[]> candlesListener;
     private ChangeListener<? super Number> priceListener;
 
-    private AtomicLong lastChartUpdateMs = new AtomicLong();
-
     @FXML
     public HBox mainHBox;
     @FXML
@@ -66,10 +62,6 @@ public class CryptonoseGuiPinnedNodeController {
     public Label changeLabel;
     @FXML
     public Pane chartPane;
-
-    public CryptonoseGuiPinnedNodeController() {
-        lastChartUpdateMs.set(milliTime());
-    }
 
     // listeners are set on priceProperty and chartCandlesProperty, if these properties will exist longer than this object use removeListeners()
     public synchronized void init(ExchangeSpecs exchangeSpecs, String pairApiSymbol, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
@@ -112,11 +104,8 @@ public class CryptonoseGuiPinnedNodeController {
             if (!mainHBox.isVisible()) {
                 Platform.runLater(() -> mainHBox.setVisible(true));
             }
-            if (milliTime() - lastChartUpdateMs.get() > MIN_UPDATE_PERIOD_MS) {
-                Platform.runLater(() -> priceLabel.setText(DecimalFormatter.formatDecimalPrice(newValue.doubleValue())));
-                updateChartLastVal(newValue.doubleValue());
-                lastChartUpdateMs.set(milliTime());
-            }
+            Platform.runLater(() -> priceLabel.setText(DecimalFormatter.formatDecimalPrice(newValue.doubleValue())));
+            updateChartLastVal(newValue.doubleValue());
         };
         priceProperty.addListener(priceListener);
         mainHBox.setOnMouseClicked(e -> {

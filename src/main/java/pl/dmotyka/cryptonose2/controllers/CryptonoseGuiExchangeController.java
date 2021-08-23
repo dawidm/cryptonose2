@@ -158,6 +158,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         initPriceAlertThresholds();
         cryptonoseGuiAlertChecker = new CryptonoseGuiAlertChecker(exchangeSpecs,priceAlertThresholdsMap);
         pairsDataModel = new ExchangePairsDataModel(exchangeSpecs, CryptonoseSettings.TIME_PERIODS);
+        pairsDataModel.setUpdateThrottleIntervalMs(CryptonoseSettings.PRICE_CHANGES_MIN_UPDATE_INTERVAL_MS);
         priceChangesTable = new PriceChangesTable(currenciesTableView, new SortedList<>(pairsDataModel.getReadonlyItems()), CryptonoseSettings.TIME_PERIODS);
         priceChangesTable.enableGuiSorting();
         priceChangesTable.enableAutoSort();

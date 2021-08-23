@@ -52,6 +52,9 @@ public class CryptonoseSettings {
     public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
     public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
 
+    // minimum interval between updates of price change values, bigger interval results in less gui updates thus better performance
+    public static final int PRICE_CHANGES_MIN_UPDATE_INTERVAL_MS = 500;
+
     public static final String DEFAULT_RISING_SOUND_FILE="soundR.wav";
     public static final String DEFAULT_DROPPING_SOUND_FILE="soundD.wav";
 

@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
@@ -40,6 +41,8 @@ public class ExchangePairsDataModel {
     private final PairSymbolConverter pairSymbolConverter;
     private final long[] timePeriods;
 
+    private final AtomicLong updateThrottleIntervalMs = new AtomicLong();
+
     private Map<String, CryptonosePairData> cnPairDataMap = new HashMap<>();
     private ObservableList<CryptonosePairData> cnPairDataObservableList = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 
@@ -57,6 +60,10 @@ public class ExchangePairsDataModel {
             if (cnPairData == null) {
                 logger.fine("creating pair data entry for: " + priceChanges.getCurrencyPair());
                 cnPairData = new CryptonosePairData(exchangeSpecs, priceChanges.getCurrencyPair(), pairSymbolConverter.toFormattedString(priceChanges.getCurrencyPair()));
+                long interval = updateThrottleIntervalMs.get();
+                if (interval > 0) {
+                    cnPairData.setUpdateThrottleIntervalMs(interval);
+                }
                 long pinTime = CryptonoseSettings.getPinnedTimestampMs(cnPairData.getExchangeSpecs(), cnPairData.getPairName());
                 if (pinTime != 0) {
                     cnPairData.setPinned(true);
@@ -111,6 +118,12 @@ public class ExchangePairsDataModel {
 
     public synchronized ObservableList<CryptonosePairData> getReadonlyItems() {
         return FXCollections.unmodifiableObservableList(cnPairDataObservableList);
+    }
+
+    // set a minimum interval for single table value update
+    public synchronized void setUpdateThrottleIntervalMs(long updateThrottleIntervalMs) {
+        cnPairDataMap.values().forEach(cryptonosePairData -> cryptonosePairData.setUpdateThrottleIntervalMs(updateThrottleIntervalMs));
+        this.updateThrottleIntervalMs.set(updateThrottleIntervalMs);
     }
 
 }

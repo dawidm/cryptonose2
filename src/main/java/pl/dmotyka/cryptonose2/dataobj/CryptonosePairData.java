@@ -13,6 +13,8 @@
 
 package pl.dmotyka.cryptonose2.dataobj;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,6 +30,7 @@ public class CryptonosePairData {
 
     public static final int PERIOD1 = 1;
     public static final int PERIOD2 = 2;
+    public static final int MIN_THROTTLE_INTERVAL_MS = 250;
 
     private final SimpleBooleanProperty pinnedProperty;
     private long pinnedTimestampSec = 0;
@@ -40,6 +43,10 @@ public class CryptonosePairData {
     private final SimpleDoubleProperty p2RelativeChange;
     private final SimpleDoubleProperty lastPrice;
     private final SimpleObjectProperty<ChartCandle[]> chartCandlesProperty;
+    private long lastP1UpdateVmMs = 0;
+    private long lastP2UpdateVmMs = 0;
+
+    private final AtomicLong updateThrottleIntervalMs = new AtomicLong(200);
 
     public CryptonosePairData(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
         this.exchangeSpecs = exchangeSpecs;
@@ -99,17 +106,24 @@ public class CryptonosePairData {
     }
 
     public void setPriceChanges(PriceChanges priceChanges, int period) {
-        switch(period) {
+        switch (period) {
             case PERIOD1:
-                p1PercentChange.setValue(priceChanges.getPercentChange());
-                p1RelativeChange.setValue(priceChanges.getRelativePriceChange()!=null?priceChanges.getRelativePriceChange():0);
+                if (vmTimeMillis() - lastP1UpdateVmMs > updateThrottleIntervalMs.get()) {
+                    lastP1UpdateVmMs = vmTimeMillis();
+                    p1PercentChange.setValue(priceChanges.getPercentChange());
+                    p1RelativeChange.setValue(priceChanges.getRelativePriceChange() != null ? priceChanges.getRelativePriceChange() : 0);
+                    lastPrice.set(priceChanges.getLastPrice());
+                }
                 break;
             case PERIOD2:
-                p2PercentChange.setValue(priceChanges.getPercentChange());
-                p2RelativeChange.setValue(priceChanges.getRelativePriceChange()!=null?priceChanges.getRelativePriceChange():0);
+                if (vmTimeMillis() - lastP2UpdateVmMs > updateThrottleIntervalMs.get()) {
+                    lastP2UpdateVmMs = vmTimeMillis();
+                    p2PercentChange.setValue(priceChanges.getPercentChange());
+                    p2RelativeChange.setValue(priceChanges.getRelativePriceChange() != null ? priceChanges.getRelativePriceChange() : 0);
+                    lastPrice.set(priceChanges.getLastPrice());
+                }
                 break;
         }
-        lastPrice.set(priceChanges.getLastPrice());
     }
 
     public SimpleObjectProperty<ChartCandle[]> chartCandlesProperty() {
@@ -124,4 +138,19 @@ public class CryptonosePairData {
     public boolean isSamePair(CryptonosePairData other) {
         return exchangeSpecs.equals(other.getExchangeSpecs()) && pairName.equals(other.getPairName());
     }
+
+    // should be >= MIN_THROTTLE_INTERVAL_MS
+    public void setUpdateThrottleIntervalMs(long updateThrottleIntervalMs) {
+        if (updateThrottleIntervalMs >= MIN_THROTTLE_INTERVAL_MS) {
+            this.updateThrottleIntervalMs.set(updateThrottleIntervalMs);
+        } else {
+            throw new IllegalArgumentException("updateThrottleIntervalMs should be >= MIN_THROTTLE_INTERVAL_MS");
+        }
+    }
+
+    private long vmTimeMillis() {
+        return System.nanoTime() / 1000000;
+    }
+
+
 }
