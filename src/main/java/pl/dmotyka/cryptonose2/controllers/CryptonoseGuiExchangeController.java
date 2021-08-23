@@ -299,7 +299,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
-                lastUpdateTimeMillis.set(System.currentTimeMillis());
+                lastUpdateTimeMillis.set(timeMillis());
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
@@ -332,14 +332,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 }
                 break;
             case AUTO_REFRESHING_DONE:
-                lastUpdateTimeMillis.set(System.currentTimeMillis());
+                lastUpdateTimeMillis.set(timeMillis());
                 pairsDataModel.removeOutdatedPairs(engine.getAllPairs());
         }
     }
 
     @Override
     public void receiveTransactionHeartbeat() {
-        lastUpdateTimeMillis.set(System.currentTimeMillis());
+        lastUpdateTimeMillis.set(timeMillis());
         numUpdatesPerSecondAtomicInteger.getAndIncrement();
     }
 
@@ -430,7 +430,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void startLastTransactionTimer() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (lastUpdateTimeMillis.get() !=0) {
-                long lastUpdateSecondsAgo = (System.currentTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
+                long lastUpdateSecondsAgo = (timeMillis() - lastUpdateTimeMillis.get()) / 1000;
                 javafx.application.Platform.runLater(() -> lastUpdateLabel.setText(lastUpdateSecondsAgo + " seconds ago"));
                 if (lastUpdateSecondsAgo > CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No updates for %d seconds. Reconnecting...", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS));
@@ -499,6 +499,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     public void blockAlert(AlertBlock alertBlock) {
         cryptonoseGuiAlertChecker.blockAlerts(alertBlock);
+    }
+
+    private long timeMillis() {
+        return System.nanoTime() / 1000000;
     }
 
 }
