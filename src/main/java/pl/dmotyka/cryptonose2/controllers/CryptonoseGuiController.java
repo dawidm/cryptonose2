@@ -57,6 +57,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
@@ -179,7 +180,8 @@ public class CryptonoseGuiController extends Application {
             }
         }
 
-        mainScene = new Scene((VBox) cryptonoseGuiFxNode);
+        mainScene = UILoader.createScene((VBox) cryptonoseGuiFxNode);
+
         mainScene.setOnKeyPressed(event -> {
             if(mainTabPane.getSelectionModel().getSelectedItem().getContent().getOnKeyPressed()!=null)
                 mainTabPane.getSelectionModel().getSelectedItem().getContent().getOnKeyPressed().handle(event);

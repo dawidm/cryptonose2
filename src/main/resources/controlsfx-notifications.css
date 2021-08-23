@@ -1,0 +1,40 @@
+* {
+    notification-base-color: #373e43;
+    notification-text-color: #ebebeb;
+}
+
+.notification-bar.dark > .pane {
+    -fx-background-color: #222222, derive(notification-base-color, 15%), notification-base-color;
+    -fx-background-radius: 1em;
+    -fx-border-radius: 1em;
+    -fx-background-insets: 0, 1, 2;
+}
+
+.notification-bar > .pane .title {
+    -fx-font-size: 1em;
+}
+
+.notification-bar > .pane .label {
+    -fx-font-size: 1em;
+}
+
+.notification-bar.dark > .pane .title,
+.notification-bar.dark > .pane .label {
+    -fx-text-fill: notification-text-color;
+}
+
+.notification-bar.dark > .pane .title {
+    -fx-padding: 0 0 0.15em 0;
+}
+
+.notification-bar > .pane .close-button:hover {
+    -fx-background-color: none;
+}
+
+.notification-bar > .pane .close-button:pressed {
+    -fx-background-color: none;
+}
+
+.notification-bar > .pane .close-button > .graphic {
+    -fx-background-color: notification-text-color;
+}

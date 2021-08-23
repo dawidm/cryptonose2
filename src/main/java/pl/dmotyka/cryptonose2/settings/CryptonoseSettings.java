@@ -50,7 +50,7 @@ public class CryptonoseSettings {
     public static final int RELATIVE_CHANGE_NUM_CANDLES = 50;
     public static final int AUTO_REFRESH_INTERVAL_MINUTES = 120;
     public static final int NO_PAIRS_RECONNECT_MINUTES = 5;
-    public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.DORKBOX;
+    public static final CryptonoseGuiNotification.NotificationLibrary NOTIFICATION_LIBRARY=CryptonoseGuiNotification.NotificationLibrary.CONTROLSFX;
 
     // minimum interval between updates of price change values, bigger interval results in less gui updates thus better performance
     public static final int PRICE_CHANGES_MIN_UPDATE_INTERVAL_MS = 500;

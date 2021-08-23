@@ -83,8 +83,15 @@ public class UILoader <T> {
     private Stage createStage(String windowTitle) {
         Stage stage = new Stage();
         stage.setTitle(windowTitle);
-        stage.setScene(new Scene(fxmlLoader.getRoot()));
+        Scene newScene = createScene(fxmlLoader.getRoot());
+        stage.setScene(newScene);
         return stage;
+    }
+
+    public static Scene createScene(Parent root) {
+        Scene newScene = new Scene(root);
+        newScene.getStylesheets().add(UILoader.class.getClassLoader().getResource("controlsfx-notifications.css").toExternalForm());
+        return newScene;
     }
 
 }
