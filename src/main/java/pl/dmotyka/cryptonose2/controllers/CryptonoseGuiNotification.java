@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
 import javafx.scene.text.Font;
+import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -78,10 +79,18 @@ public class CryptonoseGuiNotification {
     }
 
     private void notifyControlsFx(String title, String text, Runnable action) {
+        Window owner = ownerWindow;
+        for (Window currentWindow : Window.getWindows()) {
+            if (currentWindow.isFocused() && !(currentWindow instanceof PopupWindow)) {
+                owner = currentWindow;
+                break;
+            }
+        }
+        Window finalOwner = owner;
         Platform.runLater(() -> {
             Notifications notifications = Notifications.
                 create().
-                owner(ownerWindow).
+                owner(finalOwner).
                 darkStyle().
                 title(title).
                 text(text).
