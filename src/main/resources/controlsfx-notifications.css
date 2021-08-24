@@ -21,10 +21,7 @@
 .notification-bar.dark > .pane .title,
 .notification-bar.dark > .pane .label {
     -fx-text-fill: notification-text-color;
-}
-
-.notification-bar.dark > .pane .title {
-    -fx-padding: 0 0 0.3em 0;
+    -fx-alignment: center-left;
 }
 
 .notification-bar > .pane .close-button:hover {
