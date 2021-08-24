@@ -17,7 +17,9 @@ import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
 import javafx.scene.text.Font;
+import javafx.stage.Popup;
 import javafx.stage.Screen;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 import dorkbox.notify.Notify;
@@ -32,9 +34,17 @@ public class CryptonoseGuiNotification {
     public static final int HIDE_AFTER=7000;
     public static final int DORKBOX_MAX_FONT_SIZE = 19;
 
-    public enum NotificationLibrary {CONTROLSFX,DORKBOX};
+    public enum NotificationLibrary { CONTROLSFX,DORKBOX };
 
-    public void notifyPriceAlert(NotificationLibrary notificationLibrary, PriceAlert priceAlert, Runnable action) {
+    private final NotificationLibrary notificationLibrary;
+    private Window anchorHelperWindow = null;
+    private Popup anchorHelperPopup = null;
+
+    public CryptonoseGuiNotification(NotificationLibrary notificationLibrary) {
+        this.notificationLibrary = notificationLibrary;
+    }
+
+    public void notifyPriceAlert(PriceAlert priceAlert, Runnable action) {
         String notifyText = String.format("Change: %.2f%% (rel %.2f)\n" +
                         "Time: %s (%ds)\n" +
                         "Final price: %s",
@@ -54,7 +64,7 @@ public class CryptonoseGuiNotification {
         }
     }
 
-    public void notifyConnectionState(NotificationLibrary notificationLibrary,ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
+    public void notifyConnectionState(ExchangeSpecs exchangeSpecs, CryptonoseGuiConnectionStatus cryptonoseGuiConnectionStatus) {
         String statusText;
         if (cryptonoseGuiConnectionStatus.equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATED_RECONNECT))
             statusText = String.format("No price updates for %d seconds, reconnecting", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS);
@@ -70,10 +80,47 @@ public class CryptonoseGuiNotification {
         }
     }
 
+    public void notifyText(String title, String text, Runnable action) {
+        switch (notificationLibrary) {
+            case CONTROLSFX:
+                notifyControlsFx(title, text, action);
+                break;
+            case DORKBOX:
+                notifyDorkbox(title, text, action);
+                break;
+        }
+    }
+
+    // Set to window that is always visible (doesn't have to be active) to avoid problems with notifications.
+    // This is a workaround for notifications disappearing too early when no window is active
+    //  (because if there's existing notification it may be used used as an owner for the next one).
+    //  Also a workaround notifications disappearing after closing active window (Controlsfx Notifications
+    //  use active widow as an owner for notification and when window is closed, notification disappears)
+    public void setAnchorHelperWindow(Window anchorHelperWindow) {
+        this.anchorHelperWindow = anchorHelperWindow;
+        // An invisible popup is created as an owner for notifications popups
+        Platform.runLater(() -> {
+            anchorHelperPopup = new Popup();
+            anchorHelperPopup.setHeight(0);
+            anchorHelperPopup.setWidth(0);
+            anchorHelperPopup.hide();
+            anchorHelperPopup.show(anchorHelperWindow);
+        });
+    }
+
+    public void anchorHelperUpdate() {
+        anchorHelperPopup.setX(Screen.getPrimary().getVisualBounds().getMaxX());
+        anchorHelperPopup.setY(Screen.getPrimary().getVisualBounds().getMaxY());
+    }
+
     private void notifyControlsFx(String title, String text, Runnable action) {
         Platform.runLater(() -> {
+            if (anchorHelperPopup != null) {
+                anchorHelperUpdate();
+            }
             Notifications notifications = Notifications.
                 create().
+                owner(anchorHelperPopup==null?null:anchorHelperPopup).
                 darkStyle().
                 title(title).
                 text(text).

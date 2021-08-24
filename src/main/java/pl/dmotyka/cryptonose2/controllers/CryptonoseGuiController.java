@@ -57,7 +57,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
@@ -113,6 +112,8 @@ public class CryptonoseGuiController extends Application {
 
     private final Map<ExchangeSpecs, CryptonoseGuiExchangeController> activeExchangesControllersMap = new HashMap<>();
     private final ObservableListAggregate<CryptonosePairData> cnPairDataAggregate = new ObservableListAggregate<>();
+
+    private CryptonoseGuiNotification cryptonoseGuiNotification;
 
     private CryptonoseGuiPriceAlertsTabController priceAlertsTabController;
 
@@ -200,6 +201,9 @@ public class CryptonoseGuiController extends Application {
             saveOtherSettings();
             System.exit(0);
         });
+
+        cryptonoseGuiNotification = new CryptonoseGuiNotification(CryptonoseSettings.NOTIFICATION_LIBRARY);
+        cryptonoseGuiNotification.setAnchorHelperWindow(mainScene.getWindow());
 
         UILoader<CryptonoseGuiPriceAlertsTabController> uiLoaderAlerts = new UILoader<>("cryptonoseGuiPriceAlertsTab.fxml");
         Node priceAlertsPane = uiLoaderAlerts.getRoot();
@@ -360,7 +364,7 @@ public class CryptonoseGuiController extends Application {
         if(activate)
             mainTabPane.getSelectionModel().select(tab);
         CryptonoseGuiExchangeController cryptonoseGuiExchangeController = exchangeLoader.getController();
-        cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox);
+        cryptonoseGuiExchangeController.init(exchangeSpecs,priceAlertsTabController,this, indicatorBox, cryptonoseGuiNotification);
         final ObservableList<CryptonosePairData> readOnlyPairsData = cryptonoseGuiExchangeController.getPairsData();
         cnPairDataAggregate.addList(readOnlyPairsData);
         tab.setOnCloseRequest((event) -> {

@@ -116,7 +116,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public Label tablePlaceholderLabel;
 
-    private CryptonoseGuiNotification cryptonoseGuiNotification = new CryptonoseGuiNotification();
+    private CryptonoseGuiNotification cryptonoseGuiNotification;
     private ColorIndicatorBox indicatorBox;
     private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
@@ -137,11 +137,12 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private final AtomicReference<CryptonoseGuiConnectionStatus> connectionStatus = new AtomicReference<>(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED);
     private boolean noPairsAlertShown = false;
 
-    public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, ColorIndicatorBox indicatorBox) {
+    public void init(ExchangeSpecs exchangeSpecs,CryptonoseGuiPriceAlertsTabController cryptonoseGuiPriceAlertsTabController, CryptonoseGuiController cryptonoseGuiController, ColorIndicatorBox indicatorBox, CryptonoseGuiNotification cryptonoseGuiNotification) {
         this.priceAlertTabController = cryptonoseGuiPriceAlertsTabController;
         this.cryptonoseGuiController = cryptonoseGuiController;
         this.indicatorBox = indicatorBox;
         this.exchangeSpecs = exchangeSpecs;
+        this.cryptonoseGuiNotification = cryptonoseGuiNotification;
         pairsButton.setOnAction(event -> pairsClick());
         alertSettingsButton.setOnAction(event -> alertSettingsClick());
         alertBlocksButton.setOnAction(event -> showAlertBlocksDialog());
@@ -284,7 +285,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             }
         });
         if(notify && CryptonoseSettings.getBool(CryptonoseSettings.General.CONNECTION_STATUS_NOTIFICATIONS)) {
-            cryptonoseGuiNotification.notifyConnectionState(CryptonoseSettings.NOTIFICATION_LIBRARY, exchangeSpecs, newConnectionStatus);
+            cryptonoseGuiNotification.notifyConnectionState(exchangeSpecs, newConnectionStatus);
         }
     }
 
@@ -414,7 +415,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         }
         if(notificationCheckBox.isSelected()) {
-            cryptonoseGuiNotification.notifyPriceAlert(CryptonoseSettings.NOTIFICATION_LIBRARY,priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
+            cryptonoseGuiNotification.notifyPriceAlert(priceAlert,()->CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs()));
         }
         if (soundCheckBox.isSelected()) {
             cryptonoseGuiSoundAlerts.soundAlert(priceAlert);
