@@ -361,6 +361,15 @@ public class CryptonoseGuiController extends Application {
         tab.setGraphic(indicatorBox);
         tab.setContent(cryptonoseGuiNode);
         mainTabPane.getTabs().add(tab);
+        mainTabPane.getTabs().sort((o1, o2) -> {
+            if (!o1.isClosable()) {
+                return -1;
+            }
+            if (!o2.isClosable()) {
+                return 1;
+            }
+            return o1.getText().compareTo(o2.getText());
+        });
         if(activate)
             mainTabPane.getSelectionModel().select(tab);
         CryptonoseGuiExchangeController cryptonoseGuiExchangeController = exchangeLoader.getController();
