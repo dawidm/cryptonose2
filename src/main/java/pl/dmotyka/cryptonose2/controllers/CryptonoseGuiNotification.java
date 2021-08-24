@@ -17,9 +17,7 @@ import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
 import javafx.scene.text.Font;
-import javafx.stage.PopupWindow;
 import javafx.stage.Screen;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 import dorkbox.notify.Notify;
@@ -35,12 +33,6 @@ public class CryptonoseGuiNotification {
     public static final int DORKBOX_MAX_FONT_SIZE = 19;
 
     public enum NotificationLibrary {CONTROLSFX,DORKBOX};
-
-    private final Window ownerWindow;
-
-    public CryptonoseGuiNotification(Window ownerWindow) {
-        this.ownerWindow = ownerWindow;
-    }
 
     public void notifyPriceAlert(NotificationLibrary notificationLibrary, PriceAlert priceAlert, Runnable action) {
         String notifyText = String.format("Change: %.2f%% (rel %.2f)\n" +
@@ -79,18 +71,9 @@ public class CryptonoseGuiNotification {
     }
 
     private void notifyControlsFx(String title, String text, Runnable action) {
-        Window owner = ownerWindow;
-        for (Window currentWindow : Window.getWindows()) {
-            if (currentWindow.isFocused() && !(currentWindow instanceof PopupWindow)) {
-                owner = currentWindow;
-                break;
-            }
-        }
-        Window finalOwner = owner;
         Platform.runLater(() -> {
             Notifications notifications = Notifications.
                 create().
-                owner(finalOwner).
                 darkStyle().
                 title(title).
                 text(text).

@@ -116,7 +116,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @FXML
     public Label tablePlaceholderLabel;
 
-    private CryptonoseGuiNotification cryptonoseGuiNotification;
+    private CryptonoseGuiNotification cryptonoseGuiNotification = new CryptonoseGuiNotification();
     private ColorIndicatorBox indicatorBox;
     private CryptonoseGuiController cryptonoseGuiController;
     private CryptonoseGuiPriceAlertsTabController priceAlertTabController;
@@ -222,14 +222,6 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mainVBox.sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                cryptonoseGuiNotification = new CryptonoseGuiNotification(newScene.getWindow());
-                newScene.windowProperty().addListener((observable1, oldWindow, newWindow) -> {
-                    cryptonoseGuiNotification = new CryptonoseGuiNotification(newWindow);
-                });
-            }
-        });
         scheduledExecutorService = Executors.newScheduledThreadPool(4);
         startLastTransactionTimer();
         consoleTextArea.setOnKeyPressed(event -> consoleTextArea.getScene().getOnKeyPressed().handle(event));
