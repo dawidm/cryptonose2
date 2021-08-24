@@ -24,7 +24,7 @@
 }
 
 .notification-bar.dark > .pane .title {
-    -fx-padding: 0 0 0.15em 0;
+    -fx-padding: 0 0 0.3em 0;
 }
 
 .notification-bar > .pane .close-button:hover {

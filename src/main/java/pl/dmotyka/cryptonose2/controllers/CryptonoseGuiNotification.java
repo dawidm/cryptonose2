@@ -45,9 +45,9 @@ public class CryptonoseGuiNotification {
     }
 
     public void notifyPriceAlert(PriceAlert priceAlert, Runnable action) {
-        String notifyText = String.format("Change: %.2f%% (rel %.2f)\n" +
-                        "Time: %s (%ds)\n" +
-                        "Final price: %s",
+        String notifyText = String.format("Change:\t\t%.2f%% (rel %.2f)\n" +
+                        "Time:\t\t%s (%ds)\n" +
+                        "Last price:\t%s",
                 priceAlert.getPriceChange(),
                 priceAlert.getRelativePriceChange(),
                 priceAlert.getFormattedTimePeriod(),
