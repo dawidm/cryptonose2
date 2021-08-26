@@ -506,7 +506,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     }
 
     private long timeMillis() {
-        return System.nanoTime() / 1000000;
+        return System.currentTimeMillis();
     }
 
 }
