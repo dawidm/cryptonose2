@@ -303,7 +303,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             consoleLog(msg.getMessage());
         switch(msg.getCode()) {
             case CONNECTED:
-                lastUpdateTimeMillis.set(timeMillis());
+                lastUpdateTimeMillis.set(systemTimeMillis());
                 setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED, true);
                 break;
             case CONNECTING:
@@ -336,14 +336,14 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 }
                 break;
             case AUTO_REFRESHING_DONE:
-                lastUpdateTimeMillis.set(timeMillis());
+                lastUpdateTimeMillis.set(systemTimeMillis());
                 pairsDataModel.removeOutdatedPairs(engine.getAllPairs());
         }
     }
 
     @Override
     public void receiveTransactionHeartbeat() {
-        lastUpdateTimeMillis.set(timeMillis());
+        lastUpdateTimeMillis.set(systemTimeMillis());
         numUpdatesPerSecondAtomicInteger.getAndIncrement();
     }
 
@@ -434,7 +434,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     private void startLastTransactionTimer() {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             if (lastUpdateTimeMillis.get() !=0) {
-                long lastUpdateSecondsAgo = (timeMillis() - lastUpdateTimeMillis.get()) / 1000;
+                long lastUpdateSecondsAgo = (systemTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
                 javafx.application.Platform.runLater(() -> lastUpdateLabel.setText(lastUpdateSecondsAgo + " seconds ago"));
                 if (lastUpdateSecondsAgo > CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS) {
                     consoleLog(String.format("No updates for %d seconds. Reconnecting...", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS));
@@ -505,7 +505,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         cryptonoseGuiAlertChecker.blockAlerts(alertBlock);
     }
 
-    private long timeMillis() {
+    private long systemTimeMillis() {
         return System.currentTimeMillis();
     }
 
