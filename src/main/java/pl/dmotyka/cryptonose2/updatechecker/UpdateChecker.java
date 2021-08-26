@@ -60,11 +60,9 @@ public class UpdateChecker {
     }
 
     private static boolean versionIsHigher(int[] versionRelease, int[] versionCurrent) {
-        if (versionRelease[0] > versionCurrent[0] ||
+        return versionRelease[0] > versionCurrent[0] ||
                 (versionRelease[0] == versionCurrent[0] && versionRelease[1] > versionCurrent[1]) ||
-                (versionRelease[0] == versionCurrent[0] && versionRelease[1] == versionCurrent[1] && versionRelease[2] > versionCurrent[2]))
-            return true;
-        return false;
+                (versionRelease[0] == versionCurrent[0] && versionRelease[1] == versionCurrent[1] && versionRelease[2] > versionCurrent[2]);
     }
 
     private static int[] versionFromString(String versionString) throws GetVersionException{
