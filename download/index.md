@@ -28,6 +28,8 @@ On MacOS you can use DMG or PKG file:
 
 <a href="https://github.com/dawidm/cryptonose2/releases/download/v2.21.1/Cryptonose-2.21.1.pkg">Download MacOS PKG (Cryptonose-2.21.1.pkg)</a>
 
+**If you have a problem running an unsigned application** try using PKG file (the second link) and this method [https://support.apple.com/guide/mac-help/mh40616/mac](https://support.apple.com/guide/mac-help/mh40616/mac) (CTRL + click on PKG file and click Open).
+
 &nbsp;
 
 ## Linux packages
