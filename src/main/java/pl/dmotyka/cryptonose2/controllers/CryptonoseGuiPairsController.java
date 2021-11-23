@@ -197,7 +197,13 @@ public class CryptonoseGuiPairsController implements Initializable {
                 double volume = CryptonoseSettings.getDouble(new CryptonoseSettings.MarketVolumePreference(market),exchangeSpecs);
                 return new MarketAndVolume(market, volume);
             }).toArray(MarketAndVolume[]::new);
-            String[] selectedApiSymbols = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs).split(",");
+            String selectedApiSymbolsString = CryptonoseSettings.getString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, exchangeSpecs);
+            String[] selectedApiSymbols;
+            if (selectedApiSymbolsString.trim().isEmpty()) {
+                selectedApiSymbols = new String[]{};
+            } else {
+                selectedApiSymbols = selectedApiSymbolsString.split(",");
+            }
 
             Platform.runLater(()->{
                 mainHBox.setVisible(true);
