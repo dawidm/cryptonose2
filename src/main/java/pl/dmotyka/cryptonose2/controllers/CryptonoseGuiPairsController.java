@@ -110,10 +110,12 @@ public class CryptonoseGuiPairsController implements Initializable {
     }
 
     public static class PairListItem {
+        private final PairSymbolConverter pairSymbolConverter;
         private final BooleanProperty selectedBooleanProperty=new SimpleBooleanProperty(false);
         private final CurrencyPair currencyPair;
 
-        public PairListItem(boolean selected, CurrencyPair currencyPair) {
+        public PairListItem(boolean selected, CurrencyPair currencyPair, PairSymbolConverter pairSymbolConverter) {
+            this.pairSymbolConverter = pairSymbolConverter;
             selectedBooleanProperty.setValue(selected);
             this.currencyPair=currencyPair;
         }
@@ -136,7 +138,7 @@ public class CryptonoseGuiPairsController implements Initializable {
 
         @Override
         public String toString() {
-            return currencyPair.toString();
+            return pairSymbolConverter.toFormattedString(pairSymbolConverter.toApiSymbol(currencyPair));
         }
     }
 
@@ -163,6 +165,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     private ObservableList<PairListItem> pairsObservableList;
     private Future<?> loadPairsFuture;
     private SettingsChangedListener settingsChangedListener;
+    private PairSymbolConverter pairSymbolConverter;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -179,7 +182,7 @@ public class CryptonoseGuiPairsController implements Initializable {
     public void loadPairs() {
         try {
             PairDataProvider pairDataProvider = exchangeSpecs.getPairDataProvider();
-            final PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
+            pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
             List<CurrencyPair> currencyPairList = new ArrayList<>();
             for (String apiSymbol : pairDataProvider.getPairsApiSymbols()) {
                 try {
@@ -274,7 +277,7 @@ public class CryptonoseGuiPairsController implements Initializable {
         SortedList<PairListItem> sortedPairsList = new SortedList<>(filteredPairsList, Comparator.comparing(PairListItem::toString));
         filterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(pairListItem -> pairListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
         for(CurrencyPair currentCurrencyPair : currencyPairList) {
-            pairsObservableList.add(new PairListItem(false,currentCurrencyPair));
+            pairsObservableList.add(new PairListItem(false,currentCurrencyPair, pairSymbolConverter));
         }
         currencyPairsListView.setCellFactory(CheckBoxListCell.forListView(param -> param.selectedBooleanProperty));
         currencyPairsListView.setItems(sortedPairsList);
