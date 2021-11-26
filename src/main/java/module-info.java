@@ -4,6 +4,7 @@ module cryptonose {
     requires java.desktop;
     requires java.logging;
     requires java.prefs;
+    requires java.net.http;
     requires exchangeutils;
     requires cryptonoseengine;
     requires minimalfxcharts;
