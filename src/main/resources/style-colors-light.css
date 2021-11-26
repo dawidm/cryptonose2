@@ -26,6 +26,10 @@
     -fx-text-fill: #5758BB;
 }
 
+.uniswapv3-color {
+    -fx-text-fill: #B10DC9;
+}
+
 .status-connecting {
     -fx-background-color: #FFDC00
 }
