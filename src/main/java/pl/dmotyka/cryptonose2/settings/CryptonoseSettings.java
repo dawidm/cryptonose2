@@ -41,7 +41,7 @@ public class CryptonoseSettings {
     // number of pairs to show warning about long connection time for a big number of pairs
     public static final int LOT_OF_PAIRS_WARNING_THRESHOLD = 50;
 
-    public static final long[] TIME_PERIODS = {TimePeriod.M5.periodSec, TimePeriod.M30.periodSec}; // keep it sorted
+    public static final long[] TIME_PERIODS = {ChartTimePeriod.M5.periodSec, ChartTimePeriod.M30.periodSec}; // keep it sorted
     public static final long ALERTS_PAUSE_SECONDS = 1800; // how long to block subsequent alerts for the same pair (if the option is active)
     public static final long NO_UPDATES_WARNING_SECONDS = 300;
     public static final long NO_UPDATES_RECONNECT_SECONDS = 900;
@@ -59,28 +59,6 @@ public class CryptonoseSettings {
     public static final String DEFAULT_DROPPING_SOUND_FILE="soundD.wav";
 
     private static final Preferences mainNode = Preferences.userNodeForPackage(CryptonoseGuiController.class);
-
-    public enum TimePeriod {
-        ANY(0),
-        M5(300),
-        M30(1800);
-
-        public final long periodSec;
-
-        TimePeriod(long periodSec) {
-            this.periodSec = periodSec;
-        }
-
-        public static TimePeriod getForPeriodSec(long periodSec) {
-            if (periodSec == TimePeriod.M5.periodSec)
-                return TimePeriod.M5;
-            if (periodSec == TimePeriod.M30.periodSec)
-                return TimePeriod.M30;
-            if (periodSec == TimePeriod.ANY.periodSec)
-                return TimePeriod.ANY;
-            throw new IllegalArgumentException("Wrong time period");
-        }
-    }
 
     public enum PreferenceCategory {
         CATEGORY_GENERAL_PREFS("cryptonosePreferences"),
@@ -134,9 +112,9 @@ public class CryptonoseSettings {
 
     private static class AlertPreferenceSpecs<T> extends PreferenceSpecs<T> {
 
-        private final TimePeriod timePeriod;
+        private final ChartTimePeriod timePeriod;
 
-        private AlertPreferenceSpecs(String key, T defVal, TimePeriod timePeriod) {
+        private AlertPreferenceSpecs(String key, T defVal, ChartTimePeriod timePeriod) {
             super(key, defVal, PreferenceCategory.CATEGORY_ALERTS_PREFS);
             this.timePeriod = timePeriod;
         }
@@ -181,24 +159,24 @@ public class CryptonoseSettings {
     public static class Alert {
         private static final String PERMANENT_BLOCKS_KEY = "permanentAlertBlocks";
 
-        public static final AlertPreferenceSpecs<Boolean> M5_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM5Alerts", true, TimePeriod.M5);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, TimePeriod.M5);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredFallingValue", 3.0, TimePeriod.M5);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M5);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M5);
-        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M5);
-        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M5);
-        public static final AlertPreferenceSpecs<Boolean> M30_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM30Alerts", true, TimePeriod.M30);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRisingValue", 5.0, TimePeriod.M30);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredFallingValue", 5.0, TimePeriod.M30);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, TimePeriod.M30);
-        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, TimePeriod.M30);
-        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, TimePeriod.M30);
-        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, TimePeriod.M30);
-        public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", true, TimePeriod.ANY);
-        public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.25, TimePeriod.ANY);
-        public static final AlertPreferenceSpecs<Boolean> ENABLE_BLOCK_SUBSEQUENT_ALERTS = new AlertPreferenceSpecs<>("enableBlockSubsequentAlerts", false, TimePeriod.ANY);
-        public static final AlertPreferenceSpecs<Boolean> ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS = new AlertPreferenceSpecs<>("enableAllowSubsequent2xAlerts", true, TimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> M5_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM5Alerts", true, ChartTimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRisingValue", 3.0, ChartTimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredFallingValue", 3.0, ChartTimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, ChartTimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, ChartTimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, ChartTimePeriod.M5);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M5 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, ChartTimePeriod.M5);
+        public static final AlertPreferenceSpecs<Boolean> M30_ALERTS_ENABLED = new AlertPreferenceSpecs<>("enableM30Alerts", true, ChartTimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRisingValue", 5.0, ChartTimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredFallingValue", 5.0, ChartTimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeRisingValue", 4.0, ChartTimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> REQUIRED_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("requiredRelativeFallingValue", 4.0, ChartTimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_RISING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeRisingValue", 8.0, ChartTimePeriod.M30);
+        private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, ChartTimePeriod.M30);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", true, ChartTimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.25, ChartTimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_BLOCK_SUBSEQUENT_ALERTS = new AlertPreferenceSpecs<>("enableBlockSubsequentAlerts", false, ChartTimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS = new AlertPreferenceSpecs<>("enableAllowSubsequent2xAlerts", true, ChartTimePeriod.ANY);
     }
 
     public static class Pairs {
@@ -220,7 +198,7 @@ public class CryptonoseSettings {
         public static final GuiStatePreferenceSpecs<Boolean> ALERT_NOTIFICATION = new GuiStatePreferenceSpecs<>("enableAlertNotification", true);
     }
 
-    public static PriceAlertThresholds getPriceAlertThresholds(ExchangeSpecs forExchange, TimePeriod timePeriod) {
+    public static PriceAlertThresholds getPriceAlertThresholds(ExchangeSpecs forExchange, ChartTimePeriod timePeriod) {
         return switch (timePeriod) {
             case M5 -> new PriceAlertThresholds(
                     getDouble(Alert.REQUIRED_RISING_THRESHOLD_M5, forExchange),
@@ -243,7 +221,7 @@ public class CryptonoseSettings {
 
     }
 
-    public static void putPriceAlertThresholds(PriceAlertThresholds priceAlertThresholds, ExchangeSpecs forExchange, TimePeriod timePeriod) {
+    public static void putPriceAlertThresholds(PriceAlertThresholds priceAlertThresholds, ExchangeSpecs forExchange, ChartTimePeriod timePeriod) {
         switch (timePeriod) {
             case M5 -> {
                 putDouble(Alert.REQUIRED_RISING_THRESHOLD_M5, priceAlertThresholds.getRequiredRisingValue(), forExchange);

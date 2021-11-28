@@ -21,7 +21,7 @@ public class ExampleAlertThresholds {
         LOW, MEDIUM, HIGH
     }
 
-    public static PriceAlertThresholds getThresholds(ThresholdValuesType type, CryptonoseSettings.TimePeriod period) {
+    public static PriceAlertThresholds getThresholds(ThresholdValuesType type, ChartTimePeriod period) {
         switch (period) {
             case M5 -> {
                 switch (type) {

@@ -61,6 +61,7 @@ import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlertThresholds;
 import pl.dmotyka.cryptonose2.model.CryptonoseGuiAlertChecker;
 import pl.dmotyka.cryptonose2.model.ExchangePairsDataModel;
+import pl.dmotyka.cryptonose2.settings.ChartTimePeriod;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
@@ -426,7 +427,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         logger.info("updating alerts values for " + exchangeSpecs);
         for(long currentTimePeriod : CryptonoseSettings.TIME_PERIODS) {
             priceAlertThresholdsMap.put(currentTimePeriod,
-                    CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, CryptonoseSettings.TimePeriod.getForPeriodSec(currentTimePeriod))
+                    CryptonoseSettings.getPriceAlertThresholds(exchangeSpecs, ChartTimePeriod.getForPeriodSec(currentTimePeriod))
             );
         }
     }
