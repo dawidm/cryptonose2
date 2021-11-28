@@ -13,8 +13,11 @@
 
 package pl.dmotyka.cryptonose2.dataobj;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,7 +33,8 @@ public class CryptonosePairData {
 
     public static final int PERIOD1 = 1;
     public static final int PERIOD2 = 2;
-    public static final int MIN_THROTTLE_INTERVAL_MS = 250;
+    public static final int DEF_THROTTLE_INTERVAL_MS = 200;
+    public static final int MIN_THROTTLE_INTERVAL_MS = 200;
 
     private final SimpleBooleanProperty pinnedProperty;
     private long pinnedTimestampSec = 0;
@@ -43,10 +47,12 @@ public class CryptonosePairData {
     private final SimpleDoubleProperty p2RelativeChange;
     private final SimpleDoubleProperty lastPrice;
     private final SimpleObjectProperty<ChartCandle[]> chartCandlesProperty;
-    private long lastP1UpdateVmMs = 0;
-    private long lastP2UpdateVmMs = 0;
+    private boolean p1WaitingForUpdate = false;
+    private boolean p2WaitingForUpdate = false;
+    private PriceChanges lastP1PriceChanges = null;
+    private PriceChanges lastP2PriceChanges = null;
 
-    private final AtomicLong updateThrottleIntervalMs = new AtomicLong(200);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     public CryptonosePairData(ExchangeSpecs exchangeSpecs, String pairName, String formattedPairName) {
         this.exchangeSpecs = exchangeSpecs;
@@ -59,6 +65,7 @@ public class CryptonosePairData {
         p2RelativeChange=new SimpleDoubleProperty(0.0);
         lastPrice=new SimpleDoubleProperty(0.0);
         chartCandlesProperty = new SimpleObjectProperty<>(null);
+        scheduledExecutorService.scheduleAtFixedRate(this::updateValues, DEF_THROTTLE_INTERVAL_MS, DEF_THROTTLE_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
 
     public String getPairName() {
@@ -105,24 +112,16 @@ public class CryptonosePairData {
         this.pinnedTimestampSec = pinnedTimestampSec;
     }
 
-    public void setPriceChanges(PriceChanges priceChanges, int period) {
+    public synchronized void setPriceChanges(PriceChanges priceChanges, int period) {
         switch (period) {
-            case PERIOD1:
-                if (vmTimeMillis() - lastP1UpdateVmMs > updateThrottleIntervalMs.get()) {
-                    lastP1UpdateVmMs = vmTimeMillis();
-                    p1PercentChange.setValue(priceChanges.getPercentChange());
-                    p1RelativeChange.setValue(priceChanges.getRelativePriceChange() != null ? priceChanges.getRelativePriceChange() : 0);
-                    lastPrice.set(priceChanges.getLastPrice());
-                }
-                break;
-            case PERIOD2:
-                if (vmTimeMillis() - lastP2UpdateVmMs > updateThrottleIntervalMs.get()) {
-                    lastP2UpdateVmMs = vmTimeMillis();
-                    p2PercentChange.setValue(priceChanges.getPercentChange());
-                    p2RelativeChange.setValue(priceChanges.getRelativePriceChange() != null ? priceChanges.getRelativePriceChange() : 0);
-                    lastPrice.set(priceChanges.getLastPrice());
-                }
-                break;
+            case PERIOD1 -> {
+                lastP1PriceChanges = priceChanges;
+                p1WaitingForUpdate = true;
+            }
+            case PERIOD2 -> {
+                lastP2PriceChanges = priceChanges;
+                p2WaitingForUpdate = true;
+            }
         }
     }
 
@@ -142,9 +141,30 @@ public class CryptonosePairData {
     // should be >= MIN_THROTTLE_INTERVAL_MS
     public void setUpdateThrottleIntervalMs(long updateThrottleIntervalMs) {
         if (updateThrottleIntervalMs >= MIN_THROTTLE_INTERVAL_MS) {
-            this.updateThrottleIntervalMs.set(updateThrottleIntervalMs);
+            scheduledExecutorService.shutdown();
+            scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+            scheduledExecutorService.scheduleAtFixedRate(this::updateValues, updateThrottleIntervalMs, updateThrottleIntervalMs, TimeUnit.MILLISECONDS);
         } else {
             throw new IllegalArgumentException("updateThrottleIntervalMs should be >= MIN_THROTTLE_INTERVAL_MS");
+        }
+    }
+
+    private synchronized void updateValues() {
+        if (p1WaitingForUpdate || p2WaitingForUpdate) {
+            Platform.runLater(() -> {
+                if (p1WaitingForUpdate) {
+                    p1PercentChange.setValue(lastP1PriceChanges.getPercentChange());
+                    p1RelativeChange.setValue(lastP1PriceChanges.getRelativePriceChange() != null ? lastP1PriceChanges.getRelativePriceChange() : 0);
+                    lastPrice.set(lastP1PriceChanges.getLastPrice());
+                    p1WaitingForUpdate = false;
+                }
+                if (p2WaitingForUpdate) {
+                    p2PercentChange.setValue(lastP2PriceChanges.getPercentChange());
+                    p2RelativeChange.setValue(lastP2PriceChanges.getRelativePriceChange() != null ? lastP2PriceChanges.getRelativePriceChange() : 0);
+                    lastPrice.set(lastP2PriceChanges.getLastPrice());
+                    p2WaitingForUpdate = false;
+                }
+            });
         }
     }
 

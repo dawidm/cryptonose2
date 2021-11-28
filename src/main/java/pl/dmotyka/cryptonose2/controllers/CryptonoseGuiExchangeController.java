@@ -358,9 +358,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void receiveChanges(List<PriceChanges> priceChangesList) {
-        if(currenciesTableView.isVisible()) {
-            Platform.runLater(() -> pairsDataModel.updateData(priceChangesList));
-        }
+        pairsDataModel.updateData(priceChangesList);
         List<PriceAlert> priceAlerts = cryptonoseGuiAlertChecker.checkAlerts(priceChangesList);
         if (priceAlerts == null) {
             return;
