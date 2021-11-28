@@ -25,8 +25,8 @@ public class PriceAlert {
     private final String formattedPair;
     private final double priceChange;
     private final double relativePriceChange;
-    private final double minPrice;
-    private final double maxPrice;
+    private final double referencePrice;
+    private final double finalPrice;
     private final long changeTimeSeconds;
     private final long periodSeconds;
     private final long timestamp;
@@ -34,7 +34,7 @@ public class PriceAlert {
     private final long referencePriceTimestamp;
     private final ExchangeSpecs exchangeSpecs;
 
-    public PriceAlert(ExchangeSpecs exchangeSpecs, String pair, String formattedPair, long periodSeconds, long timestamp, double priceChange, double relativePriceChange, double minPrice, double maxPrice, long changeTimeSeconds, long finalPriceTimestamp, long referencePriceTimestamp) {
+    public PriceAlert(ExchangeSpecs exchangeSpecs, String pair, String formattedPair, long periodSeconds, long timestamp, double priceChange, double relativePriceChange, double referencePrice, double finalPrice, long changeTimeSeconds, long finalPriceTimestamp, long referencePriceTimestamp) {
         this.exchangeSpecs=exchangeSpecs;
         this.pair = pair;
         this.formattedPair = formattedPair;
@@ -42,8 +42,8 @@ public class PriceAlert {
         this.timestamp = timestamp;
         this.priceChange = priceChange;
         this.relativePriceChange=relativePriceChange;
-        this.minPrice = minPrice;
-        this.maxPrice = maxPrice;
+        this.referencePrice = referencePrice;
+        this.finalPrice = finalPrice;
         this.changeTimeSeconds = changeTimeSeconds;
         this.finalPriceTimestamp = finalPriceTimestamp;
         this.referencePriceTimestamp = referencePriceTimestamp;
@@ -77,12 +77,12 @@ public class PriceAlert {
         return priceChange;
     }
 
-    public double getMinPrice() {
-        return minPrice;
+    public double getReferencePrice() {
+        return referencePrice;
     }
 
-    public double getMaxPrice() {
-        return maxPrice;
+    public double getFinalPrice() {
+        return finalPrice;
     }
 
     /**
@@ -90,10 +90,6 @@ public class PriceAlert {
      */
     public double getRelativePriceChange() {
         return relativePriceChange;
-    }
-
-    public double getFinalPrice() {
-        return (priceChange>0)?maxPrice:minPrice;
     }
 
     public ExchangeSpecs getExchangeSpecs() {

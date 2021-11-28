@@ -410,7 +410,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         consoleLog(alertString);
         SimpleDateFormat preciseTimeDateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
         String preciseTime = preciseTimeDateFormat.format(new Date(System.currentTimeMillis()));
-        logger.info(preciseTime + ": " + alertString);
+        logger.info(String.format("%s: %s; ref price: %.8f (%d), reference price: %.8f (%d), final price: %.8f (%d)",preciseTime, alertString, priceAlert.getReferencePrice(), priceAlert.getReferencePriceTimestamp(), priceAlert.getFinalPrice(), priceAlert.getFinalPriceTimestamp()));
         if (runBrowserCheckBox.isSelected()) {
             CryptonoseGuiBrowser.runBrowser(priceAlert.getPair(),priceAlert.getExchangeSpecs());
         }
