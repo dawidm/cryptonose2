@@ -31,6 +31,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 import pl.dmotyka.cryptonose2.dataobj.CryptonosePairData;
+import pl.dmotyka.cryptonose2.tools.CoinPluginConverter;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 public class PriceChangesTable {
@@ -138,11 +139,10 @@ public class PriceChangesTable {
                     if (!empty) {
                         this.setText(null);
                         CryptonosePairData cnPairData = tableView.getItems().get(getIndex());
-                        String baseCurrency = cnPairData.getExchangeSpecs().getPairSymbolConverter().apiSymbolToBaseCurrencySymbol(cnPairData.getPairName()).toUpperCase();
                         HBox hbox = new HBox();
                         hbox.setAlignment(Pos.CENTER);
                         PriceAlertPluginsButtons buttons = new PriceAlertPluginsButtons();
-                        buttons.install(hbox, baseCurrency, buttonsFocusTraversable);
+                        buttons.install(hbox, CoinPluginConverter.apiSymbolToPluginSymbol(cnPairData.getPairName(), cnPairData.getExchangeSpecs()), buttonsFocusTraversable);
                         this.setGraphic(hbox);
                     } else {
                         this.setText(null);

@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
+import pl.dmotyka.cryptonose2.tools.CoinPluginConverter;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
@@ -111,9 +112,8 @@ public class CryptonoseGuiPriceAlertNodeController {
             }
         });
         timeLabel.setText(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
-        String baseCurrency = priceAlert.getExchangeSpecs().getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(priceAlert.getPair()).base.getCurrencyCode();
         PriceAlertPluginsButtons buttons = new PriceAlertPluginsButtons();
-        buttons.install(moreHBox, baseCurrency, true);
+        buttons.install(moreHBox, CoinPluginConverter.apiSymbolToPluginSymbol(priceAlert.getPair(), priceAlert.getExchangeSpecs()), true);
     }
 
     private double[] chartCandlesToClosePrices(ChartCandle[] chartCandles) {
