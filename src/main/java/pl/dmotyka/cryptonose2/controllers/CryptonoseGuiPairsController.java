@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -62,7 +63,19 @@ import pl.dmotyka.exchangeutils.pairsymbolconverter.PairSymbolConverter;
 
 public class CryptonoseGuiPairsController implements Initializable {
 
-    public static final double DEFAULT_MIN_VOLUME = 200;
+    private static final Map<String, Double> DEF_MIN_VOLUMES = Map.of(
+            "BTC", 200.0,
+            "ETH", 1000.0,
+            "BNB", 10000.0,
+            "EUR", 10000000.0,
+            "USD", 10000000.0,
+            "USDT", 10000000.0,
+            "DAI", 10000000.0,
+            "USDC", 10000000.0,
+            "BUSD", 10000000.0,
+            "TUSD", 10000000.0
+    );
+    private static final double DEF_OTHER_MIN_VOL = 100.0;
 
     public static class MarketTableItem {
 
@@ -229,7 +242,9 @@ public class CryptonoseGuiPairsController implements Initializable {
             baseCurrencies.add(currentCurrencyPair.counter);
         marketsObservableList = FXCollections.observableArrayList();
         for(Currency currency : baseCurrencies) {
-            marketsObservableList.add(new MarketTableItem(false,currency.getCurrencyCode(),DEFAULT_MIN_VOLUME));
+            String currencyCode = currency.getCurrencyCode();
+            double defMinVol = DEF_MIN_VOLUMES.getOrDefault(currencyCode, DEF_OTHER_MIN_VOL);
+            marketsObservableList.add(new MarketTableItem(false, currencyCode, defMinVol));
         }
         marketsObservableList.sort(Comparator.comparing(MarketTableItem::getName));
         minVolumeTableView.getColumns().clear();
