@@ -50,7 +50,7 @@
                           <content>
                               <VBox spacing="7.0">
                                  <children>
-                                    <Label text="Cryptonose will check changes on selected markets on pairs with 24 hour volume exceding provided value. Click on volume to edit." wrapText="true" />
+                                    <Label text="Cryptonose will track prices on selected markets for pairs with 24 hour volume exceeding provided value. Click on volume to edit." wrapText="true" />
                                     <TableView fx:id="minVolumeTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
