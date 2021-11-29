@@ -22,9 +22,9 @@ import pl.dmotyka.exchangeutils.thegraphuniswapv3.Uniswap3PairDataProvider;
 public class CoinPluginConverter {
 
     public static String apiSymbolToPluginSymbol(String apiSymbol, ExchangeSpecs exchangeSpecs) {
-        String baseCurrency = exchangeSpecs.getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(apiSymbol).base.getCurrencyCode().toLowerCase(Locale.ROOT);
+        String baseCurrency = exchangeSpecs.getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(apiSymbol).base.getCurrencyCode();
         if (exchangeSpecs instanceof Uniswap3ExchangeSpecs) {
-            baseCurrency = ((Uniswap3PairDataProvider)exchangeSpecs.getPairDataProvider()).getTokenInfo(baseCurrency).getTokenSymbol();
+            baseCurrency = ((Uniswap3PairDataProvider)exchangeSpecs.getPairDataProvider()).getTokenInfo(baseCurrency.toLowerCase(Locale.ROOT)).getTokenSymbol();
         }
         return baseCurrency;
     }
