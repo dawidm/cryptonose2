@@ -24,7 +24,7 @@ public class CoinPluginConverter {
     public static String apiSymbolToPluginSymbol(String apiSymbol, ExchangeSpecs exchangeSpecs) {
         String baseCurrency = exchangeSpecs.getPairSymbolConverter().apiSymbolToXchangeCurrencyPair(apiSymbol).base.getCurrencyCode().toLowerCase(Locale.ROOT);
         if (exchangeSpecs instanceof Uniswap3ExchangeSpecs) {
-            baseCurrency = ((Uniswap3PairDataProvider)exchangeSpecs.getPairDataProvider()).getTokenSymbol(baseCurrency);
+            baseCurrency = ((Uniswap3PairDataProvider)exchangeSpecs.getPairDataProvider()).getTokenInfo(baseCurrency).getTokenSymbol();
         }
         return baseCurrency;
     }
