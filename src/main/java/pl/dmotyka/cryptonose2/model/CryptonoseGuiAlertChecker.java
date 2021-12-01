@@ -104,7 +104,7 @@ public class CryptonoseGuiAlertChecker {
                             relativeChangeValue,
                             currentPriceChanges.getReferenceToLastPrice(),
                             currentPriceChanges.getLastPrice(),
-                            currentPriceChanges.getChangeTimeSeconds(),
+                            currentPriceChanges.getLastPriceTimestampSec() - currentPriceChanges.getReferencePriceTimestampSec(),
                             currentPriceChanges.getLastPriceTimestampSec(),
                             currentPriceChanges.getReferenceToLastPriceTimestampSec());
                     if(!checkPreviousAlerts(priceAlert)) {
