@@ -22,11 +22,13 @@ To fix this I would have to pay for a special certificate every year but still W
 
 ## MacOS packages
 
-On MacOS you can use DMG or PKG file:
+You can use PKG:
 
-<a class="download-button" style="padding-bottom: 1em" href="https://github.com/dawidm/cryptonose2/releases/download/v2.22.0/Cryptonose-2.22.0.pkg">Download MacOS PKG (Cryptonose-2.22.0.pkg)</a>
+<a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.22.0/Cryptonose-2.22.0.pkg">Download MacOS PKG (Cryptonose-2.22.0.pkg)</a>
 
-<a class="download-button" style="padding-bottom: 1em" href="https://github.com/dawidm/cryptonose2/releases/download/v2.22.0/Cryptonose-2.22.0.dmg">Download MacOS DMG (Cryptonose-2.22.0.dmg)</a>
+or DMG:
+
+<a class="download-button" href="https://github.com/dawidm/cryptonose2/releases/download/v2.22.0/Cryptonose-2.22.0.dmg">Download MacOS DMG (Cryptonose-2.22.0.dmg)</a>
 
 **If you have a problem running an unsigned application** try using PKG file (the first link) and this method [https://support.apple.com/guide/mac-help/mh40616/mac](https://support.apple.com/guide/mac-help/mh40616/mac) (CTRL + click on PKG file and click Open).
 
