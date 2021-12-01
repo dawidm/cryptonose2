@@ -15,9 +15,9 @@ You may want to try Cryptonose if you are day trader on cryptocurrency markets. 
 ## The most important features of Cryptonose
 * Cryptonose uses **real-time connection** to an exchange. For selected cryptocurrency pairs, it uses all exchange transactions (fills) to track the price.
 * Aside from tracking percent price changes, it also tracks **relative price change**. Some currency pairs are much more volatile than others. Relative price change helps to determine when price change is significant for given currency. You can find the details in manual (link at the top of the site).
-* When price change meets price alert conditions Cryptonose can: send **desktop notification**, play **sound**, **run web browser** with exchagne website.
+* When price change meets price alert conditions Cryptonose can: send **desktop notification**, play **sound**, **run web browser** with exchange website.
 
 ## Supported exchanges
-Currently supported exchanges: **Binance, Bitfinex, Huobi, KuCoin, Poloniex**. Another exchanges may be added in the future, but existing ones provide data for most of popular markets, so you can use Cryptonose even if you trade on another exchange.
+Currently supported spot exchanges: **Binance, Bitfinex, Huobi, KuCoin, Poloniex**. Also a a DeFi exchange (DEX) **Uniswap V3** is available. Another exchanges may be added in the future, but existing ones provide data for most of popular markets, so you can use Cryptonose even if you trade on another exchange.
 
 [![cryptonose exchange tab]({{ site.baseurl }}/images/cryptonose-exchange.png "Main window, exchange tab")]({{ site.baseurl }}/images/cryptonose-exchange.png)
