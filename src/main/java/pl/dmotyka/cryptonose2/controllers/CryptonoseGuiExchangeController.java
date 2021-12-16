@@ -13,6 +13,7 @@
 
 package pl.dmotyka.cryptonose2.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -76,6 +77,7 @@ import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.chartutils.LiquidityFactor;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.pairdataprovider.PairSelectionCriteria;
+import pl.dmotyka.exchangeutils.thegraphuniswapv3.Uniswap3ExchangeSpecs;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
 
 /**
@@ -436,10 +438,22 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
                 long lastUpdateSecondsAgo = (systemTimeMillis() - lastUpdateTimeMillis.get()) / 1000;
                 javafx.application.Platform.runLater(() -> lastUpdateLabel.setText(lastUpdateSecondsAgo + " seconds ago"));
                 if (lastUpdateSecondsAgo > CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS) {
-                    consoleLog(String.format("No updates for %d seconds. Reconnecting...", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS));
-                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATED_RECONNECT, true);
-                    setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING, false);
-                    reconnectEngine();
+                    boolean reconnect = true;
+                    if (exchangeSpecs instanceof Uniswap3ExchangeSpecs) { // different mechanism because it's not using streaming but periodical http requests for getting tickers
+                        try {
+                            exchangeSpecs.checkConnection();
+                            lastUpdateTimeMillis.set(systemTimeMillis());
+                            reconnect = false;
+                        } catch (IOException e) {
+                            reconnect = true;
+                        }
+                    }
+                    if (reconnect) {
+                        consoleLog(String.format("No updates for %d seconds. Reconnecting...", CryptonoseSettings.NO_UPDATES_RECONNECT_SECONDS));
+                        setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATED_RECONNECT, true);
+                        setConnectionStatus(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING, false);
+                        reconnectEngine();
+                    }
                 } else if (lastUpdateSecondsAgo > CryptonoseSettings.NO_UPDATES_WARNING_SECONDS) {
                     if (!connectionStatus.get().equals(CryptonoseGuiConnectionStatus.CONNECTION_STATUS_NO_UPDATES))
                         consoleLog(String.format("No updates for %d seconds.", CryptonoseSettings.NO_UPDATES_WARNING_SECONDS));
