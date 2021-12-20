@@ -102,7 +102,7 @@ jobs:
             build/jpackage/*.rpm
             LICENSE.txt
             LICENSE-3RD-PARTY.txt
-            ~/cryptonose-linux-x86_64.AppImage
+            /home/runner/cryptonose-linux-x86_64.AppImage
 
   jpackage-windows:
     # The type of runner that the job will run on
