@@ -1,0 +1,48 @@
+{
+    "buildinfo": [
+    {
+        "prerun": [
+           "cp build/jpackage/cryptonose*deb ~/.cache/deb2appimage/debs/cryptonose-linux.deb"
+        ], 
+        "name": "cryptonose",
+        "version": "linux",
+        "deps": "libc6,xdg-utils,zlib1g",
+        "repoarch": "amd64,all,amd64",
+        "distrorepo": "Ubuntu",
+        "repoversion": "focal",
+        "binarypath": "/opt/cryptonose/bin/Cryptonose",
+        "desktoppath": "/opt/cryptonose/lib/cryptonose-Cryptonose.desktop",
+        "iconpath": "/opt/cryptonose/lib/Cryptonose.png",
+        "usewrapper": "true",
+        "postrun": [
+            null
+        ]
+    }
+    ],
+    "apprunconf": [
+    {
+        "setpath": "true",
+        "setlibpath": "true",
+        "setpythonpath": "false",
+        "setpythonhome": "false",
+        "setpythondontwritebytecode": "false",
+        "setxdgdatadirs": "false",
+        "setperllib": "false",
+        "setgsettingsschemadir": "false",
+        "setqtpluginpath": "false",
+        "exec": "/opt/cryptonose/bin/Cryptonose"
+    }
+    ],
+    "authors": [
+    {
+        "type": "Author",
+        "author": "Dawid Motyka",
+        "url": "https://dawidm.github.io/cryptonose2/"
+    },
+    {
+        "type": "AppImage Maintainer",
+        "author": "Dawid Motyka",
+        "url": "https://dawidm.github.io/cryptonose2/"
+    }
+    ]
+}
