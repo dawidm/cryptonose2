@@ -85,6 +85,12 @@ jobs:
       - name: jpackage
         run: ./gradlew jpackage
 
+      - name: appimage
+        run: >
+          wget https://github.com/simoniz0r/deb2appimage/releases/download/v0.0.5/deb2appimage-0.0.5-x86_64.AppImage;
+          chmod +x deb2appimage-0.0.5-x86_64.AppImage;
+          ./deb2appimage-0.0.5-x86_64.AppImage -j deb2appimage.json
+
       - name: Release
         uses: softprops/action-gh-release@v1
         #if: startsWith(github.ref, 'refs/tags/')
