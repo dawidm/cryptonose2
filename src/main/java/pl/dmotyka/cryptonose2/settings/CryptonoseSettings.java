@@ -175,7 +175,7 @@ public class CryptonoseSettings {
         private static final AlertPreferenceSpecs<Double> SUFFICIENT_RELATIVE_FALLING_THRESHOLD_M30 = new AlertPreferenceSpecs<>("sufficientRelativeFallingValue", 8.0, ChartTimePeriod.M30);
         public static final AlertPreferenceSpecs<Boolean> ENABLE_MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("enableMinCnLiquidity", true, ChartTimePeriod.ANY);
         public static final AlertPreferenceSpecs<Double> MIN_CN_LIQUIDITY = new AlertPreferenceSpecs<>("minCnLiquidity", 0.25, ChartTimePeriod.ANY);
-        public static final AlertPreferenceSpecs<Boolean> ENABLE_BLOCK_SUBSEQUENT_ALERTS = new AlertPreferenceSpecs<>("enableBlockSubsequentAlerts", false, ChartTimePeriod.ANY);
+        public static final AlertPreferenceSpecs<Boolean> ENABLE_BLOCK_SUBSEQUENT_ALERTS = new AlertPreferenceSpecs<>("enableBlockSubsequentAlerts", true, ChartTimePeriod.ANY);
         public static final AlertPreferenceSpecs<Boolean> ENABLE_ALLOW_SUBSEQUENT_2X_ALERTS = new AlertPreferenceSpecs<>("enableAllowSubsequent2xAlerts", true, ChartTimePeriod.ANY);
     }
 
