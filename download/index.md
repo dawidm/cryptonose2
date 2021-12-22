@@ -1,6 +1,6 @@
 {% include menu.md %}
 
-# Get Cryptonose 2.21
+# Get Cryptonose 2.22
 
 ## What's new?
 
