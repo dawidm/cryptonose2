@@ -126,3 +126,7 @@ To sum up, low value of liquidity factor for given currency pair means that ther
 
 You can **click on the notification to run web browser**.
 Notification shows details of price alert: percent change, relative change, time period, real change period, final price.
+
+## Comments for Uniswap V3 support
+Cryptonose provides support for Uniswap V3 providing prices of Uniswap assets in USD. The prices are approximate (but not out-of-date, with a delay of few seconds maximum) because of data source used. They should be good enough for for user to keep track of the markets.
+
