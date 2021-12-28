@@ -30,6 +30,10 @@
     -fx-text-fill: #e67acd;
 }
 
+.uniswapv3polygon-color {
+    -fx-text-fill: #eeeeee;
+}
+
 .status-connecting {
     -fx-background-color: #FFDC00
 }
