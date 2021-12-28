@@ -104,7 +104,7 @@ public class CryptonoseGuiPriceAlertNodeController {
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
         if(priceAlert.getExchangeSpecs()!=null) {
             exchangeLabel.setText(priceAlert.getExchangeSpecs().getName());
-            pairNameLabel.getStyleClass().add(priceAlert.getExchangeSpecs().getName().toLowerCase()+"-color");
+            pairNameLabel.getStyleClass().add(priceAlert.getExchangeSpecs().getCssClass());
         }
         mainHBox.setOnMouseClicked((event) -> {
             if (event.getButton() == MouseButton.PRIMARY) {

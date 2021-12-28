@@ -71,7 +71,7 @@ public class CryptonoseGuiPinnedNodeController {
         this.chartCandlesProperty = chartCandlesProperty;
         mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol));
-        pairLabel.getStyleClass().add(exchangeSpecs.getName().toLowerCase()+"-color");
+        pairLabel.getStyleClass().add(exchangeSpecs.getCssClass());
         Tooltip.install(chartPane, new Tooltip(String.format("Chart time frame: %s", TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC))));
         Tooltip.install(pairLabel, new Tooltip("%s on %s".formatted(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol), exchangeSpecs.getName())));
         final ChartCandle[] finalChartCandles = chartCandlesProperty.get();
