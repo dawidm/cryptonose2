@@ -27,21 +27,18 @@
          <children>
             <Label text="(no data)" />
          </children></StackPane>
-      <VBox>
+      <VBox fx:id="labelsVBox" styleClass="pinned-labels">
          <children>
             <Label fx:id="pairLabel" text="(pair)">
                <styleClass>
-                  <String fx:value="pinned-price" />
                   <String fx:value="pinned-font" />
                </styleClass></Label>
             <Label fx:id="priceLabel" text="(no data)">
                <styleClass>
-                  <String fx:value="pinned-price" />
                   <String fx:value="pinned-font" />
                </styleClass></Label>
             <Label fx:id="changeLabel" text="(no data)">
                <styleClass>
-                  <String fx:value="pinned-price" />
                   <String fx:value="pinned-font" />
                </styleClass>
             </Label>

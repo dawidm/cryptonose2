@@ -27,6 +27,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.CssClasses;
@@ -63,6 +64,8 @@ public class CryptonoseGuiPinnedNodeController {
     public Label changeLabel;
     @FXML
     public Pane chartPane;
+    @FXML
+    public VBox labelsVBox;
 
     // listeners are set on priceProperty and chartCandlesProperty, if these properties will exist longer than this object use removeListeners()
     public synchronized void init(ExchangeSpecs exchangeSpecs, String pairApiSymbol, SimpleDoubleProperty priceProperty, SimpleObjectProperty<ChartCandle[]> chartCandlesProperty) {
@@ -71,6 +74,12 @@ public class CryptonoseGuiPinnedNodeController {
         this.priceProperty = priceProperty;
         this.chartCandlesProperty = chartCandlesProperty;
         mainHBox.widthProperty().addListener((observable, oldValue, newValue) -> updateChart());
+        pairLabel.heightProperty().addListener((observable, oldValue, newValue) -> {
+            mainHBox.setMaxHeight(pairLabel.getHeight() + priceLabel.getHeight() + changeLabel.getHeight());
+        });
+        pairLabel.prefWidthProperty().bind(labelsVBox.widthProperty());
+        priceLabel.prefWidthProperty().bind(labelsVBox.widthProperty());
+        changeLabel.prefWidthProperty().bind(labelsVBox.widthProperty());
         pairLabel.setText(exchangeSpecs.getPairSymbolConverter().toFormattedString(pairApiSymbol));
         pairLabel.getStyleClass().add(CssClasses.getCssClassForExchange(exchangeSpecs));
         Tooltip.install(chartPane, new Tooltip(String.format("Chart time frame: %s", TimeConverter.secondsToFullMinutesHoursDays(CryptonoseSettings.MINI_CHART_TIMEFRAME_SEC))));

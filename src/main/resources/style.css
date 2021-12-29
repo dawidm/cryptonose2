@@ -32,9 +32,8 @@
     -fx-pref-width: 7em;
 }
 
-.pinned-price {
+.pinned-labels {
     -fx-pref-width: 7em;
-    -fx-max-width: 7em;
 }
 
 .pinned-font {
