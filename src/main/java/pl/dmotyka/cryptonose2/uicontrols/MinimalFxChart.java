@@ -16,6 +16,7 @@ package pl.dmotyka.cryptonose2.uicontrols;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.effect.Effect;
 import javafx.scene.layout.Region;
@@ -30,16 +31,16 @@ public class MinimalFxChart extends Region {
     private final Canvas canvas;
     private double[] values;
     private Effect chartEffect;
-    private Paint chartPaint;
+    private ObjectProperty<Paint> chartPaintProperty;
     private double marginsHorizontalPercent = 0;
     private double marginsVerticalPercent = 0;
 
-    public MinimalFxChart(double[] values, Paint chartPaint, Effect chartEffect) {
+    public MinimalFxChart(double[] values, ObjectProperty<Paint> chartPaintProperty, Effect chartEffect) {
         if (values == null || values.length < 2)
             throw new IllegalArgumentException("please provide at least 2 values");
         this.values = values;
         this.chartEffect = chartEffect;
-        this.chartPaint = chartPaint;
+        this.chartPaintProperty = chartPaintProperty;
         widthProperty().addListener(o -> paint());
         heightProperty().addListener(o -> paint());
         canvas = new Canvas();
@@ -58,6 +59,9 @@ public class MinimalFxChart extends Region {
                     });
                 }
             }
+        });
+        chartPaintProperty.addListener((observable, oldValue, newValue) -> {
+            paint();
         });
     }
 
@@ -94,10 +98,6 @@ public class MinimalFxChart extends Region {
         this.chartEffect = chartEffect;
     }
 
-    public synchronized void setChartPaint(Paint chartPaint) {
-        this.chartPaint = chartPaint;
-    }
-
     private synchronized void paint() {
         double width = getWidth();
         double height = getHeight();
@@ -110,7 +110,7 @@ public class MinimalFxChart extends Region {
         gc.setEffect(null);
         gc.clearRect(0,0,width,height);
         gc.setEffect(chartEffect);
-        gc.setStroke(chartPaint);
+        gc.setStroke(chartPaintProperty.get());
         gc.beginPath();
         gc.moveTo(arguments[0],values[0]);
         for(int i=1; i<arguments.length;i++)

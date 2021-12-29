@@ -162,7 +162,7 @@ public class CryptonoseGuiPinnedNodeController {
         if (minimalFxChart != null) {
             Platform.runLater(() -> minimalFxChart.repaint(values));
         } else {
-            minimalFxChart = new MinimalFxChart(values, priceLabel.getTextFill(), null);
+            minimalFxChart = new MinimalFxChart(values, priceLabel.textFillProperty(), null);
             minimalFxChart.setMarginsHorizontalPercent(1);
             minimalFxChart.setMarginsVerticalPercent(15);
             Platform.runLater(() -> {

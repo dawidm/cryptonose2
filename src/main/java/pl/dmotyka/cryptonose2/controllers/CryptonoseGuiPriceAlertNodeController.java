@@ -26,7 +26,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 import org.kordamp.ikonli.javafx.FontIcon;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
@@ -90,10 +89,9 @@ public class CryptonoseGuiPriceAlertNodeController {
             changeLabel.getStyleClass().add("price-rising");
         }
         if (chartCandles != null) {
-            MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles), Color.BLACK, null);
+            MinimalFxChart minimalFxChart = new MinimalFxChart(chartCandlesToClosePrices(chartCandles), finalPriceLabel.textFillProperty(), null);
             minimalFxChart.setMarginsHorizontalPercent(1);
             minimalFxChart.setMarginsVerticalPercent(1);
-            finalPriceLabel.textFillProperty().addListener(observable -> minimalFxChart.setChartPaint(finalPriceLabel.getTextFill()));
             chartPane.getChildren().add(minimalFxChart);
         } else {
             logger.warning("chartCandles is null");

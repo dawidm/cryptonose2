@@ -15,6 +15,7 @@ package pl.dmotyka.cryptonose2.tools;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,6 +24,12 @@ import javafx.stage.Stage;
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 
 public class UILoader <T> {
+
+    private static final String STYLE_CSS_FILE = "style.css";
+    private static final String STYLE_DARK_CSS_FILE = "style-dark.css";
+    private static final String STYLE_LIGHT_CSS_FILE = "style-light.css";
+    private static final String STYLE_COLORS_DARK_CSS_FILE = "style-colors-dark.css";
+    private static final String STYLE_COLORS_LIGHT_CSS_FILE = "style-colors-light.css";
 
     private static Integer FONT_SIZE = null;
 
@@ -50,14 +57,29 @@ public class UILoader <T> {
         }
         if (FONT_SIZE != null)
             root.setStyle(String.format("-fx-font-size: %dpx;", FONT_SIZE));
-        root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style.css").toExternalForm());
+        root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_CSS_FILE).toExternalForm());
         if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
-            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-dark.css").toExternalForm());
-            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-dark.css").toExternalForm());
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_DARK_CSS_FILE).toExternalForm());
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_DARK_CSS_FILE).toExternalForm());
         } else {
-            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-light.css").toExternalForm());
-            root.getStylesheets().add(UILoader.class.getClassLoader().getResource("style-colors-light.css").toExternalForm());
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_LIGHT_CSS_FILE).toExternalForm());
+            root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_LIGHT_CSS_FILE).toExternalForm());
         }
+        CryptonoseSettings.runOnPreferenceChange(null, CryptonoseSettings.General.DARK_MODE, () -> {
+            Platform.runLater(() -> {
+                if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
+                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_LIGHT_CSS_FILE));
+                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_COLORS_LIGHT_CSS_FILE));
+                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_DARK_CSS_FILE).toExternalForm());
+                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_DARK_CSS_FILE).toExternalForm());
+                } else {
+                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_DARK_CSS_FILE));
+                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_COLORS_DARK_CSS_FILE));
+                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_LIGHT_CSS_FILE).toExternalForm());
+                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_LIGHT_CSS_FILE).toExternalForm());
+                }
+            });
+        });
     }
 
     public Parent getRoot() {
