@@ -7,7 +7,6 @@ module cryptonose {
     requires java.net.http;
     requires exchangeutils;
     requires cryptonoseengine;
-    requires minimalfxcharts;
     requires javafx.fxml;
     requires xchange.core;
     requires Notify;

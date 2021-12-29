@@ -30,10 +30,10 @@ import javafx.scene.layout.Pane;
 
 import pl.dmotyka.cryptonose2.settings.CryptonoseSettings;
 import pl.dmotyka.cryptonose2.tools.CssClasses;
+import pl.dmotyka.cryptonose2.uicontrols.MinimalFxChart;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.exchangeutils.exchangespecs.ExchangeSpecs;
 import pl.dmotyka.exchangeutils.tools.TimeConverter;
-import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
 public class CryptonoseGuiPinnedNodeController {
 

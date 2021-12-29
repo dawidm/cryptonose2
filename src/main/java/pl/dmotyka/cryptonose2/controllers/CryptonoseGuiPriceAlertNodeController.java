@@ -32,8 +32,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.tools.CoinPluginConverter;
 import pl.dmotyka.cryptonose2.tools.CssClasses;
+import pl.dmotyka.cryptonose2.uicontrols.MinimalFxChart;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
-import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
 /**
  * Created by dawid on 9/3/17.
