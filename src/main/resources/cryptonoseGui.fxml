@@ -102,7 +102,8 @@
                         <Tooltip text="Disable tables in exchange tabs to save power (lower CPU and battery usage)" />
                      </tooltip>
                   </CheckBox>
-                  <MenuButton fx:id="addExchangeMenuButton" mnemonicParsing="false" text="Add exchange...">
+                  <!-- setting size is a workaround for button not changing it's font size when changing font size globally -->
+                  <MenuButton fx:id="addExchangeMenuButton" mnemonicParsing="false" text="Add exchange..." style="-fx-font-size: 1em">
                      <effect>
                         <DropShadow color="forestgreen" radius="20.0" />
                      </effect>
