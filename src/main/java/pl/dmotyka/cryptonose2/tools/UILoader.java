@@ -31,8 +31,6 @@ public class UILoader <T> {
     private static final String STYLE_COLORS_DARK_CSS_FILE = "style-colors-dark.css";
     private static final String STYLE_COLORS_LIGHT_CSS_FILE = "style-colors-light.css";
 
-    private static Integer FONT_SIZE = null;
-
     private final FXMLLoader fxmlLoader;
 
     public UILoader(String resourcesFXMLPath) {
@@ -52,11 +50,20 @@ public class UILoader <T> {
     }
 
     public static void applyStyles(Parent root) {
-        if (FONT_SIZE == null && !CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
-            FONT_SIZE = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
-        }
-        if (FONT_SIZE != null)
-            root.setStyle(String.format("-fx-font-size: %dpx;", FONT_SIZE));
+        Runnable setFontRunnable = () -> {
+            if (!CryptonoseSettings.getBool(CryptonoseSettings.General.USE_DEF_FONT_SIZE)) {
+                int fontSize = CryptonoseSettings.getInt(CryptonoseSettings.General.FONT_SIZE_PX);
+                Platform.runLater(() -> {
+                    root.setStyle(String.format("-fx-font-size: %dpx;", fontSize));
+                });
+            } else {
+                Platform.runLater(() -> {
+                    root.setStyle("");
+                });
+            }
+        };
+        setFontRunnable.run();
+        CryptonoseSettings.runOnPreferenceChange(null, CryptonoseSettings.General.USE_DEF_FONT_SIZE, setFontRunnable);
         root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_CSS_FILE).toExternalForm());
         if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_DARK_CSS_FILE).toExternalForm());
@@ -107,6 +114,10 @@ public class UILoader <T> {
         stage.setTitle(windowTitle);
         Scene newScene = createScene(fxmlLoader.getRoot());
         stage.setScene(newScene);
+        newScene.heightProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+            stage.sizeToScene();
+            stage.centerOnScreen();
+        }));
         return stage;
     }
 
