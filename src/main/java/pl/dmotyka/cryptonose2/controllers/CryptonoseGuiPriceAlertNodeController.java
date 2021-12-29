@@ -31,6 +31,7 @@ import javafx.scene.paint.Color;
 import org.kordamp.ikonli.javafx.FontIcon;
 import pl.dmotyka.cryptonose2.dataobj.PriceAlert;
 import pl.dmotyka.cryptonose2.tools.CoinPluginConverter;
+import pl.dmotyka.cryptonose2.tools.CssClasses;
 import pl.dmotyka.exchangeutils.chartinfo.ChartCandle;
 import pl.dmotyka.minimalfxcharts.MinimalFxChart;
 
@@ -104,7 +105,7 @@ public class CryptonoseGuiPriceAlertNodeController {
         periodLabel.setText(String.format("%s (%ds)",priceAlert.getFormattedTimePeriod(),priceAlert.getChangeTimeSeconds()));
         if(priceAlert.getExchangeSpecs()!=null) {
             exchangeLabel.setText(priceAlert.getExchangeSpecs().getName());
-            pairNameLabel.getStyleClass().add(priceAlert.getExchangeSpecs().getCssClass());
+            pairNameLabel.getStyleClass().add(CssClasses.getCssClassForExchange(priceAlert.getExchangeSpecs()));
         }
         mainHBox.setOnMouseClicked((event) -> {
             if (event.getButton() == MouseButton.PRIMARY) {

@@ -19,6 +19,7 @@ module cryptonose {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome;
     requires org.controlsfx.controls;
+    requires org.apache.commons.lang3;
     exports pl.dmotyka.cryptonose2.controllers;
     exports pl.dmotyka.cryptonose2.cryptopanic;
     exports pl.dmotyka.cryptonose2.tools;
