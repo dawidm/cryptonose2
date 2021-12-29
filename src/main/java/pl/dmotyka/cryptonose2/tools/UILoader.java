@@ -72,21 +72,21 @@ public class UILoader <T> {
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_LIGHT_CSS_FILE).toExternalForm());
             root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_LIGHT_CSS_FILE).toExternalForm());
         }
-        CryptonoseSettings.runOnPreferenceChange(null, CryptonoseSettings.General.DARK_MODE, () -> {
-            Platform.runLater(() -> {
-                if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
-                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_LIGHT_CSS_FILE));
-                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_COLORS_LIGHT_CSS_FILE));
-                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_DARK_CSS_FILE).toExternalForm());
-                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_DARK_CSS_FILE).toExternalForm());
-                } else {
-                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_DARK_CSS_FILE));
-                    root.getStylesheets().removeIf(s -> s.endsWith(STYLE_COLORS_DARK_CSS_FILE));
-                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_LIGHT_CSS_FILE).toExternalForm());
-                    root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_LIGHT_CSS_FILE).toExternalForm());
-                }
-            });
-        });
+        Runnable changeStyleRunnable = () -> {
+            if (CryptonoseSettings.getBool(CryptonoseSettings.General.DARK_MODE)) {
+                root.getStylesheets().removeIf(s -> s.endsWith(STYLE_LIGHT_CSS_FILE));
+                root.getStylesheets().removeIf(s -> s.endsWith(STYLE_COLORS_LIGHT_CSS_FILE));
+                root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_DARK_CSS_FILE).toExternalForm());
+                root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_DARK_CSS_FILE).toExternalForm());
+            } else {
+                root.getStylesheets().removeIf(s -> s.endsWith(STYLE_DARK_CSS_FILE));
+                root.getStylesheets().removeIf(s -> s.endsWith(STYLE_COLORS_DARK_CSS_FILE));
+                root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_LIGHT_CSS_FILE).toExternalForm());
+                root.getStylesheets().add(UILoader.class.getClassLoader().getResource(STYLE_COLORS_LIGHT_CSS_FILE).toExternalForm());
+            }
+        };
+        changeStyleRunnable.run();
+        CryptonoseSettings.runOnPreferenceChange(null, CryptonoseSettings.General.DARK_MODE, () -> Platform.runLater(changeStyleRunnable));
     }
 
     public Parent getRoot() {
