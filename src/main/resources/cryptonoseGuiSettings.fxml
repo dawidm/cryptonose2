@@ -94,7 +94,6 @@
                      </children>
                   </HBox>
                   <CheckBox fx:id="darkStyleCheckbox" mnemonicParsing="false" selected="true" text="Use dark style" />
-                  <Label text="NOTICE: Please restart Cryptonose after changing appearance settings" />
                </children>
             </VBox>
          </content>
