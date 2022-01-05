@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2021 Dawid Motyka
+ * Copyright © 2019-2022 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -46,12 +46,12 @@ public class PinnedTickersHBox {
 
             @Override
             public void added(List<? extends CryptonosePairData> added) {
-                handleAdded(added);
+                Platform.runLater(() -> handleAdded(added));
             }
 
             @Override
             public void removed(List<? extends CryptonosePairData> removed) {
-                removePinnedTickers(removed);
+                Platform.runLater(() -> removePinnedTickers(removed));
             }
         });
     }
@@ -100,15 +100,13 @@ public class PinnedTickersHBox {
     }
 
     private void refreshHBox() {
-        Platform.runLater(() -> {
-            pinnedHBox.getChildren().clear();
-            for (var it = pinnedTickers.iterator(); it.hasNext();) {
-                PinnedTicker pt = it.next();
-                if (pinnedHBox.getChildren().size() < CryptonoseSettings.MAX_PINNED_TICKERS) {
-                    pinnedHBox.getChildren().add(pt.getRoot());
-                }
+        pinnedHBox.getChildren().clear();
+        for (var it = pinnedTickers.iterator(); it.hasNext();) {
+            PinnedTicker pt = it.next();
+            if (pinnedHBox.getChildren().size() < CryptonoseSettings.MAX_PINNED_TICKERS) {
+                pinnedHBox.getChildren().add(pt.getRoot());
             }
-        });
+        }
     }
 
 }
