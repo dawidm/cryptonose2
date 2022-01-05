@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2021 Dawid Motyka
+ * Copyright © 2019-2022 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -68,6 +68,7 @@ import pl.dmotyka.cryptonose2.tools.UILoader;
 import pl.dmotyka.cryptonoseengine.CryptonoseGenericEngine;
 import pl.dmotyka.cryptonoseengine.EngineChangesReceiver;
 import pl.dmotyka.cryptonoseengine.EngineMessage;
+import pl.dmotyka.cryptonoseengine.EngineMessageConnectionProgress;
 import pl.dmotyka.cryptonoseengine.EngineMessageReceiver;
 import pl.dmotyka.cryptonoseengine.EngineMessageSelectedPairs;
 import pl.dmotyka.cryptonoseengine.EngineTransactionHeartbeatReceiver;
@@ -294,6 +295,10 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
 
     @Override
     public void message(EngineMessage msg) {
+        if (msg instanceof EngineMessageConnectionProgress) {
+
+            return;
+        }
         if (msg instanceof EngineMessageSelectedPairs) {
             int numPairs = ((EngineMessageSelectedPairs)msg).getNumSelectedPairs();
             if (numPairs > CryptonoseSettings.LOT_OF_PAIRS_WARNING_THRESHOLD && !CryptonoseSettings.getBool(CryptonoseSettings.General.LOT_OF_PAIRS_ALERT_SHOWN)) {
