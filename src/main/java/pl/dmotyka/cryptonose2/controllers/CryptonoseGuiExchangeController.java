@@ -50,6 +50,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
@@ -119,6 +120,8 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     public Button alertBlocksButton;
     @FXML
     public Label tablePlaceholderLabel;
+    @FXML
+    public ProgressBar connectionProgressBar;
 
     private CryptonoseGuiNotification cryptonoseGuiNotification;
     private ColorIndicatorBox indicatorBox;
@@ -154,6 +157,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
         tableDisabledHbox.managedProperty().bind(tableDisabledHbox.visibleProperty());
         logTitledPane.managedProperty().bind(logTitledPane.visibleProperty());
         tableDisabledHbox.visibleProperty().bind(currenciesTableView.visibleProperty().not());
+        connectionProgressBar.managedProperty().bind(connectionProgressBar.visibleProperty());
         CryptonoseSettings.getPrefsNode(CryptonoseSettings.PreferenceCategory.CATEGORY_ALERTS_PREFS, exchangeSpecs).addPreferenceChangeListener(evt -> {
             if(evt.getNode().name().equals(exchangeSpecs.getName())) {
                 if(updatePreferencesScheduledFuture==null || updatePreferencesScheduledFuture.isDone())
@@ -283,8 +287,15 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             connectionStatusLabel.setText(newConnectionStatus.getText().toLowerCase());
             indicatorBox.switchColor(newConnectionStatus.getCssClass());
             if (newConnectionStatus == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTED) {
+                connectionProgressBar.setVisible(false);
                 tablePlaceholderLabel.setText("No data");
-            } else {
+            } if (newConnectionStatus == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_DISCONNECTED) {
+                connectionProgressBar.setVisible(false);
+            } if (newConnectionStatus == CryptonoseGuiConnectionStatus.CONNECTION_STATUS_CONNECTING) {
+                connectionProgressBar.setProgress(0.0);
+                connectionProgressBar.setVisible(true);
+            }
+            else {
                 tablePlaceholderLabel.setText("Not connected yet");
             }
         });
@@ -296,7 +307,7 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
     @Override
     public void message(EngineMessage msg) {
         if (msg instanceof EngineMessageConnectionProgress) {
-
+            Platform.runLater(() -> connectionProgressBar.setProgress(((EngineMessageConnectionProgress) msg).getProgress()/100));
             return;
         }
         if (msg instanceof EngineMessageSelectedPairs) {

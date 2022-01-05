@@ -39,3 +39,7 @@
 .pinned-font {
     -fx-font-size: 90%;
 }
+
+.connection-progress-bar {
+    -fx-pref-width: 7em;
+}
