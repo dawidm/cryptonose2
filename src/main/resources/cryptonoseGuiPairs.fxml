@@ -3,7 +3,7 @@
 <!--
   ~ Cryptonose
   ~
-  ~ Copyright © 2019-2021 Dawid Motyka
+  ~ Copyright © 2019-2022 Dawid Motyka
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
   ~
@@ -44,7 +44,7 @@
          <children>
             <HBox fx:id="mainHBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="250.0" HBox.hgrow="ALWAYS">
                      <children>
                         <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                           <content>
@@ -61,6 +61,29 @@
                           </content>
                            <graphic>
                               <Label styleClass="h2" text="Choose markets" />
+                           </graphic>
+                        </TitledPane>
+                     </children>
+                  </VBox>
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TitledPane animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="blacklistChoosePairsVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
+                                 <children>
+                                    <TextField fx:id="blacklistFilterTextField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Filter..." />
+                                    <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
+                                       <children>
+                                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#blacklistSelectVisibleClick" text="Select visible" HBox.hgrow="ALWAYS" />
+                                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#blacklistDeselectAllClick" text="Deselect all" HBox.hgrow="ALWAYS" />
+                                       </children>
+                                    </HBox>
+                                    <ListView fx:id="blacklistCurrencyPairsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                           </content>
+                           <graphic>
+                              <Label styleClass="h2" text="Pairs blacklist" />
                            </graphic>
                         </TitledPane>
                      </children>

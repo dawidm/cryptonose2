@@ -205,6 +205,12 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             additionalPairs = new String[0];
         else
             additionalPairs=pairs.split(",");
+        String blacklistPairsString = CryptonoseSettings.getString(CryptonoseSettings.Pairs.BLACKLIST_PAIRS_API_SYMBOLS, exchangeSpecs);
+        String[] blacklistPairs;
+        if(blacklistPairsString==null || blacklistPairsString.equals(""))
+            blacklistPairs = new String[0];
+        else
+            blacklistPairs = blacklistPairsString.split(",");
         Set<String> additionalPairsSet = new HashSet<>(Arrays.asList(additionalPairs));
         additionalPairsSet.addAll(Arrays.asList(CryptonoseSettings.getPinnedTickersSymbols(exchangeSpecs)));
         String[] allAdditionalPairs = additionalPairsSet.toArray(String[]::new);
@@ -212,12 +218,13 @@ public class CryptonoseGuiExchangeController implements Initializable, EngineMes
             if (engine!=null)
                 engine.stop();
             pairsDataModel.clear();
-            engine = CryptonoseGenericEngine.withProvidedMarketsAndPairs(exchangeSpecs,
+            engine = CryptonoseGenericEngine.withProvidedMarketsPairsAndBlacklist(exchangeSpecs,
                     this,
                     CryptonoseSettings.TIME_PERIODS,
                     CryptonoseSettings.RELATIVE_CHANGE_NUM_CANDLES,
                     pairSelectionCriteria.toArray(PairSelectionCriteria[]::new),
-                    allAdditionalPairs);
+                    allAdditionalPairs,
+                    blacklistPairs);
             engine.enableInitEngineWithLowerPeriodChartData();
             engine.autoRefreshPairData(CryptonoseSettings.AUTO_REFRESH_INTERVAL_MINUTES);
             engine.setCheckChangesDelayMs(250);

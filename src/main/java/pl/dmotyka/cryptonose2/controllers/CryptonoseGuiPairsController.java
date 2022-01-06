@@ -1,7 +1,7 @@
 /*
  * Cryptonose
  *
- * Copyright © 2019-2021 Dawid Motyka
+ * Copyright © 2019-2022 Dawid Motyka
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *
@@ -171,11 +171,18 @@ public class CryptonoseGuiPairsController implements Initializable {
     @FXML
     public TextField filterTextField;
     @FXML
+    public VBox blacklistChoosePairsVBox;
+    @FXML
+    public ListView<PairListItem> blacklistCurrencyPairsListView;
+    @FXML
+    public TextField blacklistFilterTextField;
+    @FXML
     public Button saveButton;
 
     private ExchangeSpecs exchangeSpecs;
     private ObservableList<MarketTableItem> marketsObservableList;
     private ObservableList<PairListItem> pairsObservableList;
+    private ObservableList<PairListItem> blacklistPairsObservableList;
     private Future<?> loadPairsFuture;
     private SettingsChangedListener settingsChangedListener;
     private PairSymbolConverter pairSymbolConverter;
@@ -220,13 +227,20 @@ public class CryptonoseGuiPairsController implements Initializable {
             } else {
                 selectedApiSymbols = selectedApiSymbolsString.split(",");
             }
+            String selectedBlacklistApiSymbolsString = CryptonoseSettings.getString(CryptonoseSettings.Pairs.BLACKLIST_PAIRS_API_SYMBOLS, exchangeSpecs);
+            String[] selectedBlacklistApiSymbols;
+            if (selectedBlacklistApiSymbolsString.trim().isEmpty()) {
+                selectedBlacklistApiSymbols = new String[]{};
+            } else {
+                selectedBlacklistApiSymbols = selectedBlacklistApiSymbolsString.split(",");
+            }
 
             Platform.runLater(()->{
                 mainHBox.setVisible(true);
                 loadingGridPane.setVisible(false);
                 fillTable(currencyPairList);
                 fillList(currencyPairList);
-                fillPreferencesData(marketsVolumes, selectedApiSymbols);
+                fillPreferencesData(marketsVolumes, selectedApiSymbols, selectedBlacklistApiSymbols);
                 saveButton.setDisable(false);
             });
 
@@ -288,17 +302,24 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void fillList(List<CurrencyPair> currencyPairList) {
         pairsObservableList = FXCollections.observableArrayList();
+        blacklistPairsObservableList = FXCollections.observableArrayList();
         FilteredList<PairListItem> filteredPairsList = new FilteredList<>(pairsObservableList);
         SortedList<PairListItem> sortedPairsList = new SortedList<>(filteredPairsList, Comparator.comparing(PairListItem::toString));
+        FilteredList<PairListItem> filteredBlacklistPairsList = new FilteredList<>(blacklistPairsObservableList);
+        SortedList<PairListItem> sortedBlacklistPairsList = new SortedList<>(filteredBlacklistPairsList, Comparator.comparing(PairListItem::toString));
         filterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredPairsList.setPredicate(pairListItem -> pairListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
+        blacklistFilterTextField.textProperty().addListener((observable, oldValue, newValue) -> filteredBlacklistPairsList.setPredicate(pairListItem -> pairListItem.toString().toUpperCase().contains(newValue.toUpperCase())));
         for(CurrencyPair currentCurrencyPair : currencyPairList) {
             pairsObservableList.add(new PairListItem(false,currentCurrencyPair, pairSymbolConverter));
+            blacklistPairsObservableList.add(new PairListItem(false,currentCurrencyPair, pairSymbolConverter));
         }
         currencyPairsListView.setCellFactory(CheckBoxListCell.forListView(param -> param.selectedBooleanProperty));
         currencyPairsListView.setItems(sortedPairsList);
+        blacklistCurrencyPairsListView.setCellFactory(CheckBoxListCell.forListView(param -> param.selectedBooleanProperty));
+        blacklistCurrencyPairsListView.setItems(sortedBlacklistPairsList);
     }
 
-    public void fillPreferencesData(MarketAndVolume[] marketAndVolumes, String[] selectedPairs) {
+    public void fillPreferencesData(MarketAndVolume[] marketAndVolumes, String[] selectedPairs, String[] selectedBlacklistPairs) {
         PairSymbolConverter pairSymbolConverter = exchangeSpecs.getPairSymbolConverter();
         for (MarketAndVolume marketAndVolume : marketAndVolumes) {
             Optional<MarketTableItem> optionalMarketTableItem = marketsObservableList.stream().filter(marketTableItem -> marketTableItem.getName().equals(marketAndVolume.getMarketSymbol())).findAny();
@@ -311,6 +332,11 @@ public class CryptonoseGuiPairsController implements Initializable {
         Set<String> selectedApiSymbolsSet = Set.of(selectedPairs);
         for(PairListItem pairListItem : pairsObservableList) {
             if(selectedApiSymbolsSet.contains(pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())))
+                pairListItem.setSelected(true);
+        }
+        Set<String> selectedBlacklistApiSymbolsSet = Set.of(selectedBlacklistPairs);
+        for(PairListItem pairListItem : blacklistPairsObservableList) {
+            if(selectedBlacklistApiSymbolsSet.contains(pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())))
                 pairListItem.setSelected(true);
         }
     }
@@ -333,6 +359,11 @@ public class CryptonoseGuiPairsController implements Initializable {
                 map(pairListItem -> pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())).
                 collect(Collectors.joining(","));
         CryptonoseSettings.putString(CryptonoseSettings.Pairs.PAIRS_API_SYMBOLS, apiSymbols, exchangeSpecs);
+        String blacklistApiSymbols = blacklistPairsObservableList.stream().
+                filter(PairListItem::isSelected).
+                map(pairListItem -> pairSymbolConverter.toApiSymbol(pairListItem.getCurrencyPair())).
+                collect(Collectors.joining(","));
+        CryptonoseSettings.putString(CryptonoseSettings.Pairs.BLACKLIST_PAIRS_API_SYMBOLS, blacklistApiSymbols, exchangeSpecs);
     }
 
     public void selectVisibleClick() {
@@ -343,6 +374,18 @@ public class CryptonoseGuiPairsController implements Initializable {
 
     public void deselectAllClick() {
         for(PairListItem pairListItem : pairsObservableList) {
+            pairListItem.setSelected(false);
+        }
+    }
+
+    public void blacklistSelectVisibleClick() {
+        for(PairListItem pairListItem : blacklistCurrencyPairsListView.getItems()) {
+            pairListItem.setSelected(true);
+        }
+    }
+
+    public void blacklistDeselectAllClick() {
+        for(PairListItem pairListItem : blacklistPairsObservableList) {
             pairListItem.setSelected(false);
         }
     }
