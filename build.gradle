@@ -39,11 +39,11 @@ repositories {
 dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'pl.dmotyka:dmutils:1.1.0'
-    implementation ('pl.dmotyka:exchangeutils:1.19.7')  {
+    implementation ('pl.dmotyka:exchangeutils:1.19.8')  {
         exclude group: 'javax.annotation', module: 'javax.annotation-api' // conflict with jsr305
         exclude group: 'jakarta.ws.rs', module: 'jakarta.ws.rs-api' // conflict with javax.ws.rs
     }
-    implementation ('pl.dmotyka:cryptonoseengine:1.13.3')  {
+    implementation ('pl.dmotyka:cryptonoseengine:1.13.4')  {
         exclude group: 'javax.annotation', module: 'javax.annotation-api' // conflict with jsr305
         exclude group: 'jakarta.ws.rs', module: 'jakarta.ws.rs-api' // conflict with javax.ws.rs
     }
