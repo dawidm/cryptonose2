@@ -37,7 +37,6 @@ jobs:
           echo dmutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:dmutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
           echo exchangeutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:exchangeutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
           echo cryptonoseengine_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:cryptonoseengine: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
-          echo minimalfxcharts_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:minimal-fx-charts: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
 
       - uses: actions/checkout@v2
         with:
@@ -57,12 +56,6 @@ jobs:
           ref: 'v${{ env.cryptonoseengine_version }}'
           path: 'cryptonoseengine'
 
-      - uses: actions/checkout@v2
-        with:
-          repository: 'dawidm/minimal-fx-charts'
-          ref: 'v${{ env.minimalfxcharts_version }}'
-          path: 'minimal-fx-charts'
-
       - name: Build dmutils
         run: >
           cd dmutils;
@@ -78,10 +71,6 @@ jobs:
           cd cryptonoseengine;
           mvn install -DskipTests;
 
-      - name: Build minimal-fx-charts
-        run: >
-          cd minimal-fx-charts;
-          mvn install -DskipTests;
       - name: jpackage
         run: ./gradlew jpackage
 
@@ -128,7 +117,6 @@ jobs:
           echo dmutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:dmutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
           echo exchangeutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:exchangeutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
           echo cryptonoseengine_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:cryptonoseengine: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
-          echo minimalfxcharts_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:minimal-fx-charts: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
 
       - uses: actions/checkout@v2
         with:
@@ -148,12 +136,6 @@ jobs:
           ref: 'v${{ env.cryptonoseengine_version }}'
           path: 'cryptonoseengine'
 
-      - uses: actions/checkout@v2
-        with:
-          repository: 'dawidm/minimal-fx-charts'
-          ref: 'v${{ env.minimalfxcharts_version }}'
-          path: 'minimal-fx-charts'
-
       - name: Build dmutils
         run: >
           cd dmutils;
@@ -169,10 +151,6 @@ jobs:
           cd cryptonoseengine;
           mvn install -DskipTests;
 
-      - name: Build minimal-fx-charts
-        run: >
-          cd minimal-fx-charts;
-          mvn install -DskipTests;
       - name: jpackage
         run: ./gradlew.bat jpackage
 
@@ -209,7 +187,6 @@ jobs:
           echo dmutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:dmutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
           echo exchangeutils_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:exchangeutils: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
           echo cryptonoseengine_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:cryptonoseengine: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
-          echo minimalfxcharts_version=$(cat build.gradle | grep -G implementation.*pl.dmotyka:minimal-fx-charts: | cut -d: -f3 | cut -d "'" -f1) >> $GITHUB_ENV;
 
       - uses: actions/checkout@v2
         with:
@@ -229,12 +206,6 @@ jobs:
           ref: 'v${{ env.cryptonoseengine_version }}'
           path: 'cryptonoseengine'
 
-      - uses: actions/checkout@v2
-        with:
-          repository: 'dawidm/minimal-fx-charts'
-          ref: 'v${{ env.minimalfxcharts_version }}'
-          path: 'minimal-fx-charts'
-
       - name: Build dmutils
         run: >
           cd dmutils;
@@ -250,10 +221,6 @@ jobs:
           cd cryptonoseengine;
           mvn install -DskipTests;
 
-      - name: Build minimal-fx-charts
-        run: >
-          cd minimal-fx-charts;
-          mvn install -DskipTests;
       - name: jpackage
         run: ./gradlew jpackage
 
