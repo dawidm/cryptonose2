@@ -3,6 +3,5 @@ description: Cryptonose is a tool useful in Cryptocurrency trading
 theme: jekyll-theme-minimal
 show_downloads: false
 logo: images/icon256.png
-google_analytics: UA-133319780-1
 plugins:
   - jekyll-seo-tag
