@@ -1,3 +1,5 @@
+<div style="border: 2px solid #f1c40f; background-color: #fff9db; padding: 10px; margin-bottom: 20px; text-align: center;">Cryptonose 3 is available now. Visit <a href="https://dawidm.github.io/cryptonose3/">https://dawidm.github.io/cryptonose3/</a></div>
+
 <!-- Matomo -->
 <script>
   var _paq = window._paq = window._paq || [];
