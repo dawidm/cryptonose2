@@ -7,4 +7,4 @@ https://github.com/dawidm/dmutils
 https://github.com/dawidm/exchangeutils  
 https://github.com/dawidm/cryptonoseengine
 
-To run Cryptonose use `gradlew run`, to build packages/installer use `gradlew jpackage`. Use the code with the most recent git tag for the newest working version.
+To run Cryptonose use `gradlew run`, to build packages/installer use `gradlew jpackage`. This branch only announces Cryptonose 3 (tag `v3.1.0`). For the last Cryptonose 2 code use the most recent `v2.x.y` git tag.
